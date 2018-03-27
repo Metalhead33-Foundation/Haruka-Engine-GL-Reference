@@ -21,13 +21,14 @@ void GlShaderProgram::popModule()
 {
 	modules.pop_back();
 }
-void GlShaderProgram::linkShaders()
+bool GlShaderProgram::linkShaders()
 {
 	for(ModuleIterator it = modules.begin(); it != modules.end(); ++it)
 	{
 		GlShaderModule* mod = dynamic_cast<GlShaderModule*>(it->get());
-		if(!mod) throw std::runtime_error("Invalid shader module!");
+		if(!mod) return false;
 		else glAttachShader(shaderID,mod->getShaderID());
 	}
 	glLinkProgram(shaderID);
+	return true;
 }

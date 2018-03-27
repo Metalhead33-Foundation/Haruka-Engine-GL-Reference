@@ -31,6 +31,7 @@ sTexture GlTexture::createFromTGA(textureType ntype, sAbstractFread reada)
 {
 	sTexture tmp = sTexture(new GlTexture(ntype));
 	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());
+	gltex->mipMapCount = 0;
 	uint8_t id;
 	uint8_t cmapType;
 	uint8_t imgType;
@@ -47,9 +48,9 @@ sTexture GlTexture::createFromTGA(textureType ntype, sAbstractFread reada)
 	reada->read(&id,sizeof(uint8_t));
 	reada->read(&cmapType,sizeof(uint8_t));
 	reada->read(&imgType,sizeof(uint8_t));
-	if((imgType & TGA_UNCOMPRESSED_COLORMAPPED) != 0) throw std::runtime_error("Colour-mapped TGA images are not supported!");
-	if((imgType & TGA_GREYSCALE) != 0) throw std::runtime_error("Greyscale TGA images are not supported!");
-	if((imgType & TGA_COMPRESSED) != 0) throw std::runtime_error("Compressed TGA images are not supported!");
+	// if((imgType & TGA_UNCOMPRESSED_COLORMAPPED) != 0) return sTexture();
+	if((imgType & TGA_GREYSCALE) != 0) return sTexture();
+	if((imgType & TGA_COMPRESSED) != 0) return sTexture();
 	reada->read(&colormapFirstEntryIndex,sizeof(uint16_t));
 	reada->read(&colormapLength,sizeof(uint16_t));
 	reada->read(&colormapEntrySize,sizeof(uint8_t));
@@ -60,13 +61,44 @@ sTexture GlTexture::createFromTGA(textureType ntype, sAbstractFread reada)
 	reada->read(&pixelDepth,sizeof(uint8_t));
 	reada->read(&imageDescriptor,sizeof(uint8_t));
 
+	gltex->height = imageHeight;
+	gltex->width = imageWidth;
+
 	size_t byteRate = pixelDepth / 8;
-	size_t imgSize = ((size_t)imageWidth * (size_t)imageHeight) * byteRate;
+	size_t imgSize = ((size_t)imageWidth * (size_t)imageHeight);
+	gltex->linearSize = imgSize;
+	imgSize *= byteRate;
 	std::vector<uint8_t> pixelBuffer(imgSize);
-	reada->read(pixelBuffer.data(),imgSize);
+	if((imgType & TGA_UNCOMPRESSED_COLORMAPPED) != 0)
+	{
+		uint8_t packetHeader;
+		std::vector<uint8_t> individualPixel(byteRate);
+		for(size_t offset = 0;offset < imgSize;) {
+			reada->read(&packetHeader,sizeof(uint8_t));
+			if( (packetHeader & 0x80) != 0)
+			{
+				uint8_t packetRepetition = packetHeader & 0x7F;
+				reada->read(individualPixel.data(),byteRate);
+				for(uint8_t flag = 0; flag < packetHeader; ++flag,offset+=byteRate)
+				{
+					memcpy(&(pixelBuffer[offset]),individualPixel.data(),byteRate);
+				}
+			}
+			else
+			{
+				size_t readSize = byteRate * packetHeader;
+				reada->read(&(pixelBuffer[offset]),readSize);
+				offset += readSize;
+			}
+		}
+	}
+	else reada->read(pixelBuffer.data(),imgSize);
 	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
 	switch(byteRate)
 	{
+	case 2:
+		glTexImage2D(GL_TEXTURE_2D, GL_RGB5_A1, 0,imageWidth,imageHeight,0, GL_BGR, GL_UNSIGNED_BYTE, pixelBuffer.data());
+		break;
 	case 3:
 		glTexImage2D(GL_TEXTURE_2D, GL_RGB, 0,imageWidth,imageHeight,0, GL_BGR, GL_UNSIGNED_BYTE, pixelBuffer.data());
 		break;
@@ -74,7 +106,7 @@ sTexture GlTexture::createFromTGA(textureType ntype, sAbstractFread reada)
 		glTexImage2D(GL_TEXTURE_2D, GL_RGBA, 0,imageWidth,imageHeight,0, GL_BGRA, GL_UNSIGNED_BYTE, pixelBuffer.data());
 		break;
 	default:
-		throw std::runtime_error("Unsupported colour format!");
+		return sTexture();
 		break;
 	}
 	return tmp;
@@ -89,7 +121,7 @@ sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFread reada)
 	reada->read(mword.data(),4);
 	if (strncmp(mword.data() , "DDS ", 4) != 0)
 	{
-		throw std::runtime_error("This file is not a DDS!");
+		return sTexture();
 	}
 	reada->read(header.data(),124);
 	gltex->height = *reinterpret_cast<uint32_t*>(&header[8]);
@@ -117,7 +149,7 @@ sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFread reada)
 		format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 		break;
 	default:
-		throw std::runtime_error("Invalid type of DDS!");
+		return sTexture();
 	}
 
 	glBindTexture(GL_TEXTURE_2D, gltex->textureID);

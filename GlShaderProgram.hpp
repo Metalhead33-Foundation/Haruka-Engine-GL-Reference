@@ -17,7 +17,7 @@ public:
 	~GlShaderProgram();
 	void pushModule(sShaderModule mod);
 	void popModule();
-	void linkShaders();
+	bool linkShaders();
 	const GLuint& getShaderID() const;
 };
 
