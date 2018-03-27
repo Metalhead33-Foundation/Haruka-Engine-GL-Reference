@@ -7,8 +7,9 @@ FreeImageIO AbstractFreadImgio = { ImageRead, 0, ImageSeek, ImageTell };
 
 
 FlipImgExt::FlipImgExt(sAbstractFread reedaa)
+	: fhandle(reedaa)
 {
-	loadFromHandle(&AbstractFreadImgio,reedaa.get());
+	loadFromHandle(&AbstractFreadImgio,reinterpret_cast<void*>(fhandle.get()));
 }
 
 unsigned ImageRead(void* buffer, unsigned size, unsigned count, void* handle)

@@ -4,10 +4,11 @@
 #include "AbstractFread.hpp"
 class FlipImgExt : public fipImage
 {
+private:
+	const sAbstractFread fhandle;
 public:
 	FlipImgExt(sAbstractFread reedaa);
 };
-
 extern FreeImageIO AbstractFreadImgio;
 
 #endif // FREEIMAGEIOEXT_HPP
