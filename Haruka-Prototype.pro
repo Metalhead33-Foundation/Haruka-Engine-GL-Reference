@@ -3,8 +3,8 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs
-CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus
 
 SOURCES += main.cpp \
     RenderWindow.cpp \
@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     glad_glx.c \
     GlShaderModule.cpp \
     GlShaderProgram.cpp \
-    GlTexture.cpp
+    GlTexture.cpp \
+    FreeImageIoExt.cpp
 
 HEADERS += \
     khrplatform.h \
@@ -34,4 +35,5 @@ HEADERS += \
     GlShaderProgram.hpp \
     ShaderProgram.hpp \
     Texture.hpp \
-    GlTexture.hpp
+    GlTexture.hpp \
+    FreeImageIoExt.hpp

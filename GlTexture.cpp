@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstring>
 #include <stdexcept>
+#include "FreeImageIoExt.hpp"
 
 #define FOURCC_DXT1 0x31545844
 #define FOURCC_DXT3 0x33545844
@@ -27,87 +28,31 @@ GlTexture::~GlTexture()
 {
 	glDeleteTextures(1,&textureID);
 }
-sTexture GlTexture::createFromTGA(textureType ntype, sAbstractFread reada)
+sTexture GlTexture::createFromIMage(textureType ntype, sAbstractFread reada)
 {
 	sTexture tmp = sTexture(new GlTexture(ntype));
 	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());
 	gltex->mipMapCount = 0;
-	uint8_t id;
-	uint8_t cmapType;
-	uint8_t imgType;
-	uint16_t colormapFirstEntryIndex;
-	uint16_t colormapLength;
-	uint8_t colormapEntrySize;
-	uint16_t xOrigin;
-	uint16_t yOrigin;
-	uint16_t imageWidth;
-	uint16_t imageHeight;
-	uint8_t pixelDepth;
-	uint8_t imageDescriptor;
-
-	reada->read(&id,sizeof(uint8_t));
-	reada->read(&cmapType,sizeof(uint8_t));
-	reada->read(&imgType,sizeof(uint8_t));
-	// if((imgType & TGA_UNCOMPRESSED_COLORMAPPED) != 0) return sTexture();
-	if((imgType & TGA_GREYSCALE) != 0) return sTexture();
-	if((imgType & TGA_COMPRESSED) != 0) return sTexture();
-	reada->read(&colormapFirstEntryIndex,sizeof(uint16_t));
-	reada->read(&colormapLength,sizeof(uint16_t));
-	reada->read(&colormapEntrySize,sizeof(uint8_t));
-	reada->read(&xOrigin,sizeof(uint16_t));
-	reada->read(&yOrigin,sizeof(uint16_t));
-	reada->read(&imageWidth,sizeof(uint16_t));
-	reada->read(&imageHeight,sizeof(uint16_t));
-	reada->read(&pixelDepth,sizeof(uint8_t));
-	reada->read(&imageDescriptor,sizeof(uint8_t));
-
-	gltex->height = imageHeight;
-	gltex->width = imageWidth;
-
-	size_t byteRate = pixelDepth / 8;
-	size_t imgSize = ((size_t)imageWidth * (size_t)imageHeight);
-	gltex->linearSize = imgSize;
-	imgSize *= byteRate;
-	std::vector<uint8_t> pixelBuffer(imgSize);
-	if((imgType & TGA_COMPRESSED) != 0)
-	{
-		uint8_t packetHeader;
-		std::vector<uint8_t> individualPixel(byteRate);
-		for(size_t offset = 0;offset < imgSize;) {
-			reada->read(&packetHeader,sizeof(uint8_t));
-			if( (packetHeader & 0x80) != 0)
-			{
-				uint8_t packetRepetition = packetHeader & 0x7F;
-				reada->read(individualPixel.data(),byteRate);
-				for(uint8_t flag = 0; flag < packetHeader; ++flag,offset+=byteRate)
-				{
-					memcpy(&(pixelBuffer[offset]),individualPixel.data(),byteRate);
-				}
-			}
-			else
-			{
-				size_t readSize = byteRate * packetHeader;
-				reada->read(&(pixelBuffer[offset]),readSize);
-				offset += readSize;
-			}
-		}
-	}
-	else reada->read(pixelBuffer.data(),imgSize);
+	fipImage img;
+	img.loadFromHandle(&AbstractFreadImgio,reada.get());
+	gltex->height = img.getHeight();
+	gltex->width = img.getWidth();
+	gltex->linearSize = gltex->height * gltex->width;
+	// if(img.getBitsPerPixel() < 24) img.convertTo24Bits();
 	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
-	switch(byteRate)
+	if(img.isTransparent())
 	{
-	case 2:
-		glTexImage2D(GL_TEXTURE_2D, GL_RGB5_A1, 0,imageWidth,imageHeight,0, GL_BGR, GL_UNSIGNED_BYTE, pixelBuffer.data());
-		break;
-	case 3:
-		glTexImage2D(GL_TEXTURE_2D, GL_RGB, 0,imageWidth,imageHeight,0, GL_BGR, GL_UNSIGNED_BYTE, pixelBuffer.data());
-		break;
-	case 4:
-		glTexImage2D(GL_TEXTURE_2D, GL_RGBA, 0,imageWidth,imageHeight,0, GL_BGRA, GL_UNSIGNED_BYTE, pixelBuffer.data());
-		break;
-	default:
-		return sTexture();
-		break;
+		img.convertTo32Bits();
+		std::vector<uint8_t> imgBuff(img.getHeight() * img.getWidth() * (img.getBitsPerPixel() / 8));
+		FreeImage_ConvertToRawBits(imgBuff.data(),img,img.getScanWidth(),32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
+		glTexImage2D(GL_TEXTURE_2D, GL_RGBA, 0,gltex->width,gltex->height,0, GL_BGRA, GL_UNSIGNED_BYTE, imgBuff.data());
+	}
+	else
+	{
+		img.convertTo24Bits();
+		std::vector<uint8_t> imgBuff(img.getHeight() * img.getWidth() * (img.getBitsPerPixel() / 8));
+		FreeImage_ConvertToRawBits(imgBuff.data(),img,img.getScanWidth(),24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
+		glTexImage2D(GL_TEXTURE_2D, GL_RGB, 0,gltex->width,gltex->height,0, GL_BGR, GL_UNSIGNED_BYTE, imgBuff.data());
 	}
 	return tmp;
 }

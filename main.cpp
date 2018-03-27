@@ -2,6 +2,7 @@
 #include "SettingContainer.hpp"
 #include "RenderWindow.hpp"
 #include <cstdlib>
+#include <FreeImagePlus.h>
 using namespace std;
 
 int main()

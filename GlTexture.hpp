@@ -14,7 +14,7 @@ public:
 	GlTexture(textureType ntype);
 	~GlTexture();
 	static sTexture createFromDDS(textureType ntype, sAbstractFread reada);
-	static sTexture createFromTGA(textureType ntype, sAbstractFread reada);
+	static sTexture createFromIMage(textureType ntype, sAbstractFread reada);
 
 	uint32_t getWidth() { return width; }
 	uint32_t getHeight() { return height; }
