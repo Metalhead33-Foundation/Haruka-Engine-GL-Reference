@@ -69,7 +69,7 @@ sTexture GlTexture::createFromTGA(textureType ntype, sAbstractFread reada)
 	gltex->linearSize = imgSize;
 	imgSize *= byteRate;
 	std::vector<uint8_t> pixelBuffer(imgSize);
-	if((imgType & TGA_UNCOMPRESSED_COLORMAPPED) != 0)
+	if((imgType & TGA_COMPRESSED) != 0)
 	{
 		uint8_t packetHeader;
 		std::vector<uint8_t> individualPixel(byteRate);
