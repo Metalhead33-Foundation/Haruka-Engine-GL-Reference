@@ -28,7 +28,7 @@ GlTexture::~GlTexture()
 {
 	glDeleteTextures(1,&textureID);
 }
-sTexture GlTexture::createFromIMage(textureType ntype, sAbstractFread reada)
+sTexture GlTexture::createFromImage(textureType ntype, sAbstractFread reada)
 {
 	sTexture tmp = sTexture(new GlTexture(ntype));
 	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());

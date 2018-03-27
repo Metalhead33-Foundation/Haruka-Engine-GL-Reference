@@ -7,7 +7,7 @@ typedef AbstractFread* pAbstractFread;
 
 class AbstractFread {
 public:
-	virtual ~AbstractFread() {;}
+	virtual ~AbstractFread() = default;
 	virtual int64_t read(void* data, int64_t size) = 0;
 	virtual int64_t seek(int64_t position) = 0;
 	virtual int64_t tell() = 0;

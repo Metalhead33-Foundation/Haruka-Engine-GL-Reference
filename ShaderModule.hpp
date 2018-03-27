@@ -15,5 +15,5 @@ public:
 		COMPUTE_SHADER
 	};
 	virtual ShaderType getType() = 0;
-	virtual ~ShaderModule() {;}
+	virtual ~ShaderModule() = default;
 };
