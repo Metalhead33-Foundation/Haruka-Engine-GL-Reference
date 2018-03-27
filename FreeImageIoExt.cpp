@@ -4,6 +4,13 @@ unsigned ImageRead(void* buffer, unsigned size, unsigned count, void* handle);
 int ImageSeek(void* handle, long offset, int origin);
 long ImageTell(void* handle);
 FreeImageIO AbstractFreadImgio = { ImageRead, 0, ImageSeek, ImageTell };
+
+
+FlipImgExt::FlipImgExt(sAbstractFread reedaa)
+{
+	loadFromHandle(&AbstractFreadImgio,reedaa.get());
+}
+
 unsigned ImageRead(void* buffer, unsigned size, unsigned count, void* handle)
 {
 	return reinterpret_cast<pAbstractFread>(handle)->read(buffer,size*count);

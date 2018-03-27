@@ -33,8 +33,7 @@ sTexture GlTexture::createFromImage(textureType ntype, sAbstractFread reada)
 	sTexture tmp = sTexture(new GlTexture(ntype));
 	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());
 	gltex->mipMapCount = 0;
-	fipImage img;
-	img.loadFromHandle(&AbstractFreadImgio,reada.get());
+	FlipImgExt img(reada);
 	gltex->height = img.getHeight();
 	gltex->width = img.getWidth();
 	gltex->linearSize = gltex->height * gltex->width;
