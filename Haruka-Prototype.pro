@@ -12,7 +12,10 @@ SOURCES += main.cpp \
     PhysFsRead.cpp \
     StdStream.cpp \
     glad.c \
-    glad_glx.c
+    glad_glx.c \
+    GlShaderModule.cpp \
+    GlShaderProgram.cpp \
+    GlTexture.cpp
 
 HEADERS += \
     khrplatform.h \
@@ -25,4 +28,10 @@ HEADERS += \
     PhysFsRead.hpp \
     StdStream.hpp \
     glad.h \
-    glad_glx.h
+    glad_glx.h \
+    ShaderModule.hpp \
+    GlShaderModule.hpp \
+    GlShaderProgram.hpp \
+    ShaderProgram.hpp \
+    Texture.hpp \
+    GlTexture.hpp

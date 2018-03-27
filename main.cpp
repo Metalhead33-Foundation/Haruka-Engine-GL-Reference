@@ -19,7 +19,7 @@ int main()
 	window->sysWMinfo = reinterpret_cast<SDL_SysWMinfo*>(malloc(sizeof(SDL_SysWMinfo)));
 	SDL_VERSION(&window->sysWMinfo->version);
 	SDL_GetWindowWMInfo(window->window, window->sysWMinfo);
-	RenderWindow renderer(window);
+	RenderWindow* renderer = new RenderWindow(window);
 
 	int major,minor;
 	glXQueryVersion(window->sysWMinfo->info.x11.display,&major,&minor);
@@ -67,7 +67,9 @@ int main()
 		}
 		glClearColor( calaz[0], calaz[1], calaz[2], calaz[3] );
 		glClear(GL_COLOR_BUFFER_BIT);
-		renderer.switchBuffers();
+		renderer->switchBuffers();
 	} while(!exit_signal);
+	delete renderer;
+	SDL_Quit();
 	return 0;
 }
