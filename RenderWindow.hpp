@@ -2,10 +2,7 @@
 #define RENDERWINDOW_HPP
 #include "SettingContainer.hpp"
 #include <cstdlib>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <GL/gl.h>
-#include <GL/glx.h>
+#include "glad_glx.h"
 
 class RenderWindow
 {
@@ -13,6 +10,7 @@ private:
 	const sSettingContainer settings;
 	XVisualInfo* vi;
 	GLXContext cnt;
+
 public:
 	RenderWindow(sSettingContainer nsettings);
 	~RenderWindow();

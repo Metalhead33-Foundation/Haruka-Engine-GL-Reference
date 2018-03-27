@@ -3,8 +3,8 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-CONFIG(release, debug|release): LIBS += -lGL -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs
-CONFIG(debug, debug|release): LIBS += -lGL -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs
 
 SOURCES += main.cpp \
     RenderWindow.cpp \
