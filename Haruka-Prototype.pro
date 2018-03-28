@@ -18,7 +18,9 @@ SOURCES += main.cpp \
     io/FreeImageIoExt.cpp \
     io/PhysFsRead.cpp \
     io/SoundFile.cpp \
-    io/StdStream.cpp
+    io/StdStream.cpp \
+    audio/Samplerate.cpp \
+    audio/StreamedAudio.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -40,4 +42,6 @@ HEADERS += \
     io/FreeImageIoExt.hpp \
     io/PhysFsRead.hpp \
     io/SoundFile.hpp \
-    io/StdStream.hpp
+    io/StdStream.hpp \
+    audio/Samplerate.hpp \
+    audio/StreamedAudio.hpp

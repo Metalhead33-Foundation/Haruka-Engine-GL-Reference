@@ -12,7 +12,7 @@ private:
 	SF_INFO sndInfo;
 public:
 	SoundFile(sAbstractFread nhandle);
-	SoundFile(sAbstractFread nhandle, const SF_INFO& info);
+	// SoundFile(sAbstractFread nhandle, const SF_INFO& info);
 	~SoundFile();
 
 	sf_count_t seek (sf_count_t frames, int whence);
@@ -20,7 +20,7 @@ public:
 	const char* strerror();
 
 	int perror();
-	int error_str (char* str, size_t len);
+	int error_str(char* str, size_t len);
 	sf_count_t read_short (short *ptr, sf_count_t items);
 	sf_count_t read_int(int *ptr, sf_count_t items);
 	sf_count_t read_float (float *ptr, sf_count_t items);

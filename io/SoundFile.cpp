@@ -7,12 +7,12 @@ SoundFile::SoundFile(sAbstractFread nhandle)
 	sndInfo.channels;
 	sndHandle = sf_open_virtual(&sndFileIO,SFM_READ,&sndInfo,reinterpret_cast<void*>(ioHandle.get()));
 }
-SoundFile::SoundFile(sAbstractFread nhandle, const SF_INFO& info)
+/*SoundFile::SoundFile(sAbstractFread nhandle, const SF_INFO& info)
 	: ioHandle(nhandle)
 {
 	sndInfo = info;
 	sndHandle = sf_open_virtual(&sndFileIO,SFM_READ,&sndInfo,reinterpret_cast<void*>(ioHandle.get()));
-}
+}*/
 SoundFile::~SoundFile()
 {
 	sf_close(sndHandle);
