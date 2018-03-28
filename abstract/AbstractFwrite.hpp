@@ -1,9 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <memory>
-class AbstractFwrite;
-typedef std::shared_ptr<AbstractFwrite> sAbstractFwrite;
-typedef AbstractFwrite* pAbstractFwrite;
+#include "Global.hpp"
+DEFINE_CLASS(AbstractFwrite)
 
 class AbstractFwrite {
 public:

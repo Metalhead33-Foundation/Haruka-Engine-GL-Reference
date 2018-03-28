@@ -1,6 +1,6 @@
 #include <iostream>
-#include "SettingContainer.hpp"
-#include "RenderWindow.hpp"
+#include "abstract/SettingContainer.hpp"
+#include "GL/RenderWindow.hpp"
 #include <cstdlib>
 #include <FreeImagePlus.h>
 using namespace std;

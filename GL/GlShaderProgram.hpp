@@ -1,6 +1,6 @@
 #ifndef GLSHADERPROGRAM_HPP
 #define GLSHADERPROGRAM_HPP
-#include "ShaderProgram.hpp"
+#include "../abstract/ShaderProgram.hpp"
 #include "GlShaderModule.hpp"
 #include <deque>
 

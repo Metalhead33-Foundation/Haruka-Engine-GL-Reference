@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstring>
 #include <stdexcept>
-#include "FreeImageIoExt.hpp"
+#include "../io/FreeImageIoExt.hpp"
 
 #define FOURCC_DXT1 0x31545844
 #define FOURCC_DXT3 0x33545844

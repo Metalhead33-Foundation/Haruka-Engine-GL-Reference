@@ -5,7 +5,7 @@
 namespace PhysFS {
 
 
-FileHandle::FileHandle(std::string& path,OpenMode mode)
+FileHandle::FileHandle(const std::string &path, OpenMode mode)
 {
 	switch(mode)
 	{
@@ -39,15 +39,15 @@ FileHandle::~FileHandle()
 	if(!PHYSFS_close(fhandle))
 		PHYSFS_EXCEPTION;
 }
-sFileHandle FileHandle::openRead(std::string& path)
+sFileHandle FileHandle::openRead(const std::string &path)
 {
 	return sFileHandle(new FileHandle(path,PHYSFS_READ));
 }
-sFileHandle FileHandle::openWrite(std::string& path)
+sFileHandle FileHandle::openWrite(const std::string &path)
 {
 	return sFileHandle(new FileHandle(path,PHYSFS_WRITE));
 }
-sFileHandle FileHandle::openAppend(std::string& path)
+sFileHandle FileHandle::openAppend(const std::string &path)
 {
 	return sFileHandle(new FileHandle(path,PHYSFS_APPEND));
 }
@@ -70,7 +70,7 @@ std::string FileHandle::getUserDir()
 {
 	return std::string(PHYSFS_getUserDir());
 }
-std::string FileHandle::getPrefDir(std::string& org, std::string& app)
+std::string FileHandle::getPrefDir(const std::string &org, const std::string &app)
 {
 	return std::string(PHYSFS_getPrefDir(org.c_str(),app.c_str()));
 }
@@ -82,17 +82,17 @@ std::string FileHandle::getLastError()
 {
 	return std::string(PHYSFS_GetNonNerfedErrorCode());
 }
-void FileHandle::setWriteDir(std::string& newDir)
+void FileHandle::setWriteDir(const std::string &newDir)
 {
 	if(!PHYSFS_setWriteDir(newDir.c_str()))
 		PHYSFS_EXCEPTION;
 }
-void FileHandle::addToSearchPath(std::string& newDir, std::string& mountPoint, bool appendToPath)
+void FileHandle::addToSearchPath(const std::string &newDir, const std::string &mountPoint, bool appendToPath)
 {
 	if(!PHYSFS_mount(newDir.c_str(),mountPoint.c_str(),appendToPath))
 		PHYSFS_EXCEPTION;
 }
-void FileHandle::removeFromSearchPath(std::string& oldDir)
+void FileHandle::removeFromSearchPath(const std::string &oldDir)
 {
 	if(!PHYSFS_unmount(oldDir.c_str()))
 		PHYSFS_EXCEPTION;
@@ -134,7 +134,7 @@ PHYSFS_sint64 FileHandle::fileLength()
 	return PHYSFS_fileLength(fhandle);
 }
 
-stringBuffer FileHandle::enumerateFiles(std::string& path)
+stringBuffer FileHandle::enumerateFiles(const std::string &path)
 {
 	stringBuffer tmp;
 	char **rc = PHYSFS_enumerateFiles(path.c_str());
@@ -144,7 +144,7 @@ stringBuffer FileHandle::enumerateFiles(std::string& path)
 	PHYSFS_freeList(rc);
 	return tmp;
 }
-stringBuffer FileHandle::enumerateFilesFullpath(std::string& path)
+stringBuffer FileHandle::enumerateFilesFullpath(const std::string &path)
 {
 	stringBuffer tmp;
 	char **rc = PHYSFS_enumerateFiles(path.c_str());
@@ -157,7 +157,7 @@ stringBuffer FileHandle::enumerateFilesFullpath(std::string& path)
 	PHYSFS_freeList(rc);
 	return tmp;
 }
-byteBuffer FileHandle::loadFileIntoBuffer(std::string& path)
+byteBuffer FileHandle::loadFileIntoBuffer(const std::string &path)
 {
 	byteBuffer temp;
 	sFileHandle tHandle = openRead(path);
@@ -165,14 +165,14 @@ byteBuffer FileHandle::loadFileIntoBuffer(std::string& path)
 	tHandle->readBytes(temp.data(),tHandle->fileLength());
 	return temp;
 }
-std::string FileHandle::stringizeFile(std::string& path)
+std::string FileHandle::stringizeFile(const std::string &path)
 {
 	byteBuffer temp = loadFileIntoBuffer(path);
 	// temp.push_back(0);
 	// return std::string(reinterpret_cast<const char*>(temp.data()));
 	return std::string(reinterpret_cast<const char*>(temp.data()), temp.size());
 }
-PHYSFS_Stat FileHandle::stat(std::string& path)
+PHYSFS_Stat FileHandle::stat(const std::string &path)
 {
 	PHYSFS_Stat temp;
 	if(!PHYSFS_stat(path.c_str(),&temp))

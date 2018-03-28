@@ -1,7 +1,7 @@
 #ifndef GLSHADERMODULE_HPP
 #define GLSHADERMODULE_HPP
-#include "ShaderModule.hpp"
-#include "AbstractFread.hpp"
+#include "../abstract/ShaderModule.hpp"
+#include "../abstract/AbstractFread.hpp"
 #include "glad_glx.h"
 
 class GlShaderModule : public ShaderModule

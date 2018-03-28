@@ -1,8 +1,8 @@
 #ifndef GLTEXTURE_HPP
 #define GLTEXTURE_HPP
-#include "Texture.hpp"
+#include "../abstract/Texture.hpp"
 #include "glad_glx.h"
-#include "AbstractFread.hpp"
+#include "../abstract/AbstractFread.hpp"
 
 class GlTexture : public Texture
 {

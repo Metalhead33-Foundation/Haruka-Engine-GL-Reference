@@ -4,14 +4,14 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include <memory>
+#include "../abstract/Global.hpp"
+
 namespace PhysFS {
 
 typedef std::vector<uint8_t> byteBuffer;
 typedef std::vector<std::string> stringBuffer;
 
-class FileHandle;
-typedef std::shared_ptr<FileHandle> sFileHandle;
+DEFINE_CLASS(FileHandle)
 
 class FileHandle
 {
@@ -31,24 +31,24 @@ public:
 	static std::string getDirSeparator();
 	static std::string getBaseDir();
 	static std::string getUserDir();
-	static std::string getPrefDir(std::string& org, std::string& app);
+	static std::string getPrefDir(const std::string& org, const std::string& app);
 	static std::string getWriteDir();
 	static std::string getLastError();
-	static void setWriteDir(std::string& newDir);
-	static void addToSearchPath(std::string& newDir, std::string& mountPoint, bool appendToPath);
-	static void removeFromSearchPath(std::string& oldDir);
+	static void setWriteDir(const std::string& newDir);
+	static void addToSearchPath(const std::string& newDir, const std::string& mountPoint, bool appendToPath);
+	static void removeFromSearchPath(const std::string& oldDir);
 
-	static stringBuffer enumerateFiles(std::string& path);
-	static stringBuffer enumerateFilesFullpath(std::string& path);
-	static byteBuffer loadFileIntoBuffer(std::string& path);
-	static std::string stringizeFile(std::string& path);
-	static PHYSFS_Stat stat(std::string& path);
+	static stringBuffer enumerateFiles(const std::string& path);
+	static stringBuffer enumerateFilesFullpath(const std::string& path);
+	static byteBuffer loadFileIntoBuffer(const std::string& path);
+	static std::string stringizeFile(const std::string& path);
+	static PHYSFS_Stat stat(const std::string& path);
 
-	FileHandle(std::string& path,OpenMode mode);
+	FileHandle(const std::string& path,OpenMode mode);
 	~FileHandle();
-	static sFileHandle openRead(std::string& path);
-	static sFileHandle openWrite(std::string& path);
-	static sFileHandle openAppend(std::string& path);
+	static sFileHandle openRead(const std::string& path);
+	static sFileHandle openWrite(const std::string& path);
+	static sFileHandle openAppend(const std::string& path);
 
 	PHYSFS_sint64 readBytes(void * buffer, PHYSFS_uint64 len);
 	PHYSFS_sint64 writeBytes(void * buffer, PHYSFS_uint64 len);

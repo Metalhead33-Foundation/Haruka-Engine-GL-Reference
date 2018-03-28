@@ -1,7 +1,9 @@
 #ifndef FREEIMAGEIOEXT_HPP
 #define FREEIMAGEIOEXT_HPP
 #include <FreeImagePlus.h>
-#include "AbstractFread.hpp"
+#include "../abstract/AbstractFread.hpp"
+
+DEFINE_CLASS(FlipImgExt)
 class FlipImgExt : public fipImage
 {
 private:

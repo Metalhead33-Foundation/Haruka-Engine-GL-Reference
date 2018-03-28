@@ -1,9 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <memory>
-class AbstractFread;
-typedef std::shared_ptr<AbstractFread> sAbstractFread;
-typedef AbstractFread* pAbstractFread;
+#include "Global.hpp"
+DEFINE_CLASS(AbstractFread)
 
 class AbstractFread {
 public:

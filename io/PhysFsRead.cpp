@@ -1,6 +1,6 @@
 #include "PhysFsRead.hpp"
 
-PhysFsRead::PhysFsRead(std::string& str)
+PhysFsRead::PhysFsRead(const std::string &str)
 	: handle(str, PhysFS::FileHandle::PHYSFS_READ)
 {
 	;
