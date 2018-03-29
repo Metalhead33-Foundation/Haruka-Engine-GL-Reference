@@ -22,6 +22,9 @@ public:
 	uint32_t getMipMapCount() { return mipMapCount; }
 	const GLuint& getTextureId() const { return textureID; }
 	const textureType& getTextureType() const { return type; }
+
+	static const char* __stringizeType(textureType typus);
+	const char* stringizeType();
 };
 
 #endif // GLTEXTURE_HPP

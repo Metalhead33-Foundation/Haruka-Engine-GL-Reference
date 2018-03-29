@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     io/SoundFile.cpp \
     io/StdStream.cpp \
     audio/Samplerate.cpp \
-    audio/StreamedAudio.cpp
+    audio/StreamedAudio.cpp \
+    GL/GlMesh.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -44,4 +45,9 @@ HEADERS += \
     io/SoundFile.hpp \
     io/StdStream.hpp \
     audio/Samplerate.hpp \
-    audio/StreamedAudio.hpp
+    audio/StreamedAudio.hpp \
+    io/sndfile.hh \
+    audio/Audio.hpp \
+    abstract/Vertex.hpp \
+    abstract/Mesh.hpp \
+    GL/GlMesh.hpp

@@ -28,6 +28,33 @@ GlTexture::~GlTexture()
 {
 	glDeleteTextures(1,&textureID);
 }
+
+
+const char* GlTexture::__stringizeType(textureType typus)
+{
+	switch(typus)
+	{
+		case texture_diffuse:
+	return "texture_diffuse";
+	break;
+		case texture_specular:
+	return "texture_specular";
+	break;
+		case texture_normal:
+	return "texture_normal";
+	break;
+		case texture_height:
+	return "texture_height";
+	break;
+		default:
+	return "invalid_texture";
+	}
+}
+const char* GlTexture::stringizeType()
+{
+	return __stringizeType(type);
+}
+
 sTexture GlTexture::createFromImage(textureType ntype, sAbstractFread reada)
 {
 	sTexture tmp = sTexture(new GlTexture(ntype));
