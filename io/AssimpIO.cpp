@@ -1,7 +1,7 @@
 #include "AssimpIO.hpp"
 
 
-AssimpIOStream::AssimpIOStream(PhysFS::sFileHandle nhandle)
+AssimpIOStream::AssimpIOStream(sAbstractFIO nhandle)
 	: handle(nhandle)
 {
 	;
@@ -12,7 +12,7 @@ AssimpIOStream::~AssimpIOStream(void)
 }
 size_t AssimpIOStream::Read( void* pvBuffer, size_t pSize, size_t pCount)
 {
-	handle->readBytes(pvBuffer,pSize * pCount);
+	handle->read(pvBuffer,pSize * pCount);
 }
 size_t AssimpIOStream::Write( const void* pvBuffer, size_t pSize, size_t pCount)
 {
@@ -31,7 +31,7 @@ aiReturn AssimpIOStream::Seek( size_t pOffset, aiOrigin pOrigin)
 		return aiReturn_SUCCESS;
 		break;
 	case aiOrigin_END:
-		handle->seek(handle->fileLength() - pOffset);
+		handle->seek(handle->size() - pOffset);
 		return aiReturn_SUCCESS;
 		break;
 	default:
@@ -44,35 +44,35 @@ size_t AssimpIOStream::Tell() const
 }
 size_t AssimpIOStream::FileSize() const
 {
-	return handle->fileLength();
+	return handle->size();
 }
 void AssimpIOStream::Flush()
 {
 	;
 }
 
-AssimpIOSystem::AssimpIOSystem()
+AssimpPhysFS::AssimpPhysFS()
 {
 	;
 }
-AssimpIOSystem::~AssimpIOSystem()
+AssimpPhysFS::~AssimpPhysFS()
 {
 	;
 }
-bool AssimpIOSystem::Exists( const std::string& pFile) const
+bool AssimpPhysFS::Exists( const std::string& pFile) const
 {
 	return PHYSFS_exists(pFile.c_str());
 }
-char AssimpIOSystem::GetOsSeparator() const
+char AssimpPhysFS::GetOsSeparator() const
 {
 	return PHYSFS_getDirSeparator()[0];
 }
-Assimp::IOStream* AssimpIOSystem::Open( const std::string& pFile, const std::string& pMode)
+Assimp::IOStream* AssimpPhysFS::Open( const std::string& pFile, const std::string& pMode)
 {
 	if(Exists(pFile)) return new AssimpIOStream(PhysFS::FileHandle::openRead(pFile));
 	else return 0;
 }
-void AssimpIOSystem::Close(Assimp::IOStream* pFile)
+void AssimpPhysFS::Close(Assimp::IOStream* pFile)
 {
 	delete pFile;
 }

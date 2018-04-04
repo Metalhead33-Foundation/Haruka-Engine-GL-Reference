@@ -1,4 +1,4 @@
-#include "FileHandle.hpp"
+#include "PhysFsFileHandle.hpp"
 #include <stdexcept>
 #define PHYSFS_GetNonNerfedErrorCode() PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())
 #define PHYSFS_EXCEPTION throw std::runtime_error(PHYSFS_GetNonNerfedErrorCode())
@@ -39,17 +39,17 @@ FileHandle::~FileHandle()
 	if(!PHYSFS_close(fhandle))
 		PHYSFS_EXCEPTION;
 }
-sFileHandle FileHandle::openRead(const std::string &path)
+sAbstractFIO FileHandle::openRead(const std::string &path)
 {
-	return sFileHandle(new FileHandle(path,PHYSFS_READ));
+	return sAbstractFIO(new FileHandle(path,PHYSFS_READ));
 }
-sFileHandle FileHandle::openWrite(const std::string &path)
+sAbstractFIO FileHandle::openWrite(const std::string &path)
 {
-	return sFileHandle(new FileHandle(path,PHYSFS_WRITE));
+	return sAbstractFIO(new FileHandle(path,PHYSFS_WRITE));
 }
-sFileHandle FileHandle::openAppend(const std::string &path)
+sAbstractFIO FileHandle::openAppend(const std::string &path)
 {
-	return sFileHandle(new FileHandle(path,PHYSFS_APPEND));
+	return sAbstractFIO(new FileHandle(path,PHYSFS_APPEND));
 }
 
 void FileHandle::init(const char *argv0)
@@ -97,39 +97,37 @@ void FileHandle::removeFromSearchPath(const std::string &oldDir)
 	if(!PHYSFS_unmount(oldDir.c_str()))
 		PHYSFS_EXCEPTION;
 }
-PHYSFS_sint64 FileHandle::readBytes(void * buffer, PHYSFS_uint64 len)
+int64_t FileHandle::read(void* data, int64_t size)
 {
-	PHYSFS_sint64 temp = PHYSFS_readBytes(fhandle, buffer, len);
+	PHYSFS_sint64 temp = PHYSFS_readBytes(fhandle, data, size);
 	if(temp == -1)
 		PHYSFS_EXCEPTION;
-	else return temp;
-
+	else return int64_t(temp);
 }
-PHYSFS_sint64 FileHandle::writeBytes(void * buffer, PHYSFS_uint64 len)
+int64_t FileHandle::write(void* data, int64_t size)
 {
-	PHYSFS_sint64 temp = PHYSFS_readBytes(fhandle, buffer, len);
+	PHYSFS_sint64 temp = PHYSFS_readBytes(fhandle, data, size);
 	if(temp == -1)
 		PHYSFS_EXCEPTION;
-	else return temp;
+	else return int64_t(temp);
 }
-PHYSFS_sint64 FileHandle::tell()
+int64_t FileHandle::tell()
 {
 	PHYSFS_sint64 temp = PHYSFS_tell(fhandle);
 	if(temp == -1)
 		PHYSFS_EXCEPTION;
-	else return temp;
+	else return int64_t(temp);
 }
-void FileHandle::seek(PHYSFS_uint64 pos)
+int64_t FileHandle::seek(int64_t pos)
 {
-	if(!PHYSFS_seek(fhandle,pos))
-		PHYSFS_EXCEPTION;
+	return int64_t(PHYSFS_seek(fhandle,pos));
 }
-void FileHandle::flush()
+/*void FileHandle::flush()
 {
 	if(!PHYSFS_flush(fhandle))
 		PHYSFS_EXCEPTION;
-}
-PHYSFS_sint64 FileHandle::fileLength()
+}*/
+int64_t FileHandle::size()
 {
 	return PHYSFS_fileLength(fhandle);
 }
@@ -160,9 +158,9 @@ stringBuffer FileHandle::enumerateFilesFullpath(const std::string &path)
 byteBuffer FileHandle::loadFileIntoBuffer(const std::string &path)
 {
 	byteBuffer temp;
-	sFileHandle tHandle = openRead(path);
-	temp.resize(tHandle->fileLength());
-	tHandle->readBytes(temp.data(),tHandle->fileLength());
+	sAbstractFIO tHandle = openRead(path);
+	temp.resize(tHandle->size());
+	tHandle->read(temp.data(),tHandle->size());
 	return temp;
 }
 std::string FileHandle::stringizeFile(const std::string &path)
@@ -178,6 +176,12 @@ PHYSFS_Stat FileHandle::stat(const std::string &path)
 	if(!PHYSFS_stat(path.c_str(),&temp))
 		PHYSFS_EXCEPTION;
 	else return temp;
+}
+char FileHandle::getc()
+{
+	char tmp;
+	read(&tmp,sizeof(char));
+	return tmp;
 }
 
 }

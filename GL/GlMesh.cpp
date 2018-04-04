@@ -1,10 +1,10 @@
 #include "GlMesh.hpp"
 
-GlMesh::GlMesh(VertexVector& vertices, IndexVector& indices, TextureVector& textures)
+GlMesh::GlMesh(ConstructorReference constr)
 {
-	this->vertices = vertices;
-	this->indices = indices;
-	this->textures = textures;
+	this->vertices = constr.vec;
+	this->indices = constr.ind;
+	this->textures = *(constr.tex);
 	setupMesh();
 }
 void GlMesh::draw(sShaderProgram shader)
@@ -24,7 +24,7 @@ void GlMesh::draw(sShaderProgram shader)
 	}
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indices->size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	// always good practice to set everything back to defaults once configured.
@@ -55,10 +55,10 @@ void GlMesh::setupMesh()
 	// A great thing about structs is that their memory layout is sequential for all its items.
 	// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
 	// again translates to 3/2 floats which translates to a byte array.
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * Vertex::vertexSize(), vertices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices->size() * Vertex::vertexSize(), vertices->data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(unsigned int), indices->data(), GL_STATIC_DRAW);
 
 	// set the vertex attribute pointers
 	// vertex Positions
@@ -78,4 +78,6 @@ void GlMesh::setupMesh()
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),reinterpret_cast<void*>(Vertex::getBitangentOffset() ) );
 
 	glBindVertexArray(0);
+	vertices = 0;
+	indices = 0;
 }

@@ -14,14 +14,13 @@ SOURCES += main.cpp \
     GL/GlTexture.cpp \
     GL/RenderWindow.cpp \
     io/AssimpIO.cpp \
-    io/FileHandle.cpp \
     io/FreeImageIoExt.cpp \
-    io/PhysFsRead.cpp \
     io/SoundFile.cpp \
     io/StdStream.cpp \
     audio/Samplerate.cpp \
     audio/StreamedAudio.cpp \
-    GL/GlMesh.cpp
+    GL/GlMesh.cpp \
+    io/PhysFsFileHandle.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -30,8 +29,6 @@ HEADERS += \
     GL/GlShaderProgram.hpp \
     GL/GlTexture.hpp \
     GL/RenderWindow.hpp \
-    abstract/AbstractFread.hpp \
-    abstract/AbstractFwrite.hpp \
     abstract/Texture.hpp \
     abstract/ShaderModule.hpp \
     abstract/ShaderProgram.hpp \
@@ -39,9 +36,7 @@ HEADERS += \
     abstract/SettingContainer.hpp \
     abstract/Global.hpp \
     io/AssimpIO.hpp \
-    io/FileHandle.hpp \
     io/FreeImageIoExt.hpp \
-    io/PhysFsRead.hpp \
     io/SoundFile.hpp \
     io/StdStream.hpp \
     audio/Samplerate.hpp \
@@ -50,4 +45,7 @@ HEADERS += \
     audio/Audio.hpp \
     abstract/Vertex.hpp \
     abstract/Mesh.hpp \
-    GL/GlMesh.hpp
+    GL/GlMesh.hpp \
+    abstract/Model.hpp \
+    io/PhysFsFileHandle.hpp \
+    abstract/AbstractFIO.hpp

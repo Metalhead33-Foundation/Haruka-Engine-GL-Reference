@@ -55,7 +55,7 @@ const char* GlTexture::stringizeType()
 	return __stringizeType(type);
 }
 
-sTexture GlTexture::createFromImage(textureType ntype, sAbstractFread reada)
+sTexture GlTexture::createFromImage(textureType ntype, sAbstractFIO reada)
 {
 	sTexture tmp = sTexture(new GlTexture(ntype));
 	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());
@@ -83,7 +83,7 @@ sTexture GlTexture::createFromImage(textureType ntype, sAbstractFread reada)
 	return tmp;
 }
 
-sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFread reada)
+sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFIO reada)
 {
 	sTexture tmp = sTexture(new GlTexture(ntype));
 	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include "../abstract/Global.hpp"
+#include "../abstract/AbstractFIO.hpp"
 
 namespace PhysFS {
 
@@ -13,7 +13,7 @@ typedef std::vector<std::string> stringBuffer;
 
 DEFINE_CLASS(FileHandle)
 
-class FileHandle
+class FileHandle : public AbstractFIO
 {
 public:
 	enum OpenMode
@@ -24,6 +24,7 @@ public:
 	};
 private:
 	PHYSFS_File* fhandle;
+	FileHandle(const std::string& path,OpenMode mode);
 public:
 	static void init(const char *argv0);
 	static void deInit();
@@ -44,18 +45,17 @@ public:
 	static std::string stringizeFile(const std::string& path);
 	static PHYSFS_Stat stat(const std::string& path);
 
-	FileHandle(const std::string& path,OpenMode mode);
 	~FileHandle();
-	static sFileHandle openRead(const std::string& path);
-	static sFileHandle openWrite(const std::string& path);
-	static sFileHandle openAppend(const std::string& path);
+	static sAbstractFIO openRead(const std::string& path);
+	static sAbstractFIO openWrite(const std::string& path);
+	static sAbstractFIO openAppend(const std::string& path);
 
-	PHYSFS_sint64 readBytes(void * buffer, PHYSFS_uint64 len);
-	PHYSFS_sint64 writeBytes(void * buffer, PHYSFS_uint64 len);
-	PHYSFS_sint64 tell();
-	void seek(PHYSFS_uint64 pos);
-	void flush();
-	PHYSFS_sint64 fileLength();
+	int64_t read(void* data, int64_t size);
+	int64_t seek(int64_t position);
+	int64_t tell();
+	int64_t size();
+	int64_t write(void* data, int64_t size);
+	char getc();
 };
 
 }

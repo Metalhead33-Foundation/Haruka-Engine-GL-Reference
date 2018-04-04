@@ -6,7 +6,7 @@ long ImageTell(void* handle);
 FreeImageIO AbstractFreadImgio = { ImageRead, 0, ImageSeek, ImageTell };
 
 
-FlipImgExt::FlipImgExt(sAbstractFread reedaa)
+FlipImgExt::FlipImgExt(sAbstractFIO reedaa)
 	: fhandle(reedaa)
 {
 	loadFromHandle(&AbstractFreadImgio,reinterpret_cast<void*>(fhandle.get()));
@@ -14,11 +14,11 @@ FlipImgExt::FlipImgExt(sAbstractFread reedaa)
 
 unsigned ImageRead(void* buffer, unsigned size, unsigned count, void* handle)
 {
-	return reinterpret_cast<pAbstractFread>(handle)->read(buffer,size*count);
+	return reinterpret_cast<pAbstractFIO>(handle)->read(buffer,size*count);
 }
 int ImageSeek(void* handle, long offset, int origin)
 {
-	pAbstractFread chandle = reinterpret_cast<pAbstractFread>(handle);
+	pAbstractFIO chandle = reinterpret_cast<pAbstractFIO>(handle);
 	switch(origin)
 	{
 		case SEEK_SET:
@@ -36,5 +36,5 @@ int ImageSeek(void* handle, long offset, int origin)
 }
 long ImageTell(void* handle)
 {
-	return reinterpret_cast<pAbstractFread>(handle)->tell();
+	return reinterpret_cast<pAbstractFIO>(handle)->tell();
 }

@@ -3,18 +3,18 @@
 #include <assimp/IOStream.hpp>
 #include <assimp/IOSystem.hpp>
 #include "../abstract/Global.hpp"
-#include "FileHandle.hpp"
+#include "PhysFsFileHandle.hpp"
 
 DEFINE_CLASS(AssimpIOStream)
 DEFINE_CLASS(AssimpIOSystem)
 
 class AssimpIOStream : public Assimp::IOStream
 {
-	friend class AssimpIOSystem;
+	friend class AssimpPhysFS;
 private:
-	const PhysFS::sFileHandle handle;
+	const sAbstractFIO handle;
 public:
-	AssimpIOStream(PhysFS::sFileHandle nhandle);
+	AssimpIOStream(sAbstractFIO nhandle);
 	~AssimpIOStream(void);
 	size_t Read( void* pvBuffer, size_t pSize, size_t pCount);
 	size_t Write( const void* pvBuffer, size_t pSize, size_t pCount);
@@ -23,11 +23,11 @@ public:
 	size_t FileSize() const;
 	void Flush();
 };
-class AssimpIOSystem : public Assimp::IOSystem
+class AssimpPhysFS : public Assimp::IOSystem
 {
 public:
-	AssimpIOSystem();
-	~AssimpIOSystem();
+	AssimpPhysFS();
+	~AssimpPhysFS();
 	bool Exists( const std::string& pFile) const;
 	char GetOsSeparator() const;
 	Assimp::IOStream* Open( const std::string& pFile, const std::string& pMode);

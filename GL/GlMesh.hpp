@@ -10,7 +10,7 @@ private:
 	GLuint VAO, VBO, EBO;
 	void setupMesh();
 public:
-	GlMesh(VertexVector& vertices, IndexVector& indices, TextureVector& textures);
+	GlMesh(ConstructorReference constr);
 	const GLuint& getVAO() const;
 	const GLuint& getVBO() const;
 	const GLuint& getEBO() const;

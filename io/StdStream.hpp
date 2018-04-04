@@ -7,11 +7,10 @@
 
 #ifndef STDSTREAM_HPP
 #define STDSTREAM_HPP
-#include "../abstract/AbstractFread.hpp"
-#include "../abstract/AbstractFwrite.hpp"
+#include "../abstract/AbstractFIO.hpp"
 #include <cstdio>
 #include <string>
-class StdStream : public AbstractFread, public AbstractFwrite {
+class StdStream : public AbstractFIO {
 public:
 	StdStream();
 	StdStream(std::string newpath, bool ro = false);
@@ -21,16 +20,14 @@ public:
 	virtual int64_t tell();
 	virtual int64_t size();
 	virtual int64_t write(void* data, int64_t size);
-	virtual int64_t rel_rewind(int64_t position);
-	virtual int64_t abs_rewind(int64_t position);
 	virtual char getc();
 	std::string GetPath();
 	void close();
 	bool IsActive();
 	bool open(std::string newpath, bool ro = false);
 
-	static sAbstractFread createReader(std::string newpath);
-	static sAbstractFwrite createWriter(std::string newpath);
+	static sAbstractFIO createReader(std::string newpath);
+	static sAbstractFIO createWriter(std::string newpath);
 private:
 	std::string path;
 	FILE* chandle;

@@ -63,18 +63,6 @@ int64_t StdStream::write(void* data, int64_t size)
 	else return (int64_t)fwrite(data,1,size,chandle);
 }
 
-int64_t StdStream::rel_rewind(int64_t position)
-{
-	if(!active) return -1;
-	else return (int64_t)fseek(chandle,position,SEEK_CUR);
-}
-
-int64_t StdStream::abs_rewind(int64_t position)
-{
-	if(!active) return -1;
-	else return (int64_t)fseek(chandle,position,SEEK_SET);
-}
-
 std::string StdStream::GetPath()
 {
 	return path;
@@ -119,11 +107,11 @@ char StdStream::getc()
 {
 	return fgetc(chandle);
 }
-sAbstractFread StdStream::createReader(std::string newpath)
+sAbstractFIO StdStream::createReader(std::string newpath)
 {
-	return sAbstractFread(new StdStream(newpath,true));
+	return sAbstractFIO(new StdStream(newpath,true));
 }
-sAbstractFwrite StdStream::createWriter(std::string newpath)
+sAbstractFIO StdStream::createWriter(std::string newpath)
 {
-	return sAbstractFwrite(new StdStream(newpath,false));
+	return sAbstractFIO(new StdStream(newpath,false));
 }

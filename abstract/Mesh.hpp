@@ -15,9 +15,26 @@ public:
 	typedef IndexVector::iterator IndexIterator;
 	typedef std::vector<sTexture> TextureVector;
 	typedef TextureVector::iterator TextureIterator;
+
+	typedef std::shared_ptr<VertexVector> sVertexVector;
+	typedef std::shared_ptr<IndexVector> sIndexVector;
+	typedef std::shared_ptr<TextureVector> sTextureVector;
+
+	struct MeshConstructor
+	{
+		sVertexVector vec;
+		sIndexVector ind;
+		sTextureVector tex;
+	};
+	typedef MeshConstructor& ConstructorReference;
+	typedef std::vector<MeshConstructor> ConstructorArray;
+	typedef std::vector<MeshConstructor>::iterator ConstructorIterator;
+	typedef ConstructorArray& ConstructorArrayReference;
+	typedef std::shared_ptr<ConstructorArray> ConstructorArrayPointer;
+
 protected:
-	VertexVector vertices;
-	IndexVector indices;
+	sVertexVector vertices;
+	sIndexVector indices;
 	TextureVector textures;
 public:
 	virtual ~Mesh() = default;

@@ -14,7 +14,7 @@ GlShaderModule::~GlShaderModule()
 {
 	glDeleteShader(shaderID); // Don't leak the shader.
 }
-GlShaderModule::GlShaderModule(ShaderType ntype, sAbstractFread reada)
+GlShaderModule::GlShaderModule(ShaderType ntype, sAbstractFIO reada)
 	: type(ntype)
 {
 	switch(type) {

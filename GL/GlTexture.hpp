@@ -2,7 +2,7 @@
 #define GLTEXTURE_HPP
 #include "../abstract/Texture.hpp"
 #include "glad_glx.h"
-#include "../abstract/AbstractFread.hpp"
+#include "../abstract/AbstractFIO.hpp"
 
 class GlTexture : public Texture
 {
@@ -13,8 +13,8 @@ private:
 public:
 	GlTexture(textureType ntype);
 	~GlTexture();
-	static sTexture createFromDDS(textureType ntype, sAbstractFread reada);
-	static sTexture createFromImage(textureType ntype, sAbstractFread reada);
+	static sTexture createFromDDS(textureType ntype, sAbstractFIO reada);
+	static sTexture createFromImage(textureType ntype, sAbstractFIO reada);
 
 	uint32_t getWidth() { return width; }
 	uint32_t getHeight() { return height; }
