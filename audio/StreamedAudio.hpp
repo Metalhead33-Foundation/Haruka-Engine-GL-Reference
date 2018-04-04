@@ -3,6 +3,7 @@
 #include "Samplerate.hpp"
 #include "../io/SoundFile.hpp"
 #include "Audio.hpp"
+namespace Audio {
 
 DEFINE_CLASS(StreamedAudio)
 class StreamedAudio
@@ -20,4 +21,5 @@ public:
 	virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate);
 };
 
+}
 #endif // STREAMEDAUDIO_HPP

@@ -7,12 +7,12 @@
 class RenderWindow
 {
 private:
-	const sSettingContainer settings;
+	const Abstract::sSettingContainer settings;
 	XVisualInfo* vi;
 	GLXContext cnt;
 
 public:
-	RenderWindow(sSettingContainer nsettings);
+	RenderWindow(Abstract::sSettingContainer nsettings);
 	~RenderWindow();
 	void switchBuffers();
 	static GLint att[];

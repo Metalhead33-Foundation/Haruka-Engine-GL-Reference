@@ -39,17 +39,17 @@ FileHandle::~FileHandle()
 	if(!PHYSFS_close(fhandle))
 		PHYSFS_EXCEPTION;
 }
-sAbstractFIO FileHandle::openRead(const std::string &path)
+Abstract::sFIO FileHandle::openRead(const std::string &path)
 {
-	return sAbstractFIO(new FileHandle(path,PHYSFS_READ));
+	return Abstract::sFIO(new FileHandle(path,PHYSFS_READ));
 }
-sAbstractFIO FileHandle::openWrite(const std::string &path)
+Abstract::sFIO FileHandle::openWrite(const std::string &path)
 {
-	return sAbstractFIO(new FileHandle(path,PHYSFS_WRITE));
+	return Abstract::sFIO(new FileHandle(path,PHYSFS_WRITE));
 }
-sAbstractFIO FileHandle::openAppend(const std::string &path)
+Abstract::sFIO FileHandle::openAppend(const std::string &path)
 {
-	return sAbstractFIO(new FileHandle(path,PHYSFS_APPEND));
+	return Abstract::sFIO(new FileHandle(path,PHYSFS_APPEND));
 }
 
 void FileHandle::init(const char *argv0)
@@ -158,7 +158,7 @@ stringBuffer FileHandle::enumerateFilesFullpath(const std::string &path)
 byteBuffer FileHandle::loadFileIntoBuffer(const std::string &path)
 {
 	byteBuffer temp;
-	sAbstractFIO tHandle = openRead(path);
+	Abstract::sFIO tHandle = openRead(path);
 	temp.resize(tHandle->size());
 	tHandle->read(temp.data(),tHandle->size());
 	return temp;

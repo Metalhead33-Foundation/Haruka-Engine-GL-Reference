@@ -1,4 +1,5 @@
 #include "audio/Samplerate.hpp"
+namespace Audio {
 
 Samplerate::Samplerate( int converter_type, int channels ) {
 	m_state = src_new( converter_type, channels, &m_error );
@@ -17,3 +18,4 @@ int Samplerate::setRatio( double new_ratio ) {
 }
 
 int Samplerate::lastError( ) { return m_error; }
+}

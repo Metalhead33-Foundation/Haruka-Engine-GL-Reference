@@ -5,6 +5,8 @@
 #include "Texture.hpp"
 #include <vector>
 
+namespace Abstract {
+
 DEFINE_CLASS(Mesh)
 class Mesh
 {
@@ -41,4 +43,5 @@ public:
 	virtual void draw(sShaderProgram shader) = 0;
 };
 
+}
 #endif // MESH_HPP

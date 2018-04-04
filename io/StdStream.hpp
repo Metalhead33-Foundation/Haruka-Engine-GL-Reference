@@ -7,10 +7,10 @@
 
 #ifndef STDSTREAM_HPP
 #define STDSTREAM_HPP
-#include "../abstract/AbstractFIO.hpp"
+#include "../abstract/FIO.hpp"
 #include <cstdio>
 #include <string>
-class StdStream : public AbstractFIO {
+class StdStream : public Abstract::FIO {
 public:
 	StdStream();
 	StdStream(std::string newpath, bool ro = false);
@@ -26,8 +26,8 @@ public:
 	bool IsActive();
 	bool open(std::string newpath, bool ro = false);
 
-	static sAbstractFIO createReader(std::string newpath);
-	static sAbstractFIO createWriter(std::string newpath);
+	static Abstract::sFIO createReader(std::string newpath);
+	static Abstract::sFIO createWriter(std::string newpath);
 private:
 	std::string path;
 	FILE* chandle;

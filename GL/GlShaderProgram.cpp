@@ -1,38 +1,41 @@
 #include "GlShaderProgram.hpp"
 #include <stdexcept>
+namespace Gl {
 
-sShaderProgram GlShaderProgram::createShaderProgram()
+Abstract::sShaderProgram ShaderProgram::createShaderProgram()
 {
-	return sShaderProgram(new GlShaderProgram());
+	return Abstract::sShaderProgram(new ShaderProgram());
 }
-GlShaderProgram::GlShaderProgram()
+ShaderProgram::ShaderProgram()
 {
 	shaderID = glCreateProgram();
 }
-GlShaderProgram::~GlShaderProgram()
+ShaderProgram::~ShaderProgram()
 {
 	glDeleteProgram(shaderID);
 }
-const GLuint& GlShaderProgram::getShaderID() const
+const GLuint& ShaderProgram::getShaderID() const
 {
 	return shaderID;
 }
-void GlShaderProgram::pushModule(sShaderModule mod)
+void ShaderProgram::pushModule(Abstract::sShaderModule mod)
 {
 	modules.push_back(mod);
 }
-void GlShaderProgram::popModule()
+void ShaderProgram::popModule()
 {
 	modules.pop_back();
 }
-bool GlShaderProgram::linkShaders()
+bool ShaderProgram::linkShaders()
 {
 	for(ModuleIterator it = modules.begin(); it != modules.end(); ++it)
 	{
-		GlShaderModule* mod = dynamic_cast<GlShaderModule*>(it->get());
+		ShaderModule* mod = dynamic_cast<ShaderModule*>(it->get());
 		if(!mod) return false;
 		else glAttachShader(shaderID,mod->getShaderID());
 	}
 	glLinkProgram(shaderID);
 	return true;
+}
+
 }

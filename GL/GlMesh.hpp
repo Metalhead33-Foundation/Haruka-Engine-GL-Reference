@@ -4,18 +4,21 @@
 #include "GlTexture.hpp"
 #include "GlShaderProgram.hpp"
 
-class GlMesh : public Mesh
+namespace Gl {
+
+class Mesh : public Abstract::Mesh
 {
 private:
 	GLuint VAO, VBO, EBO;
 	void setupMesh();
-	GlMesh(ConstructorReference constr);
+	Mesh(ConstructorReference constr);
 public:
-	static sMesh createMesh(ConstructorReference constr);
+	static Abstract::sMesh createMesh(ConstructorReference constr);
 	const GLuint& getVAO() const;
 	const GLuint& getVBO() const;
 	const GLuint& getEBO() const;
-	void draw(sShaderProgram shader);
+	void draw(Abstract::sShaderProgram shader);
 };
 
+}
 #endif // GLMESH_HPP

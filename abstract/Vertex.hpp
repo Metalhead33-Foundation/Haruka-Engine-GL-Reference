@@ -2,7 +2,6 @@
 #define VERTEX_HPP
 #include "Global.hpp"
 #include <glm/glm.hpp>
-
 DEFINE_STRUCT(Vertex)
 struct Vertex {
 	// position

@@ -1,4 +1,5 @@
 #include "StreamedAudio.hpp"
+namespace Audio {
 
 StreamedAudio::StreamedAudio(sSoundFile src)
 	: source(src)
@@ -35,4 +36,6 @@ size_t StreamedAudio::generateAudio(std::vector<float>& target, int channels, in
 			return dat.output_frames * channels;
 		}
 	}
+}
+
 }

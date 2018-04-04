@@ -1,24 +1,25 @@
 #include "GlShaderModule.hpp"
 #include <stdexcept>
 #include <vector>
+namespace Gl {
 
-const GLuint& GlShaderModule::getShaderID() const
+const GLuint& ShaderModule::getShaderID() const
 {
 	return shaderID;
 }
-GlShaderModule::ShaderType GlShaderModule::getType()
+ShaderModule::ShaderType ShaderModule::getType()
 {
 	return type;
 }
-GlShaderModule::~GlShaderModule()
+ShaderModule::~ShaderModule()
 {
 	glDeleteShader(shaderID); // Don't leak the shader.
 }
-sShaderModule GlShaderModule::createShaderModule(ShaderType ntype, sAbstractFIO reada)
+Abstract::sShaderModule ShaderModule::createShaderModule(ShaderType ntype, Abstract::sFIO reada)
 {
-	return sShaderModule(new GlShaderModule(ntype, reada)) ;
+	return Abstract::sShaderModule(new ShaderModule(ntype, reada)) ;
 }
-GlShaderModule::GlShaderModule(ShaderType ntype, sAbstractFIO reada)
+ShaderModule::ShaderModule(ShaderType ntype, Abstract::sFIO reada)
 	: type(ntype)
 {
 	switch(type) {
@@ -69,4 +70,6 @@ GlShaderModule::GlShaderModule(ShaderType ntype, sAbstractFIO reada)
 		glDeleteShader(shaderID); // Don't leak the shader.
 		throw std::runtime_error(errorLog);
 	}
+}
+
 }

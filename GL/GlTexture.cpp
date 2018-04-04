@@ -3,6 +3,7 @@
 #include <cstring>
 #include <stdexcept>
 #include "../io/FreeImageIoExt.hpp"
+namespace Gl {
 
 #define FOURCC_DXT1 0x31545844
 #define FOURCC_DXT3 0x33545844
@@ -19,18 +20,18 @@
 #define TGA_RUNLENGTH_TRUECOLOR (TGA_TRUECOLOUR | TGA_COMPRESSED)
 #define TGA_RUNLENGTH_GREYSCALE (TGA_GREYSCALE | TGA_COMPRESSED)
 
-GlTexture::GlTexture(textureType ntype)
+Texture::Texture(textureType ntype)
 	: type(ntype)
 {
 	glGenTextures(1, &textureID);
 }
-GlTexture::~GlTexture()
+Texture::~Texture()
 {
 	glDeleteTextures(1,&textureID);
 }
 
 
-const char* GlTexture::__stringizeType(textureType typus)
+const char* Texture::__stringizeType(textureType typus)
 {
 	switch(typus)
 	{
@@ -50,15 +51,15 @@ const char* GlTexture::__stringizeType(textureType typus)
 	return "invalid_texture";
 	}
 }
-const char* GlTexture::stringizeType()
+const char* Texture::stringizeType()
 {
 	return __stringizeType(type);
 }
 
-sTexture GlTexture::createFromImage(textureType ntype, sAbstractFIO reada)
+Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO reada)
 {
-	sTexture tmp = sTexture(new GlTexture(ntype));
-	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());
+	Abstract::sTexture tmp = Abstract::sTexture(new Texture(ntype));
+	Texture* gltex = dynamic_cast<Texture*>(tmp.get());
 	gltex->mipMapCount = 0;
 	FlipImgExt img(reada);
 	gltex->height = img.getHeight();
@@ -83,16 +84,16 @@ sTexture GlTexture::createFromImage(textureType ntype, sAbstractFIO reada)
 	return tmp;
 }
 
-sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFIO reada)
+Abstract::sTexture Texture::createFromDDS(textureType ntype, Abstract::sFIO reada)
 {
-	sTexture tmp = sTexture(new GlTexture(ntype));
-	GlTexture* gltex = dynamic_cast<GlTexture*>(tmp.get());
+	Abstract::sTexture tmp = Abstract::sTexture(new Texture(ntype));
+	Texture* gltex = dynamic_cast<Texture*>(tmp.get());
 	std::vector<uint8_t> header(124);
 	std::vector<char> mword(4);
 	reada->read(mword.data(),4);
 	if (strncmp(mword.data() , "DDS ", 4) != 0)
 	{
-		return sTexture();
+		return Abstract::sTexture();
 	}
 	reada->read(header.data(),124);
 	gltex->height = *reinterpret_cast<uint32_t*>(&header[8]);
@@ -120,7 +121,7 @@ sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFIO reada)
 		format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 		break;
 	default:
-		return sTexture();
+		return Abstract::sTexture();
 	}
 
 	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
@@ -141,4 +142,6 @@ sTexture GlTexture::createFromDDS(textureType ntype, sAbstractFIO reada)
 	}
 
 	return tmp;
+}
+
 }

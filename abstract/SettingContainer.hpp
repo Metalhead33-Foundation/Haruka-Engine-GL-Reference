@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 
+namespace Abstract {
+
 DEFINE_STRUCT(SettingContainer)
 struct SettingContainer {
 	SDL_Window* window;
@@ -10,3 +12,5 @@ struct SettingContainer {
 	int w, h;
 	const char *title;
 };
+
+}

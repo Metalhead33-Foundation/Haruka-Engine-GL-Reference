@@ -10,7 +10,7 @@ int main()
 	// cout << "Hello World!" << endl;
 	bool exit_signal = false;
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
-	sSettingContainer window = sSettingContainer(new SettingContainer{ 0, 0, 640, 400, "Hello Worold!" });
+	Abstract::sSettingContainer window = Abstract::sSettingContainer(new Abstract::SettingContainer{ 0, 0, 640, 400, "Hello Worold!" });
 	window->window = SDL_CreateWindow(window->title,
 									 SDL_WINDOWPOS_CENTERED,
 									 SDL_WINDOWPOS_CENTERED,

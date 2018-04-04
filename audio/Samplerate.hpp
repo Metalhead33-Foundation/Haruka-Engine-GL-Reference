@@ -2,6 +2,7 @@
 #define SAMPLERATE_HPP
 #include <samplerate.h>
 #include "../abstract/Global.hpp"
+namespace Audio {
 
 DEFINE_CLASS(Samplerate)
 class Samplerate {
@@ -22,4 +23,5 @@ class Samplerate {
 	int lastError( );
 };
 
+}
 #endif // SAMPLERATE_HPP

@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.hpp"
+namespace Abstract {
 
 DEFINE_CLASS(ShaderModule)
 class ShaderModule
@@ -17,3 +18,5 @@ public:
 	virtual ShaderType getType() = 0;
 	virtual ~ShaderModule() = default;
 };
+
+}

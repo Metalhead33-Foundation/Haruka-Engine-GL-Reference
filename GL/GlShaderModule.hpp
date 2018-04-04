@@ -1,20 +1,22 @@
 #ifndef GLSHADERMODULE_HPP
 #define GLSHADERMODULE_HPP
 #include "../abstract/ShaderModule.hpp"
-#include "../abstract/AbstractFIO.hpp"
+#include "../abstract/FIO.hpp"
 #include "glad_glx.h"
 
-class GlShaderModule : public ShaderModule
+namespace Gl {
+class ShaderModule : public Abstract::ShaderModule
 {
 private:
 	const ShaderType type;
 	GLuint shaderID;
-	GlShaderModule(ShaderType ntype, sAbstractFIO reada);
+	ShaderModule(ShaderType ntype, Abstract::sFIO reada);
 public:
-	static sShaderModule createShaderModule(ShaderType ntype, sAbstractFIO reada);
-	~GlShaderModule();
+	static Abstract::sShaderModule createShaderModule(ShaderType ntype, Abstract::sFIO reada);
+	~ShaderModule();
 	const GLuint& getShaderID() const;
 	ShaderType getType();
 };
+}
 
 #endif // GLSHADERMODULE_HPP

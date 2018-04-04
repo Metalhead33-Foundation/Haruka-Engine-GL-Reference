@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.hpp"
+namespace Abstract {
 
 DEFINE_CLASS(Texture)
 class Texture
@@ -19,3 +20,5 @@ public:
 	};
 	virtual const textureType& getTextureType() const = 0;
 };
+
+}

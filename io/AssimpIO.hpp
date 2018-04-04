@@ -12,9 +12,9 @@ class AssimpIOStream : public Assimp::IOStream
 {
 	friend class AssimpPhysFS;
 private:
-	const sAbstractFIO handle;
+	const Abstract::sFIO handle;
 public:
-	AssimpIOStream(sAbstractFIO nhandle);
+	AssimpIOStream(Abstract::sFIO nhandle);
 	~AssimpIOStream(void);
 	size_t Read( void* pvBuffer, size_t pSize, size_t pCount);
 	size_t Write( const void* pvBuffer, size_t pSize, size_t pCount);

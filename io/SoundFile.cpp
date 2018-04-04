@@ -1,12 +1,14 @@
 #include "SoundFile.hpp"
 #include <cstring>
+namespace Audio {
 
-SoundFile::SoundFile(sAbstractFIO nhandle, int mode,
+SoundFile::SoundFile(Abstract::sFIO nhandle, int mode,
 					 int format, int channels, int samplerate)
 	: ioHandle(nhandle),
 	  SndfileHandle(sndFileIO,reinterpret_cast<void*>(nhandle.get()),mode,format,channels,samplerate)
 {
 	;
+}
 }
 sf_count_t sfGetFilelen(void *user_data);
 sf_count_t sfSeek(sf_count_t offset, int whence, void *user_data);
@@ -16,11 +18,11 @@ SF_VIRTUAL_IO sndFileIO = { sfGetFilelen, sfSeek, sfRead, 0, sfTell };
 
 sf_count_t sfGetFilelen(void *user_data)
 {
-	return reinterpret_cast<pAbstractFIO>(user_data)->size();
+	return reinterpret_cast<Abstract::pFIO>(user_data)->size();
 }
 sf_count_t sfSeek(sf_count_t offset, int whence, void *user_data)
 {
-	pAbstractFIO chandle = reinterpret_cast<pAbstractFIO>(user_data);
+	Abstract::pFIO chandle = reinterpret_cast<Abstract::pFIO>(user_data);
 	switch(whence)
 	{
 		case SEEK_SET:
@@ -38,9 +40,9 @@ sf_count_t sfSeek(sf_count_t offset, int whence, void *user_data)
 }
 sf_count_t sfRead(void *ptr, sf_count_t count, void *user_data)
 {
-	return reinterpret_cast<pAbstractFIO>(user_data)->read(ptr,count);
+	return reinterpret_cast<Abstract::pFIO>(user_data)->read(ptr,count);
 }
 sf_count_t sfTell(void *user_data)
 {
-	return reinterpret_cast<pAbstractFIO>(user_data)->tell();
+	return reinterpret_cast<Abstract::pFIO>(user_data)->tell();
 }

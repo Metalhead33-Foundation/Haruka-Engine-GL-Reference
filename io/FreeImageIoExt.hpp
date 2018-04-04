@@ -1,15 +1,15 @@
 #ifndef FREEIMAGEIOEXT_HPP
 #define FREEIMAGEIOEXT_HPP
 #include <FreeImagePlus.h>
-#include "../abstract/AbstractFIO.hpp"
+#include "../abstract/FIO.hpp"
 
 DEFINE_CLASS(FlipImgExt)
 class FlipImgExt : public fipImage
 {
 private:
-	const sAbstractFIO fhandle;
+	const Abstract::sFIO fhandle;
 public:
-	FlipImgExt(sAbstractFIO reedaa);
+	FlipImgExt(Abstract::sFIO reedaa);
 };
 extern FreeImageIO AbstractFreadImgio;
 

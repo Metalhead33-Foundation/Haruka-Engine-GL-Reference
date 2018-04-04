@@ -1,11 +1,13 @@
 #pragma once
 #include <cstdint>
 #include "Global.hpp"
-DEFINE_CLASS(AbstractFIO)
 
-class AbstractFIO {
+namespace Abstract {
+
+DEFINE_CLASS(FIO)
+class FIO {
 public:
-	virtual ~AbstractFIO() = default;
+	virtual ~FIO() = default;
 	virtual int64_t read(void* data, int64_t size) = 0;
 	virtual int64_t seek(int64_t position) = 0;
 	virtual int64_t tell() = 0;
@@ -15,3 +17,5 @@ public:
 private:
 
 };
+
+}

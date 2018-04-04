@@ -2,6 +2,8 @@
 #define MODEL_HPP
 #include "Mesh.hpp"
 
+namespace Abstract {
+
 DEFINE_CLASS(Model)
 class Model
 {
@@ -16,4 +18,5 @@ public:
 	virtual void draw(sShaderProgram shader) = 0;
 };
 
+}
 #endif // MODEL_HPP

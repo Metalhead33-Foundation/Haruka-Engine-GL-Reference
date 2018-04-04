@@ -107,11 +107,11 @@ char StdStream::getc()
 {
 	return fgetc(chandle);
 }
-sAbstractFIO StdStream::createReader(std::string newpath)
+Abstract::sFIO StdStream::createReader(std::string newpath)
 {
-	return sAbstractFIO(new StdStream(newpath,true));
+	return Abstract::sFIO(new StdStream(newpath,true));
 }
-sAbstractFIO StdStream::createWriter(std::string newpath)
+Abstract::sFIO StdStream::createWriter(std::string newpath)
 {
-	return sAbstractFIO(new StdStream(newpath,false));
+	return Abstract::sFIO(new StdStream(newpath,false));
 }

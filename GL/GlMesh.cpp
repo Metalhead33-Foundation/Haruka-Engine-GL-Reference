@@ -1,25 +1,26 @@
 #include "GlMesh.hpp"
 
-sMesh GlMesh::createMesh(ConstructorReference constr)
+namespace Gl {
+Abstract::sMesh Mesh::createMesh(ConstructorReference constr)
 {
-	return sMesh(new GlMesh(constr));
+	return Abstract::sMesh(new Mesh(constr));
 }
-GlMesh::GlMesh(ConstructorReference constr)
+Mesh::Mesh(ConstructorReference constr)
 {
 	this->vertices = constr.vec;
 	this->indices = constr.ind;
 	this->textures = *(constr.tex);
 	setupMesh();
 }
-void GlMesh::draw(sShaderProgram shader)
+void Mesh::draw(Abstract::sShaderProgram shader)
 {
-	GlShaderProgram* gshdr = dynamic_cast<GlShaderProgram*>(shader.get());
+	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
 	if(!gshdr) return;
 	uint32_t texNum = 0;
-	GlTexture* tex;
+	Texture* tex;
 	for(TextureIterator it = textures.begin(); it != textures.end(); ++it,++texNum)
 	{
-		tex = dynamic_cast<GlTexture*>(it->get());
+		tex = dynamic_cast<Texture*>(it->get());
 		if(tex) {
 			glActiveTexture(GL_TEXTURE0 + texNum); // active proper texture unit before binding
 			glUniform1i(glGetUniformLocation(gshdr->getShaderID(), tex->stringizeType()), texNum);
@@ -34,19 +35,19 @@ void GlMesh::draw(sShaderProgram shader)
 	// always good practice to set everything back to defaults once configured.
 	glActiveTexture(GL_TEXTURE0);
 }
-const GLuint& GlMesh::getVAO() const
+const GLuint& Mesh::getVAO() const
 {
 	return VAO;
 }
-const GLuint& GlMesh::getVBO() const
+const GLuint& Mesh::getVBO() const
 {
 	return VBO;
 }
-const GLuint& GlMesh::getEBO() const
+const GLuint& Mesh::getEBO() const
 {
 	return EBO;
 }
-void GlMesh::setupMesh()
+void Mesh::setupMesh()
 {
 	// create buffers/arrays
 	glGenVertexArrays(1, &VAO);
@@ -84,4 +85,5 @@ void GlMesh::setupMesh()
 	glBindVertexArray(0);
 	vertices = 0;
 	indices = 0;
+}
 }

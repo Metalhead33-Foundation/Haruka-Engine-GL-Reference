@@ -3,23 +3,25 @@
 #include "../abstract/ShaderProgram.hpp"
 #include "GlShaderModule.hpp"
 #include <deque>
+namespace Gl {
 
-class GlShaderProgram : public ShaderProgram
+class ShaderProgram : public Abstract::ShaderProgram
 {
 public:
-	typedef std::deque<sShaderModule> ModuleVector;
+	typedef std::deque<Abstract::sShaderModule> ModuleVector;
 	typedef ModuleVector::iterator ModuleIterator;
 private:
 	GLuint shaderID;
 	ModuleVector modules;
-	GlShaderProgram();
+	ShaderProgram();
 public:
-	static sShaderProgram createShaderProgram();
-	~GlShaderProgram();
-	void pushModule(sShaderModule mod);
+	static Abstract::sShaderProgram createShaderProgram();
+	~ShaderProgram();
+	void pushModule(Abstract::sShaderModule mod);
 	void popModule();
 	bool linkShaders();
 	const GLuint& getShaderID() const;
 };
 
+}
 #endif // GLSHADERPROGRAM_HPP

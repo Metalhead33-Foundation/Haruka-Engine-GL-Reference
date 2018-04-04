@@ -48,4 +48,4 @@ HEADERS += \
     GL/GlMesh.hpp \
     abstract/Model.hpp \
     io/PhysFsFileHandle.hpp \
-    abstract/AbstractFIO.hpp
+    abstract/FIO.hpp

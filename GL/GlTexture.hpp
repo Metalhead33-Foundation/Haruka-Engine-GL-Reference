@@ -2,19 +2,20 @@
 #define GLTEXTURE_HPP
 #include "../abstract/Texture.hpp"
 #include "glad_glx.h"
-#include "../abstract/AbstractFIO.hpp"
+#include "../abstract/FIO.hpp"
+namespace Gl {
 
-class GlTexture : public Texture
+class Texture : public Abstract::Texture
 {
 private:
 	GLuint textureID;
 	uint32_t width,height,linearSize,mipMapCount;
 	const textureType type;
-	GlTexture(textureType ntype);
+	Texture(textureType ntype);
 public:
-	~GlTexture();
-	static sTexture createFromDDS(textureType ntype, sAbstractFIO reada);
-	static sTexture createFromImage(textureType ntype, sAbstractFIO reada);
+	~Texture();
+	static Abstract::sTexture createFromDDS(textureType ntype, Abstract::sFIO reada);
+	static Abstract::sTexture createFromImage(textureType ntype, Abstract::sFIO reada);
 
 	uint32_t getWidth() { return width; }
 	uint32_t getHeight() { return height; }
@@ -27,4 +28,5 @@ public:
 	const char* stringizeType();
 };
 
+}
 #endif // GLTEXTURE_HPP

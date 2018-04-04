@@ -4,7 +4,7 @@
 
 GLint RenderWindow::att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 
-RenderWindow::RenderWindow(sSettingContainer nsettings)
+RenderWindow::RenderWindow(Abstract::sSettingContainer nsettings)
 	: settings(nsettings)
 {
 	if (!gladLoadGLX(settings->sysWMinfo->info.x11.display,DefaultScreen(settings->sysWMinfo->info.x11.display))) throw std::runtime_error("Couldn't load GLX!!");

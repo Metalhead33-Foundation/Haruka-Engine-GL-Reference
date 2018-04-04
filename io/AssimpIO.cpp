@@ -1,7 +1,7 @@
 #include "AssimpIO.hpp"
 
 
-AssimpIOStream::AssimpIOStream(sAbstractFIO nhandle)
+AssimpIOStream::AssimpIOStream(Abstract::sFIO nhandle)
 	: handle(nhandle)
 {
 	;

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include "../abstract/AbstractFIO.hpp"
+#include "../abstract/FIO.hpp"
 
 namespace PhysFS {
 
@@ -13,7 +13,7 @@ typedef std::vector<std::string> stringBuffer;
 
 DEFINE_CLASS(FileHandle)
 
-class FileHandle : public AbstractFIO
+class FileHandle : public Abstract::FIO
 {
 public:
 	enum OpenMode
@@ -46,9 +46,9 @@ public:
 	static PHYSFS_Stat stat(const std::string& path);
 
 	~FileHandle();
-	static sAbstractFIO openRead(const std::string& path);
-	static sAbstractFIO openWrite(const std::string& path);
-	static sAbstractFIO openAppend(const std::string& path);
+	static Abstract::sFIO openRead(const std::string& path);
+	static Abstract::sFIO openWrite(const std::string& path);
+	static Abstract::sFIO openAppend(const std::string& path);
 
 	int64_t read(void* data, int64_t size);
 	int64_t seek(int64_t position);
