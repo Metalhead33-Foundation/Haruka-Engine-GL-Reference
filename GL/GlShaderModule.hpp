@@ -9,8 +9,9 @@ class GlShaderModule : public ShaderModule
 private:
 	const ShaderType type;
 	GLuint shaderID;
-public:
 	GlShaderModule(ShaderType ntype, sAbstractFIO reada);
+public:
+	static sShaderModule createShaderModule(ShaderType ntype, sAbstractFIO reada);
 	~GlShaderModule();
 	const GLuint& getShaderID() const;
 	ShaderType getType();

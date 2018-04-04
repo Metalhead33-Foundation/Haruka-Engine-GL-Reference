@@ -14,6 +14,10 @@ GlShaderModule::~GlShaderModule()
 {
 	glDeleteShader(shaderID); // Don't leak the shader.
 }
+sShaderModule GlShaderModule::createShaderModule(ShaderType ntype, sAbstractFIO reada)
+{
+	return sShaderModule(new GlShaderModule(ntype, reada)) ;
+}
 GlShaderModule::GlShaderModule(ShaderType ntype, sAbstractFIO reada)
 	: type(ntype)
 {

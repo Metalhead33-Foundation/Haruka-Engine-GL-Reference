@@ -9,8 +9,9 @@ class GlMesh : public Mesh
 private:
 	GLuint VAO, VBO, EBO;
 	void setupMesh();
-public:
 	GlMesh(ConstructorReference constr);
+public:
+	static sMesh createMesh(ConstructorReference constr);
 	const GLuint& getVAO() const;
 	const GLuint& getVBO() const;
 	const GLuint& getEBO() const;

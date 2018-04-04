@@ -12,8 +12,9 @@ public:
 private:
 	GLuint shaderID;
 	ModuleVector modules;
-public:
 	GlShaderProgram();
+public:
+	static sShaderProgram createShaderProgram();
 	~GlShaderProgram();
 	void pushModule(sShaderModule mod);
 	void popModule();

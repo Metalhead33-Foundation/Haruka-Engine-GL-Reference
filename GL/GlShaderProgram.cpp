@@ -1,6 +1,10 @@
 #include "GlShaderProgram.hpp"
 #include <stdexcept>
 
+sShaderProgram GlShaderProgram::createShaderProgram()
+{
+	return sShaderProgram(new GlShaderProgram());
+}
 GlShaderProgram::GlShaderProgram()
 {
 	shaderID = glCreateProgram();

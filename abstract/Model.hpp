@@ -2,6 +2,7 @@
 #define MODEL_HPP
 #include "Mesh.hpp"
 
+DEFINE_CLASS(Model)
 class Model
 {
 public:

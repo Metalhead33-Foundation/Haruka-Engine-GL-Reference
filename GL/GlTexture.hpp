@@ -10,8 +10,8 @@ private:
 	GLuint textureID;
 	uint32_t width,height,linearSize,mipMapCount;
 	const textureType type;
-public:
 	GlTexture(textureType ntype);
+public:
 	~GlTexture();
 	static sTexture createFromDDS(textureType ntype, sAbstractFIO reada);
 	static sTexture createFromImage(textureType ntype, sAbstractFIO reada);

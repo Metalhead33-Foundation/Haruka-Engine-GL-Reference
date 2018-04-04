@@ -1,5 +1,9 @@
 #include "GlMesh.hpp"
 
+sMesh GlMesh::createMesh(ConstructorReference constr)
+{
+	return sMesh(new GlMesh(constr));
+}
 GlMesh::GlMesh(ConstructorReference constr)
 {
 	this->vertices = constr.vec;
