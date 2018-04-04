@@ -3,8 +3,8 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate
-CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lopenal
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lopenal
 
 SOURCES += main.cpp \
     GL/GlShaderModule.cpp \
@@ -18,9 +18,13 @@ SOURCES += main.cpp \
     io/SoundFile.cpp \
     io/StdStream.cpp \
     audio/Samplerate.cpp \
-    audio/StreamedAudio.cpp \
     GL/GlMesh.cpp \
-    io/PhysFsFileHandle.cpp
+    io/PhysFsFileHandle.cpp \
+    GL/GlModel.cpp \
+    io/AiModelFactory.cpp \
+    audio/StreamedAudio.cpp \
+    audio/PreloadedAudio.cpp \
+    audio/AudioSystem.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -48,4 +52,8 @@ HEADERS += \
     GL/GlMesh.hpp \
     abstract/Model.hpp \
     io/PhysFsFileHandle.hpp \
-    abstract/FIO.hpp
+    abstract/FIO.hpp \
+    GL/GlModel.hpp \
+    io/AiModelFactory.hpp \
+    audio/PreloadedAudio.hpp \
+    audio/AudioSystem.hpp

@@ -26,7 +26,7 @@ public:
 	{
 		sVertexVector vec;
 		sIndexVector ind;
-		sTextureVector tex;
+		TextureVector tex;
 	};
 	typedef MeshConstructor& ConstructorReference;
 	typedef std::vector<MeshConstructor> ConstructorArray;
@@ -34,6 +34,7 @@ public:
 	typedef ConstructorArray& ConstructorArrayReference;
 	typedef std::shared_ptr<ConstructorArray> ConstructorArrayPointer;
 
+	typedef sMesh (*MeshCreatorFunction)(ConstructorReference);
 protected:
 	sVertexVector vertices;
 	sIndexVector indices;

@@ -1,11 +1,34 @@
-#include <iostream>
+﻿#include <iostream>
 #include "abstract/SettingContainer.hpp"
 #include "GL/RenderWindow.hpp"
 #include <cstdlib>
 #include <FreeImagePlus.h>
+
+#include "io/PhysFsFileHandle.hpp"
+#include "audio/StreamedAudio.hpp"
 using namespace std;
 
-int main()
+int testPhysfs(char* argv0);
+int testRenderer();
+
+int main(int argc, char *argv[])
+{
+	return testPhysfs(argv[0]);
+}
+
+int testPhysfs(char* argv0)
+{
+	PHYSFS_init(argv0);
+	PhysFS::FileHandle::addToSearchPath("/home/legacy/filmletöltések/Goathelm_Samples","/",true);
+	Audio::sAudio avdio = Audio::StreamedAudio::createStreamedAudio(Audio::SoundFile::createSoundFile(PhysFS::FileHandle::openRead("Goathelm 3.wav")));
+	std::cout << "Audio format: " << avdio->getFormat() << std::endl;
+	std::cout << "Audio samplerate: " << avdio->getSamplerate() << std::endl;
+	std::cout << "Audio channel count: " << avdio->getChannelCount() << std::endl;
+	std::cout << "Audio frame count: " << avdio->getFrameCount() << std::endl;
+	PHYSFS_deinit();
+	return 0;
+}
+int testRenderer()
 {
 	// cout << "Hello World!" << endl;
 	bool exit_signal = false;

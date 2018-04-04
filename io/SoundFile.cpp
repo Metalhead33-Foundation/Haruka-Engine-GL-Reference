@@ -2,6 +2,11 @@
 #include <cstring>
 namespace Audio {
 
+sSoundFile SoundFile::createSoundFile(Abstract::sFIO nhandle, int mode,
+	  int format, int channels, int samplerate)
+{
+	return sSoundFile(new SoundFile(nhandle,mode,format,channels,samplerate));
+}
 SoundFile::SoundFile(Abstract::sFIO nhandle, int mode,
 					 int format, int channels, int samplerate)
 	: ioHandle(nhandle),

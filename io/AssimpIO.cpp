@@ -16,7 +16,7 @@ size_t AssimpIOStream::Read( void* pvBuffer, size_t pSize, size_t pCount)
 }
 size_t AssimpIOStream::Write( const void* pvBuffer, size_t pSize, size_t pCount)
 {
-	return 0; // Writing not supported.
+	return handle->write(const_cast<void*>(pvBuffer), pSize * pCount);
 }
 aiReturn AssimpIOStream::Seek( size_t pOffset, aiOrigin pOrigin)
 {
@@ -59,15 +59,15 @@ AssimpPhysFS::~AssimpPhysFS()
 {
 	;
 }
-bool AssimpPhysFS::Exists( const std::string& pFile) const
+bool AssimpPhysFS::Exists(const char *pFile) const
 {
-	return PHYSFS_exists(pFile.c_str());
+	return PHYSFS_exists(pFile);
 }
 char AssimpPhysFS::GetOsSeparator() const
 {
 	return PHYSFS_getDirSeparator()[0];
 }
-Assimp::IOStream* AssimpPhysFS::Open( const std::string& pFile, const std::string& pMode)
+Assimp::IOStream* AssimpPhysFS::Open(const char *pFile, const std::string& pMode)
 {
 	if(Exists(pFile)) return new AssimpIOStream(PhysFS::FileHandle::openRead(pFile));
 	else return 0;

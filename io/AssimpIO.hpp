@@ -28,9 +28,9 @@ class AssimpPhysFS : public Assimp::IOSystem
 public:
 	AssimpPhysFS();
 	~AssimpPhysFS();
-	bool Exists( const std::string& pFile) const;
+	bool Exists( const char* pFile) const;
 	char GetOsSeparator() const;
-	Assimp::IOStream* Open( const std::string& pFile, const std::string& pMode);
+	Assimp::IOStream* Open( const char* pFile, const std::string& pMode);
 	void Close(Assimp::IOStream* pFile);
 };
 

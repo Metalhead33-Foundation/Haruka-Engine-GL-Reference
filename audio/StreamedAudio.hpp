@@ -6,7 +6,7 @@
 namespace Audio {
 
 DEFINE_CLASS(StreamedAudio)
-class StreamedAudio
+class StreamedAudio : public Audio
 {
 private:
 	StreamedAudio(const StreamedAudio&);
@@ -16,9 +16,16 @@ private:
 
 	const sSoundFile source;
 	sSamplerate converter;
-public:
+
 	StreamedAudio(sSoundFile src);
+public:
+	~StreamedAudio() = default;
+	static sAudio createStreamedAudio(sSoundFile src);
 	virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate);
+	int getFormat();
+	int getChannelCount();
+	int getSamplerate();
+	sf_count_t getFrameCount();
 };
 
 }

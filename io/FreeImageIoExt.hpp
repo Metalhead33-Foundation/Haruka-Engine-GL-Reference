@@ -8,8 +8,9 @@ class FlipImgExt : public fipImage
 {
 private:
 	const Abstract::sFIO fhandle;
-public:
 	FlipImgExt(Abstract::sFIO reedaa);
+public:
+	static sFlipImgExt createImageReader(Abstract::sFIO reedaa);
 };
 extern FreeImageIO AbstractFreadImgio;
 

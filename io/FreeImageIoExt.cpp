@@ -6,6 +6,10 @@ long ImageTell(void* handle);
 FreeImageIO AbstractFreadImgio = { ImageRead, 0, ImageSeek, ImageTell };
 
 
+sFlipImgExt FlipImgExt::createImageReader(Abstract::sFIO reedaa)
+{
+	return sFlipImgExt(new FlipImgExt(reedaa));
+}
 FlipImgExt::FlipImgExt(Abstract::sFIO reedaa)
 	: fhandle(reedaa)
 {

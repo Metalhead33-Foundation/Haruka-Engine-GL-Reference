@@ -1,6 +1,10 @@
 #include "StreamedAudio.hpp"
 namespace Audio {
 
+sAudio StreamedAudio::createStreamedAudio(sSoundFile src)
+{
+	return sAudio(new StreamedAudio(src));
+}
 StreamedAudio::StreamedAudio(sSoundFile src)
 	: source(src)
 {
@@ -24,7 +28,7 @@ size_t StreamedAudio::generateAudio(std::vector<float>& target, int channels, in
 	else
 	{
 		if(channels == source->channels())
-		{
+		{ 
 			dat.src_ratio = double(sampleRate) / double(source->samplerate());
 			inputBuffer.resize( size_t( double(target.size()) / dat.src_ratio) );
 			dat.data_in = inputBuffer.data();
@@ -36,6 +40,22 @@ size_t StreamedAudio::generateAudio(std::vector<float>& target, int channels, in
 			return dat.output_frames * channels;
 		}
 	}
+}
+int StreamedAudio::getFormat()
+{
+	return source->format();
+}
+int StreamedAudio::getChannelCount()
+{
+	return source->channels();
+}
+int StreamedAudio::getSamplerate()
+{
+	return source->samplerate();
+}
+sf_count_t StreamedAudio::getFrameCount()
+{
+	return source->frames();
 }
 
 }

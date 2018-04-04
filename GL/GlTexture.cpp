@@ -61,24 +61,24 @@ Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO re
 	Abstract::sTexture tmp = Abstract::sTexture(new Texture(ntype));
 	Texture* gltex = dynamic_cast<Texture*>(tmp.get());
 	gltex->mipMapCount = 0;
-	FlipImgExt img(reada);
-	gltex->height = img.getHeight();
-	gltex->width = img.getWidth();
+	sFlipImgExt img = FlipImgExt::createImageReader(reada);
+	gltex->height = img->getHeight();
+	gltex->width = img->getWidth();
 	gltex->linearSize = gltex->height * gltex->width;
 	// if(img.getBitsPerPixel() < 24) img.convertTo24Bits();
 	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
-	if(img.isTransparent())
+	if(img->isTransparent())
 	{
-		img.convertTo32Bits();
-		std::vector<uint8_t> imgBuff(img.getHeight() * img.getWidth() * (img.getBitsPerPixel() / 8));
-		FreeImage_ConvertToRawBits(imgBuff.data(),img,img.getScanWidth(),32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
+		img->convertTo32Bits();
+		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
+		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
 		glTexImage2D(GL_TEXTURE_2D, GL_RGBA, 0,gltex->width,gltex->height,0, GL_BGRA, GL_UNSIGNED_BYTE, imgBuff.data());
 	}
 	else
 	{
-		img.convertTo24Bits();
-		std::vector<uint8_t> imgBuff(img.getHeight() * img.getWidth() * (img.getBitsPerPixel() / 8));
-		FreeImage_ConvertToRawBits(imgBuff.data(),img,img.getScanWidth(),24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
+		img->convertTo24Bits();
+		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
+		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
 		glTexImage2D(GL_TEXTURE_2D, GL_RGB, 0,gltex->width,gltex->height,0, GL_BGR, GL_UNSIGNED_BYTE, imgBuff.data());
 	}
 	return tmp;

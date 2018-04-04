@@ -9,7 +9,7 @@ Mesh::Mesh(ConstructorReference constr)
 {
 	this->vertices = constr.vec;
 	this->indices = constr.ind;
-	this->textures = *(constr.tex);
+	this->textures = constr.tex;
 	setupMesh();
 }
 void Mesh::draw(Abstract::sShaderProgram shader)

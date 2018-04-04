@@ -1,5 +1,6 @@
 #pragma once
 #include "Global.hpp"
+#include "FIO.hpp"
 namespace Abstract {
 
 DEFINE_CLASS(Texture)
@@ -19,6 +20,8 @@ public:
 		texture_height,
 	};
 	virtual const textureType& getTextureType() const = 0;
+
+	typedef sTexture (*TextureCreator)(textureType, Abstract::sFIO);
 };
 
 }
