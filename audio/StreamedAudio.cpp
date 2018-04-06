@@ -8,6 +8,7 @@ StreamedAudio::StreamedAudio(sSoundFile src, size_t bufferSize)
 	alGenBuffers( 1, &buffer );
 	alGenBuffers( 1, &reverseBuffer );
 	alSourcei( source, AL_BUFFER, buffer );
+	alSourcei(source, AL_LOOPING, false);
 }
 ALenum StreamedAudio::getRawFormat()
 {
