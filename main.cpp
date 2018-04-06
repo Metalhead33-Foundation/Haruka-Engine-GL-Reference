@@ -10,18 +10,28 @@
 #include "audio/SoundSource.hpp"
 using namespace std;
 
-int testStreamedSound(char* argv0);
-int testPreloadedSound(char* argv0);
+int testStreamedSound();
+int testPreloadedSound();
 int testRenderer();
 
 int main(int argc, char *argv[])
 {
-	return testPreloadedSound(argv[0]);
+	ALCint contextAttr[] = {ALC_FREQUENCY,44100,0};
+	ALCdevice* device = alcOpenDevice( NULL );
+	ALCcontext* context = alcCreateContext( device, contextAttr );
+	alcMakeContextCurrent( context );
+
+	PHYSFS_init(argv[0]);
+	testStreamedSound();
+
+	alcDestroyContext( context );
+	alcCloseDevice( device );
+	PHYSFS_deinit();
+	return 0;
 }
 
-int testStreamedSound(char* argv0)
+int testStreamedSound()
 {
-	PHYSFS_init(argv0);
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/Eurobeat","/",true);
 	// Audio::sAudio avdio = Audio::StreamedAudio::createStreamedAudio(
 	//			Audio::SoundFile::createSoundFile(PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg")));
@@ -34,12 +44,10 @@ int testStreamedSound(char* argv0)
 	avdio.setGain(100);
 	avdio.setRelativity(false);
 	avdio.play();
-	PHYSFS_deinit();
 	return 0;
 }
-int testPreloadedSound(char* argv0)
+int testPreloadedSound()
 {
-	PHYSFS_init(argv0);
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/other","/",true);
 	Abstract::sFIO file = PhysFS::FileHandle::openRead("the rack.ogg");
 	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
@@ -52,7 +60,6 @@ int testPreloadedSound(char* argv0)
 	avdio.setRelativity(false);
 	avdio.play();
 	while(avdio.getStatus() == AL_PLAYING );
-	PHYSFS_deinit();
 	return 0;
 }
 int testRenderer()
