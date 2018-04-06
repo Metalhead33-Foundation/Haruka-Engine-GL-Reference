@@ -1,15 +1,10 @@
 #ifndef AUDIOSYSTEM_HPP
 #define AUDIOSYSTEM_HPP
 #include "StreamedAudio.hpp"
-#include "PreloadedAudio.hpp"
-/* OpenAL headers */
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
 
 namespace Audio {
 
-DEFINE_CLASS(AudioSystem)
+/*DEFINE_CLASS(AudioSystem)
 class AudioSystem
 {
 private:
@@ -32,7 +27,7 @@ public:
 	~AudioSystem();
 	void bufferAllSources();
 	void playAllSources();
-};
+};*/
 
 }
 #endif // AUDIOSYSTEM_HPP

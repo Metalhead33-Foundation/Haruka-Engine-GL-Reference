@@ -6,25 +6,52 @@
 
 #include "io/PhysFsFileHandle.hpp"
 #include "audio/StreamedAudio.hpp"
+#include "audio/SoundBuffer.hpp"
+#include "audio/SoundSource.hpp"
 using namespace std;
 
-int testPhysfs(char* argv0);
+int testStreamedSound(char* argv0);
+int testPreloadedSound(char* argv0);
 int testRenderer();
 
 int main(int argc, char *argv[])
 {
-	return testPhysfs(argv[0]);
+	return testPreloadedSound(argv[0]);
 }
 
-int testPhysfs(char* argv0)
+int testStreamedSound(char* argv0)
 {
 	PHYSFS_init(argv0);
-	PhysFS::FileHandle::addToSearchPath("/home/legacy/filmletöltések/Goathelm_Samples","/",true);
-	Audio::sAudio avdio = Audio::StreamedAudio::createStreamedAudio(Audio::SoundFile::createSoundFile(PhysFS::FileHandle::openRead("Goathelm 3.wav")));
-	std::cout << "Audio format: " << avdio->getFormat() << std::endl;
-	std::cout << "Audio samplerate: " << avdio->getSamplerate() << std::endl;
-	std::cout << "Audio channel count: " << avdio->getChannelCount() << std::endl;
-	std::cout << "Audio frame count: " << avdio->getFrameCount() << std::endl;
+	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/Eurobeat","/",true);
+	// Audio::sAudio avdio = Audio::StreamedAudio::createStreamedAudio(
+	//			Audio::SoundFile::createSoundFile(PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg")));
+	Abstract::sFIO file = PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg");
+	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
+	Audio::StreamedAudio avdio(sfile,44100);
+	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
+	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
+	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;
+	avdio.setGain(100);
+	avdio.setRelativity(false);
+	avdio.play();
+	PHYSFS_deinit();
+	return 0;
+}
+int testPreloadedSound(char* argv0)
+{
+	PHYSFS_init(argv0);
+	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/other","/",true);
+	Abstract::sFIO file = PhysFS::FileHandle::openRead("the rack.ogg");
+	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
+	Audio::sAudioBuffer buff = Audio::SoundBuffer::createSoundBuffer(sfile);
+	Audio::SoundSource avdio(buff);
+	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
+	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
+	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;
+	avdio.setGain(100);
+	avdio.setRelativity(false);
+	avdio.play();
+	while(avdio.getStatus() == AL_PLAYING );
 	PHYSFS_deinit();
 	return 0;
 }

@@ -6,26 +6,31 @@
 namespace Audio {
 
 DEFINE_CLASS(StreamedAudio)
-class StreamedAudio : public Audio
+class StreamedAudio : public AudioBuffer, public AudioSource
 {
 private:
 	StreamedAudio(const StreamedAudio&);
 	StreamedAudio& operator=(const StreamedAudio&);
 	std::vector<float> inputBuffer;
-	SRC_DATA dat;
+	size_t internalCloque;
 
-	const sSoundFile source;
-	sSamplerate converter;
-
-	StreamedAudio(sSoundFile src);
+	const sSoundFile soundfile;
+	ALuint reverseBuffer;
+	size_t bufferSound();
+	void playFull();
+	ALenum getRawFormat();
+	// void swapBuffers();
 public:
-	~StreamedAudio() = default;
-	static sAudio createStreamedAudio(sSoundFile src);
-	virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate);
+	~StreamedAudio();
+	StreamedAudio(sSoundFile src, size_t bufferSize);
 	int getFormat();
 	int getChannelCount();
 	int getSamplerate();
 	sf_count_t getFrameCount();
+	void play();
+	void pause();
+	void stop();
+	void reset();
 };
 
 }

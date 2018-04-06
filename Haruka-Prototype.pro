@@ -23,8 +23,10 @@ SOURCES += main.cpp \
     GL/GlModel.cpp \
     io/AiModelFactory.cpp \
     audio/StreamedAudio.cpp \
-    audio/PreloadedAudio.cpp \
-    audio/AudioSystem.cpp
+    audio/AudioSystem.cpp \
+    audio/SoundBuffer.cpp \
+    audio/SoundSource.cpp \
+    audio/Audio.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -55,5 +57,6 @@ HEADERS += \
     abstract/FIO.hpp \
     GL/GlModel.hpp \
     io/AiModelFactory.hpp \
-    audio/PreloadedAudio.hpp \
-    audio/AudioSystem.hpp
+    audio/AudioSystem.hpp \
+    audio/SoundBuffer.hpp \
+    audio/SoundSource.hpp

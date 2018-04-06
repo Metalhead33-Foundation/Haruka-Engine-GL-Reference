@@ -1,7 +1,7 @@
 #include "AudioSystem.hpp"
 namespace Audio {
 
-AudioSystem::AudioSystem(int nSamplerate)
+/*AudioSystem::AudioSystem(int nSamplerate)
 	: sampleRate(nSamplerate)
 {
 	ALCint contextAttr[] = {ALC_FREQUENCY,nSamplerate,0};
@@ -29,6 +29,6 @@ void AudioSystem::playAllSources()
 	{
 		if(it->src) alSourcePlay(it->src);
 	}
-}
+}*/
 
 }
