@@ -67,6 +67,7 @@ void StreamedAudio::playFull()
 		do {
 			alGetSourcei(source, AL_SOURCE_STATE, &isPlaying);
 		} while( isPlaying == AL_PLAYING );
+		alSourcei( source, AL_BUFFER, 0 );
 	} while( internalCloque < frameNum );
 	reset();
 }
