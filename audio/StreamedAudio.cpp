@@ -1,14 +1,25 @@
 #include "StreamedAudio.hpp"
+#include "AudioSystem.hpp"
+#include <unistd.h>
+#include <iostream>
 namespace Audio {
 
+const char* StreamedAudio::getClassName()
+{
+	return "StreamedAudio";
+}
 StreamedAudio::StreamedAudio(sSoundFile src, size_t bufferSize)
 	: soundfile(src), inputBuffer(bufferSize), internalCloque(0)
 {
 	alGenSources( 1, &source );
+	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
 	alGenBuffers( 1, &buffer );
+	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
 	alGenBuffers( 1, &reverseBuffer );
-	alSourcei( source, AL_BUFFER, buffer );
+	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
+	// alSourcei( source, AL_BUFFER, buffer );
 	alSourcei(source, AL_LOOPING, false);
+	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
 }
 ALenum StreamedAudio::getRawFormat()
 {
@@ -50,24 +61,43 @@ size_t StreamedAudio::bufferSound(ALuint& bufferref)
 	}
 	internalCloque += tmpCtr;
 	alBufferData(bufferref, getRawFormat(), inputBuffer.data(), tmpCtr * getChannelCount() * sizeof(float), getSamplerate());
+	getSystem()->logError(getClassName(),"bufferSound",alGetError());
 	return tmpCtr;
 }
 void StreamedAudio::playFull()
 {
-	size_t frameNum = getFrameCount();
+	ALenum lastErr;
+	if( (lastErr = alGetError()) != AL_NO_ERROR)
+	{
+		std::cout << "Error at the very start! - " << AudioSystem::translateError(lastErr) << std::endl;
+	}
+	ALuint unqueuedBuffer = 0;
 	size_t readFrames = 0;
-	ALuint tmp = buffer;
-	ALint isPlaying;
+	size_t frameNum = getFrameCount();
+	ALint processedBuffers = 0;
+	ALint totalProcessedBuffers = 0;
+	readFrames = bufferSound(buffer);
+	alSourceQueueBuffers(source, 1, &buffer);
+	getSystem()->logError(getClassName(),"playFull",alGetError());
+	readFrames = bufferSound(reverseBuffer);
+	alSourceQueueBuffers(source, 1, &reverseBuffer);
+	getSystem()->logError(getClassName(),"playFull",alGetError());
+	alSourcePlay(source);
+	getSystem()->logError(getClassName(),"playFull",alGetError());
 	do {
-		readFrames = bufferSound(reverseBuffer);
-		buffer = reverseBuffer;
-		reverseBuffer = tmp;
-		alSourcei( source, AL_BUFFER, buffer );
-		alSourcePlay(source);
-		do {
-			alGetSourcei(source, AL_SOURCE_STATE, &isPlaying);
-		} while( isPlaying == AL_PLAYING );
-		alSourcei( source, AL_BUFFER, 0 );
+		usleep(10 * 1000);
+		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
+		totalProcessedBuffers += processedBuffers;
+		while(processedBuffers)
+		{
+			// std::cout << "Total processed buffers: " << totalProcessedBuffers << std::endl;
+			alSourceUnqueueBuffers(source, 1, &unqueuedBuffer);
+			getSystem()->logError(getClassName(),"playFull",alGetError());
+			readFrames = bufferSound(unqueuedBuffer);
+			alSourceQueueBuffers(source, 1, &unqueuedBuffer);
+			getSystem()->logError(getClassName(),"playFull",alGetError());
+			--processedBuffers;
+		}
 	} while( internalCloque < frameNum );
 	reset();
 }

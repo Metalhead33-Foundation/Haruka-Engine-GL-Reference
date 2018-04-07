@@ -31,6 +31,8 @@ public:
 	void pause();
 	void stop();
 	void reset();
+protected:
+	const char* getClassName();
 };
 
 }

@@ -23,6 +23,8 @@ public:
 	void pause();
 	void stop();
 	void setBuffer(sAudioBuffer buffer);
+protected:
+	const char* getClassName();
 };
 
 }

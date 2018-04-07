@@ -1,21 +1,28 @@
 #ifndef AUDIO_HPP
 #define AUDIO_HPP
-#include "../abstract/Global.hpp"
 #include "../io/SoundFile.hpp"
-#include <vector>
-/* OpenAL headers */
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
+#include "AudioSystem.hpp"
 /* We need glm too */
 #include <glm/glm.hpp>
 
 namespace Audio {
 
+DEFINE_CLASS(AudoResource)
 DEFINE_CLASS(AudioBuffer)
 DEFINE_CLASS(AudioSource)
 
-class AudioBuffer
+class AudioResource
+{
+	protected:
+	virtual const char* getClassName() = 0;
+	private:
+	static sAudioSystem SYSTEM;
+	public:
+	sAudioSystem getSystem();
+	static void initializeSystem(int samplerate);
+};
+
+class AudioBuffer : public virtual AudioResource
 {
 protected:
 	ALuint buffer;
@@ -27,8 +34,10 @@ public:
 	virtual int getSamplerate() = 0;
 	virtual sf_count_t getFrameCount() = 0;
 	const ALuint& getBuffer() const;
+protected:
+	virtual const char* getClassName();
 };
-class AudioSource
+class AudioSource : public virtual AudioResource
 {
 protected:
 	ALuint source;
@@ -57,6 +66,8 @@ public:
 	float getMinimumDistance(void) const;
 	float getAttenuation(void) const;
 	ALint getStatus(void) const;
+protected:
+	virtual const char* getClassName();
 };
 
 }

@@ -1,6 +1,10 @@
 #include "SoundSource.hpp"
 namespace Audio {
 
+const char* SoundSource::getClassName()
+{
+	return "SoundSource";
+}
 SoundSource::SoundSource()
 	: buffer(nullptr)
 {
@@ -39,20 +43,36 @@ sf_count_t SoundSource::getFrameCount()
 
 void SoundSource::play()
 {
-	if(buffer) alSourcePlay(source);
+	if(buffer)
+	{
+		alSourcePlay(source);
+		getSystem()->logError(getClassName(),"play",alGetError());
+	}
 }
 void SoundSource::pause()
 {
-	if(buffer) alSourcePause(source);
+	if(buffer)
+	{
+		alSourcePause(source);
+		getSystem()->logError(getClassName(),"pause",alGetError());
+	}
 }
 void SoundSource::stop()
 {
-	if(buffer) alSourceStop(source);
+	if(buffer)
+	{
+		alSourceStop(source);
+		getSystem()->logError(getClassName(),"pause",alGetError());
+	}
 }
 void SoundSource::setBuffer(sAudioBuffer buffer)
 {
 	this->buffer = buffer;
-	if(buffer) alSourcei( source, AL_BUFFER, buffer->getBuffer() );
+	if(buffer)
+	{
+		alSourcei( source, AL_BUFFER, buffer->getBuffer() );
+		getSystem()->logError(getClassName(),"setBuffer",alGetError());
+	}
 }
 
 }

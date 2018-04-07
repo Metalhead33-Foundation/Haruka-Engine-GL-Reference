@@ -1,32 +1,56 @@
 #include "Audio.hpp"
 namespace Audio {
 
+sAudioSystem AudioResource::SYSTEM = nullptr;
+sAudioSystem AudioResource::getSystem()
+{
+	return SYSTEM;
+}
+void AudioResource::initializeSystem(int samplerate)
+{
+	SYSTEM = sAudioSystem(new AudioSystem(samplerate));
+}
+const char* AudioSource::getClassName()
+{
+	return "AudioSource";
+}
+const char* AudioBuffer::getClassName()
+{
+	return "AudioSource";
+}
+
 const ALuint& AudioBuffer::getBuffer() const { return buffer; }
 const ALuint& AudioSource::getSource() const { return source; }
 void AudioSource::setPosition(glm::vec3& pos) { setPosition(pos.x,pos.y,pos.z); }
 void AudioSource::setPitch(float pitch)
 {
 	alSourcef(source, AL_PITCH, pitch);
+	getSystem()->logError(getClassName(),"setPitch",alGetError());
 }
 void AudioSource::setGain(float gain)
 {
 	alSourcef(source, AL_GAIN, gain);
+	getSystem()->logError(getClassName(),"setGain",alGetError());
 }
 void AudioSource::setPosition(float x, float y, float z)
 {
 	alSource3f(source, AL_POSITION, x, y, z);
+	getSystem()->logError(getClassName(),"setPosition",alGetError());
 }
 void AudioSource::setRelativity(bool shouldBeRelative)
 {
 	alSourcei(source, AL_SOURCE_RELATIVE, shouldBeRelative);
+	getSystem()->logError(getClassName(),"setRelativity",alGetError());
 }
 void AudioSource::setMinimumDistance(float minDist)
 {
 	alSourcef(source, AL_REFERENCE_DISTANCE, minDist);
+	getSystem()->logError(getClassName(),"setMinimumDistance",alGetError());
 }
 void AudioSource::setAttenuation(float attenuation)
 {
 	alSourcef(source, AL_ROLLOFF_FACTOR, attenuation);
+	getSystem()->logError(getClassName(),"setAttenuation",alGetError());
 }
 
 float AudioSource::getPitch(void) const

@@ -1,8 +1,7 @@
 #include "AudioSystem.hpp"
 namespace Audio {
 
-/*AudioSystem::AudioSystem(int nSamplerate)
-	: sampleRate(nSamplerate)
+AudioSystem::AudioSystem(int nSamplerate)
 {
 	ALCint contextAttr[] = {ALC_FREQUENCY,nSamplerate,0};
 	device = alcOpenDevice( NULL );
@@ -13,22 +12,41 @@ AudioSystem::~AudioSystem()
 	alcDestroyContext( context );
 	alcCloseDevice( device );
 }
-void AudioSystem::bufferAllSources()
+const char* AudioSystem::translateError(ALenum err)
 {
-	for(SourceIterator it = sources.begin(); it != sources.end(); ++it)
+	switch(err)
 	{
-		sf_count_t frames = it->sndsrc->generateAudio(buffer,1,sampleRate);
-		alBufferData( it->buf, AL_FORMAT_MONO_FLOAT32, buffer.data(), frames * sizeof(float), sampleRate);
-		buffer.clear();
-		alSourcei(it->src, AL_BUFFER, it->buf);
+	case AL_NO_ERROR:
+		return "AL_NO_ERROR: No error.";
+		break;
+	case AL_INVALID_NAME:
+		return "AL_INVALID_NAME: a bad name (ID) was passed to an OpenAL function.";
+		break;
+	case AL_INVALID_ENUM:
+		return "AL_INVALID_ENUM: an invalid enum value was passed to an OpenAL function.";
+		break;
+	case AL_INVALID_VALUE:
+		return "AL_INVALID_ENUM: an invalid value was passed to an OpenAL function.";
+		break;
+	case AL_INVALID_OPERATION:
+		return "AL_INVALID_ENUM: the requested operation is not valid.";
+		break;
+	case AL_OUT_OF_MEMORY:
+		return "AL_INVALID_ENUM: the requested operation resulted in OpenAL running out of memory.";
+		break;
+	default:
+		return "This is not an error.";
+		break;
+	};
+}
+void AudioSystem::logError(const char* classname, const char* operation, ALenum error)
+{
+	if(error != AL_NO_ERROR) {
+	errors.push_back( { classname, operation, translateError(error) }  );
+	ErrorLog tmplog = errors.back();
+	std::cout << "Logged OpenAL Error:" << std::endl << tmplog.classname << "." <<
+			  tmplog.operation << " - " << tmplog.error << std::endl;
 	}
 }
-void AudioSystem::playAllSources()
-{
-	for(SourceIterator it = sources.begin(); it != sources.end(); ++it)
-	{
-		if(it->src) alSourcePlay(it->src);
-	}
-}*/
 
 }

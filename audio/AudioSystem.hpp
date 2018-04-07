@@ -1,33 +1,37 @@
 #ifndef AUDIOSYSTEM_HPP
 #define AUDIOSYSTEM_HPP
-#include "StreamedAudio.hpp"
+#include <vector>
+#include <deque>
+#include "../abstract/Global.hpp"
+/* OpenAL headers */
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alext.h>
 
 namespace Audio {
 
-/*DEFINE_CLASS(AudioSystem)
+DEFINE_CLASS(AudioSystem)
 class AudioSystem
 {
+public:
+	struct ErrorLog
+	{
+		const char* classname;
+		const char* operation;
+		const char* error;
+	};
+	typedef std::deque<ErrorLog> ErrorVector;
+	typedef ErrorVector::iterator ErrorIterator;
 private:
-	std::vector<float> buffer;
 	ALCdevice* device;
 	ALCcontext* context;
-
-	const int sampleRate;
-	struct AudioSource
-	{
-		sAudio sndsrc;
-		ALuint buf;
-		ALuint src;
-	};
-	typedef std::vector<AudioSource> SourceVector;
-	typedef SourceVector::iterator SourceIterator;
-	SourceVector sources;
+	ErrorVector errors;
 public:
 	AudioSystem(int nSamplerate);
 	~AudioSystem();
-	void bufferAllSources();
-	void playAllSources();
-};*/
+	static const char* translateError(ALenum err);
+	void logError(const char* classname, const char* operation, ALenum error);
+};
 
 }
 #endif // AUDIOSYSTEM_HPP

@@ -33,11 +33,10 @@ int main(int argc, char *argv[])
 int testStreamedSound()
 {
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/Eurobeat","/",true);
-	// Audio::sAudio avdio = Audio::StreamedAudio::createStreamedAudio(
-	//			Audio::SoundFile::createSoundFile(PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg")));
+	Audio::AudioResource::initializeSystem(48000);
 	Abstract::sFIO file = PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg");
 	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
-	Audio::StreamedAudio avdio(sfile,44100);
+	Audio::StreamedAudio avdio(sfile,2048);
 	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
 	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
 	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;
@@ -50,6 +49,7 @@ int testStreamedSound()
 int testPreloadedSound()
 {
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/other","/",true);
+	Audio::AudioResource::initializeSystem(48000);
 	Abstract::sFIO file = PhysFS::FileHandle::openRead("the rack.ogg");
 	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
 	Audio::sAudioBuffer buff = Audio::SoundBuffer::createSoundBuffer(sfile);
