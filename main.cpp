@@ -16,16 +16,8 @@ int testRenderer();
 
 int main(int argc, char *argv[])
 {
-	ALCint contextAttr[] = {ALC_FREQUENCY,44100,0};
-	ALCdevice* device = alcOpenDevice( NULL );
-	ALCcontext* context = alcCreateContext( device, contextAttr );
-	alcMakeContextCurrent( context );
-
 	PHYSFS_init(argv[0]);
 	testStreamedSound();
-
-	alcDestroyContext( context );
-	alcCloseDevice( device );
 	PHYSFS_deinit();
 	return 0;
 }
@@ -36,7 +28,7 @@ int testStreamedSound()
 	Audio::AudioResource::initializeSystem(48000);
 	Abstract::sFIO file = PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg");
 	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
-	Audio::StreamedAudio avdio(sfile,2048);
+	Audio::StreamedAudio avdio(sfile,48000);
 	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
 	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
 	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;

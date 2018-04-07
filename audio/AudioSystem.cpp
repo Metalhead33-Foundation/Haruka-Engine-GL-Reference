@@ -6,6 +6,7 @@ AudioSystem::AudioSystem(int nSamplerate)
 	ALCint contextAttr[] = {ALC_FREQUENCY,nSamplerate,0};
 	device = alcOpenDevice( NULL );
 	context = alcCreateContext( device, contextAttr );
+	alcMakeContextCurrent( context );
 }
 AudioSystem::~AudioSystem()
 {
