@@ -1,6 +1,5 @@
 #include "StreamedAudio.hpp"
 #include "AudioSystem.hpp"
-#include <unistd.h>
 #include <iostream>
 namespace Audio {
 
@@ -91,7 +90,6 @@ void StreamedAudio::playFull()
 	alSourcePlay(source);
 	getSystem()->logError(getClassName(),"playFull",alGetError());
 	do {
-		usleep(10 * 1000);
 		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
 		while(processedBuffers)
 		{
