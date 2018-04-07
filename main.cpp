@@ -41,7 +41,8 @@ int testStreamedSound()
 	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
 	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
 	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;
-	avdio.setGain(100);
+	avdio.setGain(50);
+	avdio.setPitch(1.13);
 	avdio.setRelativity(false);
 	avdio.play();
 	return 0;

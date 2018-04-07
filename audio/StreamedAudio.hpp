@@ -16,7 +16,7 @@ private:
 
 	const sSoundFile soundfile;
 	ALuint reverseBuffer;
-	size_t bufferSound();
+	size_t bufferSound(ALuint& bufferref);
 	void playFull();
 	ALenum getRawFormat();
 	// void swapBuffers();

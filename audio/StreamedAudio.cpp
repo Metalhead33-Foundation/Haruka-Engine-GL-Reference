@@ -37,7 +37,7 @@ StreamedAudio::~StreamedAudio()
 	alDeleteBuffers( 1, &buffer );
 	alDeleteBuffers( 1, &reverseBuffer );
 }
-size_t StreamedAudio::bufferSound()
+size_t StreamedAudio::bufferSound(ALuint& bufferref)
 {
 	size_t tmpCtr;
 	if( (inputBuffer.size() / getChannelCount()) < soundfile->frames())
@@ -49,6 +49,7 @@ size_t StreamedAudio::bufferSound()
 		tmpCtr = soundfile->readf( inputBuffer.data(), soundfile->frames() / getChannelCount());
 	}
 	internalCloque += tmpCtr;
+	alBufferData(bufferref, getRawFormat(), inputBuffer.data(), tmpCtr * getChannelCount() * sizeof(float), getSamplerate());
 	return tmpCtr;
 }
 void StreamedAudio::playFull()
@@ -58,8 +59,7 @@ void StreamedAudio::playFull()
 	ALuint tmp = buffer;
 	ALint isPlaying;
 	do {
-		readFrames = bufferSound();
-		alBufferData(reverseBuffer, getRawFormat(), inputBuffer.data(), readFrames * getChannelCount() * sizeof(float), getSamplerate());
+		readFrames = bufferSound(reverseBuffer);
 		buffer = reverseBuffer;
 		reverseBuffer = tmp;
 		alSourcei( source, AL_BUFFER, buffer );
