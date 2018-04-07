@@ -16,10 +16,13 @@ private:
 
 	const sSoundFile soundfile;
 	ALuint reverseBuffer;
+	ThreadPointer runner;
+protected:
+	const char* getClassName();
 	size_t bufferSound(ALuint& bufferref);
 	void playFull();
 	ALenum getRawFormat();
-	// void swapBuffers();
+	static void startStreaming(pStreamedAudio audio);
 public:
 	~StreamedAudio();
 	StreamedAudio(sSoundFile src, size_t bufferSize);
@@ -31,8 +34,6 @@ public:
 	void pause();
 	void stop();
 	void reset();
-protected:
-	const char* getClassName();
 };
 
 }

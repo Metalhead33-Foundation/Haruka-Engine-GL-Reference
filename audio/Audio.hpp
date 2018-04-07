@@ -73,6 +73,7 @@ public:
 	void setRelativity(bool shouldBeRelative);
 	void setMinimumDistance(float minDist);
 	void setAttenuation(float attenuation);
+	void setLooping(bool looping);
 
 	/* Getters */
 	float getPitch(void) const;
@@ -82,6 +83,7 @@ public:
 	float getMinimumDistance(void) const;
 	float getAttenuation(void) const;
 	ALint getStatus(void) const;
+	bool getLooping(void) const;
 protected:
 	virtual const char* getClassName();
 };

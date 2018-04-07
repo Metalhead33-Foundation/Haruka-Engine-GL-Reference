@@ -9,7 +9,7 @@ const char* StreamedAudio::getClassName()
 	return "StreamedAudio";
 }
 StreamedAudio::StreamedAudio(sSoundFile src, size_t bufferSize)
-	: soundfile(src), inputBuffer(bufferSize), internalCloque(0)
+	: soundfile(src), inputBuffer(bufferSize), internalCloque(0), runner(nullptr)
 {
 	alGenSources( 1, &source );
 	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
@@ -44,6 +44,8 @@ ALenum StreamedAudio::getRawFormat()
 }*/
 StreamedAudio::~StreamedAudio()
 {
+	if(getStatus() != AL_STOPPED) alSourceStop(source);
+	if(runner) runner->join();
 	alDeleteSources( 1, &source );
 	alDeleteBuffers( 1, &buffer );
 	alDeleteBuffers( 1, &reverseBuffer );
@@ -64,6 +66,10 @@ size_t StreamedAudio::bufferSound(ALuint& bufferref)
 	getSystem()->logError(getClassName(),"bufferSound",alGetError());
 	return tmpCtr;
 }
+void StreamedAudio::startStreaming(pStreamedAudio audio)
+{
+	if(audio) audio->playFull();
+}
 void StreamedAudio::playFull()
 {
 	ALenum lastErr;
@@ -75,6 +81,7 @@ void StreamedAudio::playFull()
 	size_t readFrames = 0;
 	size_t frameNum = getFrameCount();
 	ALint processedBuffers = 0;
+	STREAMING_START:
 	readFrames = bufferSound(buffer);
 	alSourceQueueBuffers(source, 1, &buffer);
 	getSystem()->logError(getClassName(),"playFull",alGetError());
@@ -97,6 +104,13 @@ void StreamedAudio::playFull()
 		}
 	} while( internalCloque < frameNum && getStatus() == AL_PLAYING);
 	reset();
+	alSourceUnqueueBuffers(source, 1, &unqueuedBuffer);
+	alGetSourcei(source, AL_LOOPING, &processedBuffers);
+	if(processedBuffers)
+	{
+		alSourceStop(source);
+		goto STREAMING_START;
+	}
 }
 int StreamedAudio::getFormat()
 {
@@ -116,7 +130,7 @@ sf_count_t StreamedAudio::getFrameCount()
 }
 void StreamedAudio::play()
 {
-	playFull();
+	if(getStatus() != AL_PLAYING ) runner = ThreadPointer(new std::thread(startStreaming,this));
 }
 void StreamedAudio::pause()
 {

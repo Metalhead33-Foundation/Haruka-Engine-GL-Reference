@@ -36,6 +36,7 @@ int testStreamedSound()
 	avdio.setPitch(1.20f);
 	avdio.setRelativity(false);
 	avdio.play();
+	while(avdio.getStatus() == AL_PLAYING );
 	return 0;
 }
 int testPreloadedSound()

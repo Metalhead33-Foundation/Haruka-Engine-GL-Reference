@@ -101,5 +101,17 @@ ALint AudioSource::getStatus(void) const
 	alGetSourcei(source, AL_SOURCE_STATE, &status);
 	return status;
 }
+void AudioSource::setLooping(bool looping)
+{
+	alSourcei(source, AL_LOOPING, looping);
+	getSystem()->logError(getClassName(),"setLooping",alGetError());
+}
+bool AudioSource::getLooping(void) const
+{
+	ALint looping;
+	alGetSourcei(source, AL_LOOPING, &looping);
+
+	return looping != 0;
+}
 
 }

@@ -3,6 +3,7 @@
 #include <memory>
 #include <iostream>
 #include <cstdint>
+#include <thread>
 
 #ifndef _MSC_VER
 #define __enforce_inlining __attribute__((always_inline))
@@ -22,6 +23,8 @@
 #define DEFINE_CLASS(klass) class klass; DEFINE_PTR(klass)
 
 #define DEFINE_STRUCT(klass) struct klass; DEFINE_PTR(klass)
+
+typedef std::shared_ptr<std::thread> ThreadPointer;
 
 //End of former util.h
 
