@@ -5,6 +5,21 @@
 /* We need glm too */
 #include <glm/glm.hpp>
 
+#if defined(__ANDROID__) || defined(__ANDROID_API__)
+#define SOUND_FORMAT_16BIT
+#else
+#endif
+
+#ifdef SOUND_FORMAT_16BIT
+typedef short SoundItem;
+#define MONO_AUDIO AL_FORMAT_MONO16
+#define STEREO_AUDIO AL_FORMAT_STEREO16
+#else
+typedef float SoundItem;
+#define MONO_AUDIO AL_FORMAT_MONO_FLOAT32
+#define STEREO_AUDIO AL_FORMAT_STEREO_FLOAT32
+#endif
+
 namespace Audio {
 
 DEFINE_CLASS(AudoResource)
@@ -18,6 +33,7 @@ class AudioResource
 	private:
 	static sAudioSystem SYSTEM;
 	public:
+	virtual ~AudioResource() = default;
 	sAudioSystem getSystem();
 	static void initializeSystem(int samplerate);
 };

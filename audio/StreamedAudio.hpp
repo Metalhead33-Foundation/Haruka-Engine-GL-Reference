@@ -11,7 +11,7 @@ class StreamedAudio : public AudioBuffer, public AudioSource
 private:
 	StreamedAudio(const StreamedAudio&);
 	StreamedAudio& operator=(const StreamedAudio&);
-	std::vector<float> inputBuffer;
+	std::vector<SoundItem> inputBuffer;
 	size_t internalCloque;
 
 	const sSoundFile soundfile;

@@ -26,14 +26,14 @@ int testStreamedSound()
 {
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/Eurobeat","/",true);
 	Audio::AudioResource::initializeSystem(48000);
-	Abstract::sFIO file = PhysFS::FileHandle::openRead("Manuel - Gas Gas Gas-atuFSv2bLa8.ogg");
+	Abstract::sFIO file = PhysFS::FileHandle::openRead("Initial D 1st Stage Soundtrack - MAYBE TONITE-kLt-i4IzrT8.ogg");
 	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
-	Audio::StreamedAudio avdio(sfile,48000);
+	Audio::StreamedAudio avdio(sfile,128000);
 	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
 	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
 	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;
 	avdio.setGain(50);
-	avdio.setPitch(1.13);
+	avdio.setPitch(1.20f);
 	avdio.setRelativity(false);
 	avdio.play();
 	return 0;

@@ -18,7 +18,7 @@ StreamedAudio::StreamedAudio(sSoundFile src, size_t bufferSize)
 	alGenBuffers( 1, &reverseBuffer );
 	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
 	// alSourcei( source, AL_BUFFER, buffer );
-	alSourcei(source, AL_LOOPING, false);
+	// alSourcei(source, AL_LOOPING, false);
 	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
 }
 ALenum StreamedAudio::getRawFormat()
@@ -26,13 +26,13 @@ ALenum StreamedAudio::getRawFormat()
 	switch(getChannelCount())
 	{
 	case 1:
-		return AL_FORMAT_MONO_FLOAT32;
+		return MONO_AUDIO;
 		break;
 	case 2:
-		return AL_FORMAT_STEREO_FLOAT32;
+		return STEREO_AUDIO;
 		break;
 	default:
-		return AL_FORMAT_MONO_FLOAT32;
+		return MONO_AUDIO;
 		break;
 	}
 }
@@ -60,7 +60,7 @@ size_t StreamedAudio::bufferSound(ALuint& bufferref)
 		tmpCtr = soundfile->readf( inputBuffer.data(), soundfile->frames() / getChannelCount());
 	}
 	internalCloque += tmpCtr;
-	alBufferData(bufferref, getRawFormat(), inputBuffer.data(), tmpCtr * getChannelCount() * sizeof(float), getSamplerate());
+	alBufferData(bufferref, getRawFormat(), inputBuffer.data(), tmpCtr * getChannelCount() * sizeof(SoundItem), getSamplerate());
 	getSystem()->logError(getClassName(),"bufferSound",alGetError());
 	return tmpCtr;
 }
@@ -75,7 +75,6 @@ void StreamedAudio::playFull()
 	size_t readFrames = 0;
 	size_t frameNum = getFrameCount();
 	ALint processedBuffers = 0;
-	ALint totalProcessedBuffers = 0;
 	readFrames = bufferSound(buffer);
 	alSourceQueueBuffers(source, 1, &buffer);
 	getSystem()->logError(getClassName(),"playFull",alGetError());
@@ -87,10 +86,8 @@ void StreamedAudio::playFull()
 	do {
 		usleep(10 * 1000);
 		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
-		totalProcessedBuffers += processedBuffers;
 		while(processedBuffers)
 		{
-			// std::cout << "Total processed buffers: " << totalProcessedBuffers << std::endl;
 			alSourceUnqueueBuffers(source, 1, &unqueuedBuffer);
 			getSystem()->logError(getClassName(),"playFull",alGetError());
 			readFrames = bufferSound(unqueuedBuffer);
@@ -98,7 +95,7 @@ void StreamedAudio::playFull()
 			getSystem()->logError(getClassName(),"playFull",alGetError());
 			--processedBuffers;
 		}
-	} while( internalCloque < frameNum );
+	} while( internalCloque < frameNum && getStatus() == AL_PLAYING);
 	reset();
 }
 int StreamedAudio::getFormat()

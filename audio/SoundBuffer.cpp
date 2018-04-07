@@ -12,20 +12,20 @@ sAudioBuffer SoundBuffer::createSoundBuffer(sSoundFile src)
 SoundBuffer::SoundBuffer(sSoundFile src)
 	: samplerate(src->samplerate()), channelCount(src->channels()), format(src->format()), frameCount(src->frames())
 {
-	std::vector<float> tmpBuff(frameCount * channelCount);
+	std::vector<SoundItem> tmpBuff(frameCount * channelCount);
 	src->readf(tmpBuff.data(),frameCount);
 	alGenBuffers( 1, &buffer );
 	getSystem()->logError(getClassName(),"SoundBuffer",alGetError());
 	switch(channelCount)
 	{
 	case 1:
-		alBufferData( buffer, AL_FORMAT_MONO_FLOAT32, tmpBuff.data(), tmpBuff.size() * sizeof(float), samplerate );
+		alBufferData( buffer, MONO_AUDIO, tmpBuff.data(), tmpBuff.size() * sizeof(SoundItem), samplerate );
 		break;
 	case 2:
-		alBufferData( buffer, AL_FORMAT_STEREO_FLOAT32, tmpBuff.data(), tmpBuff.size() * sizeof(float), samplerate );
+		alBufferData( buffer, STEREO_AUDIO, tmpBuff.data(), tmpBuff.size() * sizeof(SoundItem), samplerate );
 		break;
 	default:
-		alBufferData( buffer, AL_FORMAT_MONO_FLOAT32, tmpBuff.data(), tmpBuff.size() * sizeof(float), samplerate );
+		alBufferData( buffer, MONO_AUDIO, tmpBuff.data(), tmpBuff.size() * sizeof(SoundItem), samplerate );
 		break;
 	}
 	getSystem()->logError(getClassName(),"SoundBuffer",alGetError());
