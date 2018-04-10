@@ -1,5 +1,9 @@
 #ifndef ALEXT_H
 #define ALEXT_H
+#if defined(__cplusplus)
+extern "C" {
+#endif
+#include "efx.h"
 
 #ifndef AL_EXT_float32
 #define AL_EXT_float32 1
@@ -66,6 +70,23 @@
 #define AL_EXT_IMA4 1
 #define AL_FORMAT_MONO_IMA4                      0x1300
 #define AL_FORMAT_STEREO_IMA4                    0x1301
+#endif
+
+typedef ALvoid (AL_APIENTRY*PFNALBUFFERDATASTATICPROC)(const ALint,ALenum,ALvoid*,ALsizei,ALsizei);
+typedef ALCboolean  (ALC_APIENTRY*PFNALCSETTHREADCONTEXTPROC)(ALCcontext *context);
+typedef ALCcontext* (ALC_APIENTRY*PFNALCGETTHREADCONTEXTPROC)(void);
+typedef void (AL_APIENTRY*LPALFOLDBACKCALLBACK)(ALenum,ALsizei);
+typedef void (AL_APIENTRY*LPALREQUESTFOLDBACKSTART)(ALenum,ALsizei,ALsizei,ALfloat*,LPALFOLDBACKCALLBACK);
+typedef void (AL_APIENTRY*LPALREQUESTFOLDBACKSTOP)(void);
+
+extern PFNALBUFFERDATASTATICPROC alBufferDataStatic;
+extern PFNALCSETTHREADCONTEXTPROC alcSetThreadContext;
+extern PFNALCGETTHREADCONTEXTPROC alcGetThreadContext;
+extern LPALREQUESTFOLDBACKSTART alRequestFoldbackStart;
+extern LPALREQUESTFOLDBACKSTOP alRequestFoldbackStop;
+
+#if defined(__cplusplus)
+}  /* extern "C" */
 #endif
 
 #endif // ALEXT_H

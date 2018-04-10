@@ -64,4 +64,5 @@ HEADERS += \
     audio/OpenALWrapper.hpp \
     audio/al.h \
     audio/alc.h \
-    audio/alext.h
+    audio/alext.h \
+    audio/efx.h
