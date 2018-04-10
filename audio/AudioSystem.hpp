@@ -4,9 +4,9 @@
 #include <deque>
 #include "../abstract/Global.hpp"
 /* OpenAL headers */
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
+#include "al.h"
+#include "alc.h"
+#include "alext.h"
 
 namespace Audio {
 

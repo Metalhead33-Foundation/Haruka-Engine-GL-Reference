@@ -3,8 +3,8 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lopenal -pthread
-CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lopenal -pthread
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
 
 SOURCES += main.cpp \
     GL/GlShaderModule.cpp \
@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     audio/AudioSystem.cpp \
     audio/SoundBuffer.cpp \
     audio/SoundSource.cpp \
-    audio/Audio.cpp
+    audio/Audio.cpp \
+    audio/OpenALWrapper.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -59,4 +60,8 @@ HEADERS += \
     io/AiModelFactory.hpp \
     audio/AudioSystem.hpp \
     audio/SoundBuffer.hpp \
-    audio/SoundSource.hpp
+    audio/SoundSource.hpp \
+    audio/OpenALWrapper.hpp \
+    audio/al.h \
+    audio/alc.h \
+    audio/alext.h

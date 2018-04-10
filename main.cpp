@@ -8,6 +8,7 @@
 #include "audio/StreamedAudio.hpp"
 #include "audio/SoundBuffer.hpp"
 #include "audio/SoundSource.hpp"
+#include "audio/OpenALWrapper.hpp"
 using namespace std;
 
 int testStreamedSound();
@@ -17,7 +18,7 @@ int testRenderer();
 int main(int argc, char *argv[])
 {
 	PHYSFS_init(argv[0]);
-	testStreamedSound();
+	if(loadAL()) testStreamedSound();
 	PHYSFS_deinit();
 	return 0;
 }
@@ -28,7 +29,7 @@ int testStreamedSound()
 	Audio::AudioResource::initializeSystem(48000);
 	Abstract::sFIO file = PhysFS::FileHandle::openRead("Initial D 1st Stage Soundtrack - MAYBE TONITE-kLt-i4IzrT8.ogg");
 	Audio::sSoundFile sfile = Audio::SoundFile::createSoundFile(file);
-	Audio::StreamedAudio avdio(sfile,128000);
+	Audio::StreamedAudio avdio(sfile,32000);
 	std::cout << "Channel count: " << avdio.getChannelCount() << std::endl;
 	std::cout << "Samplerate: " << avdio.getSamplerate() << std::endl;
 	std::cout << "Frame count: " << avdio.getFrameCount() << std::endl;
