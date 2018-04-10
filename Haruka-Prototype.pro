@@ -28,7 +28,9 @@ SOURCES += main.cpp \
     audio/SoundSource.cpp \
     audio/Audio.cpp \
     audio/OpenALWrapper.cpp \
-    sys/Time.cpp
+    sys/Time.cpp \
+    sys/Clock.cpp \
+    sys/MainSystem.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -67,4 +69,6 @@ HEADERS += \
     audio/alc.h \
     audio/alext.h \
     audio/efx.h \
-    sys/Time.hpp
+    sys/Time.hpp \
+    sys/Clock.hpp \
+    sys/MainSystem.hpp
