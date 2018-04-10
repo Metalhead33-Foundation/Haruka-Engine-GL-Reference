@@ -1,9 +1,9 @@
 #include "MainSystem.hpp"
 
-int MainSystem::run()
+MainSystem::error_t MainSystem::run()
 {
 	Time tempTime;
-	int returner = 1;
+	error_t returner = SYSTEM_OKAY;
 	if( (returner = startup()) == SYSTEM_ERROR ) return returner;
 	clock = sClock(new Clock());
 	do

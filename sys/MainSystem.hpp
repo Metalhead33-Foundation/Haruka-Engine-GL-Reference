@@ -5,7 +5,7 @@
 class MainSystem
 {
 public:
-	enum : int
+	enum error_t : uint8_t
 	{
 		SYSTEM_ERROR,
 		SYSTEM_OKAY,
@@ -15,11 +15,11 @@ private:
 	sClock clock;
 public:
 	virtual ~MainSystem() = default;
-	int run(); // The actual main loop
-	virtual int update(Time& deltaTime) = 0;
-	virtual int render() = 0;
-	virtual int startup() = 0;
-	virtual int cleanup() = 0;
+	error_t run(); // The actual main loop
+	virtual error_t update(Time& deltaTime) = 0;
+	virtual error_t render() = 0;
+	virtual error_t startup() = 0;
+	virtual error_t cleanup() = 0;
 };
 
 #endif // MAINSYSTEM_HPP
