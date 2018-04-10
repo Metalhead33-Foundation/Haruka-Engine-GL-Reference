@@ -12,7 +12,7 @@ private:
 	StreamedAudio(const StreamedAudio&);
 	StreamedAudio& operator=(const StreamedAudio&);
 	std::vector<SoundItem> inputBuffer;
-	size_t internalCloque;
+	size_t framePosition;
 
 	const sSoundFile soundfile;
 	ALuint reverseBuffer;

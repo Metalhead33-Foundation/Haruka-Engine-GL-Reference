@@ -1,6 +1,7 @@
 #include "StreamedAudio.hpp"
 #include "AudioSystem.hpp"
 #include <iostream>
+#include <unistd.h>
 namespace Audio {
 
 const char* StreamedAudio::getClassName()
@@ -8,7 +9,7 @@ const char* StreamedAudio::getClassName()
 	return "StreamedAudio";
 }
 StreamedAudio::StreamedAudio(sSoundFile src, size_t bufferSize)
-	: soundfile(src), inputBuffer(bufferSize), internalCloque(0), runner(nullptr)
+	: soundfile(src), inputBuffer(bufferSize), framePosition(0), runner(nullptr)
 {
 	alGenSources( 1, &source );
 	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
@@ -60,7 +61,7 @@ size_t StreamedAudio::bufferSound(ALuint& bufferref)
 	{
 		tmpCtr = soundfile->readf( inputBuffer.data(), soundfile->frames() / getChannelCount());
 	}
-	internalCloque += tmpCtr;
+	framePosition += tmpCtr;
 	alBufferData(bufferref, getRawFormat(), inputBuffer.data(), tmpCtr * getChannelCount() * sizeof(SoundItem), getSamplerate());
 	getSystem()->logError(getClassName(),"bufferSound",alGetError());
 	return tmpCtr;
@@ -89,6 +90,7 @@ void StreamedAudio::playFull()
 	alSourcePlay(source);
 	getSystem()->logError(getClassName(),"playFull",alGetError());
 	do {
+		usleep(float(readFrames / 2) / float(getSamplerate()) );
 		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
 		while(processedBuffers)
 		{
@@ -99,11 +101,11 @@ void StreamedAudio::playFull()
 			getSystem()->logError(getClassName(),"playFull",alGetError());
 			--processedBuffers;
 		}
-		if(internalCloque >= frameNum && getLooping())
+		if(framePosition >= frameNum && getLooping())
 		{
 			reset();
 		}
-	} while( internalCloque < frameNum && getStatus() == AL_PLAYING);
+	} while( framePosition < frameNum && getStatus() == AL_PLAYING);
 	reset();
 }
 int StreamedAudio::getFormat()
@@ -137,7 +139,7 @@ void StreamedAudio::stop()
 void StreamedAudio::reset()
 {
 	soundfile->seek(0, SEEK_SET);
-	internalCloque = 0;
+	framePosition = 0;
 }
 
 }
