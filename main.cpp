@@ -18,7 +18,9 @@ int testRenderer();
 int main(int argc, char *argv[])
 {
 	PHYSFS_init(argv[0]);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 	if(loadAL()) testStreamedSound();
+	SDL_Quit();
 	PHYSFS_deinit();
 	return 0;
 }
@@ -61,7 +63,6 @@ int testRenderer()
 {
 	// cout << "Hello World!" << endl;
 	bool exit_signal = false;
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	Abstract::sSettingContainer window = Abstract::sSettingContainer(new Abstract::SettingContainer{ 0, 0, 640, 400, "Hello Worold!" });
 	window->window = SDL_CreateWindow(window->title,
 									 SDL_WINDOWPOS_CENTERED,
@@ -123,6 +124,5 @@ int testRenderer()
 		renderer->switchBuffers();
 	} while(!exit_signal);
 	delete renderer;
-	SDL_Quit();
 	return 0;
 }

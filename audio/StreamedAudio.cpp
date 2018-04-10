@@ -1,7 +1,8 @@
 #include "StreamedAudio.hpp"
 #include "AudioSystem.hpp"
 #include <iostream>
-#include <unistd.h>
+#include <SDL2/SDL_timer.h>
+
 namespace Audio {
 
 const char* StreamedAudio::getClassName()
@@ -90,7 +91,7 @@ void StreamedAudio::playFull()
 	alSourcePlay(source);
 	getSystem()->logError(getClassName(),"playFull",alGetError());
 	do {
-		usleep(float(readFrames / 2) / float(getSamplerate()) );
+		SDL_Delay(uint32_t(float(readFrames / 2) / float(getSamplerate()) * float(1000.00)));
 		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
 		while(processedBuffers)
 		{
