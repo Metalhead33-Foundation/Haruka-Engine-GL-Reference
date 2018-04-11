@@ -19,7 +19,6 @@ private:
 	ThreadPointer runner;
 protected:
 	const char* getClassName();
-	size_t bufferSound(ALuint& bufferref);
 	void playFull();
 	ALenum getRawFormat();
 	static void startStreaming(pStreamedAudio audio);

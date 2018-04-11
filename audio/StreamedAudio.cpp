@@ -51,22 +51,6 @@ StreamedAudio::~StreamedAudio()
 	alDeleteBuffers( 1, &buffer );
 	alDeleteBuffers( 1, &reverseBuffer );
 }
-size_t StreamedAudio::bufferSound(ALuint& bufferref)
-{
-	size_t tmpCtr;
-	if( (inputBuffer.size() / getChannelCount()) < soundfile->frames())
-	{
-		tmpCtr = soundfile->readf( inputBuffer.data(), inputBuffer.size() / getChannelCount());
-	}
-	else
-	{
-		tmpCtr = soundfile->readf( inputBuffer.data(), soundfile->frames() / getChannelCount());
-	}
-	framePosition += tmpCtr;
-	alBufferData(bufferref, getRawFormat(), inputBuffer.data(), tmpCtr * getChannelCount() * sizeof(SoundItem), getSamplerate());
-	getSystem()->logError(getClassName(),"bufferSound",alGetError());
-	return tmpCtr;
-}
 void StreamedAudio::startStreaming(pStreamedAudio audio)
 {
 	if(audio) audio->playFull();
@@ -82,12 +66,10 @@ void StreamedAudio::playFull()
 	size_t readFrames = 0;
 	size_t frameNum = getFrameCount();
 	ALint processedBuffers = 0;
-	readFrames = bufferSound(buffer);
+	readFrames = soundfile->bufferSound(buffer, inputBuffer, &framePosition);
+	readFrames = soundfile->bufferSound(reverseBuffer, inputBuffer, &framePosition);
 	alSourceQueueBuffers(source, 1, &buffer);
-	getSystem()->logError(getClassName(),"playFull",alGetError());
-	readFrames = bufferSound(reverseBuffer);
 	alSourceQueueBuffers(source, 1, &reverseBuffer);
-	getSystem()->logError(getClassName(),"playFull",alGetError());
 	alSourcePlay(source);
 	getSystem()->logError(getClassName(),"playFull",alGetError());
 	do {
@@ -97,7 +79,7 @@ void StreamedAudio::playFull()
 		{
 			alSourceUnqueueBuffers(source, 1, &unqueuedBuffer);
 			getSystem()->logError(getClassName(),"playFull",alGetError());
-			readFrames = bufferSound(unqueuedBuffer);
+			readFrames = soundfile->bufferSound(unqueuedBuffer, inputBuffer, &framePosition);
 			alSourceQueueBuffers(source, 1, &unqueuedBuffer);
 			getSystem()->logError(getClassName(),"playFull",alGetError());
 			--processedBuffers;

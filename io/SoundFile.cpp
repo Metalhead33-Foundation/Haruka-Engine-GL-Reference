@@ -1,5 +1,6 @@
 #include "SoundFile.hpp"
 #include <cstring>
+
 namespace Audio {
 
 sSoundFile SoundFile::createSoundFile(Abstract::sFIO nhandle, int mode,
@@ -14,6 +15,29 @@ SoundFile::SoundFile(Abstract::sFIO nhandle, int mode,
 {
 	;
 }
+size_t SoundFile::bufferSound(ALuint& bufferref, std::vector<SoundItem>&  buff, size_t* incrementer)
+{
+	size_t tmpCtr;
+	if( (buff.size() / channels()) < frames() )
+	{
+		tmpCtr = readf( buff.data(), buff.size() / channels());
+	}
+	else
+	{
+		tmpCtr = readf( buff.data(), frames() / channels());
+	}
+	if(incrementer)	*incrementer += tmpCtr;
+	if(channels() == 2)
+	{
+		alBufferData(bufferref, STEREO_AUDIO, buff.data(), tmpCtr * channels() * sizeof(SoundItem), samplerate());
+	}
+	else
+	{
+		alBufferData(bufferref, MONO_AUDIO, buff.data(), tmpCtr * channels() * sizeof(SoundItem), samplerate());
+	}
+	return tmpCtr;
+}
+
 }
 sf_count_t sfGetFilelen(void *user_data);
 sf_count_t sfSeek(sf_count_t offset, int whence, void *user_data);
