@@ -14,7 +14,6 @@ private:
 	SoundBuffer& operator=(const SoundBuffer&);
 public:
 	static sAudioBuffer createSoundBuffer(sSoundFile src);
-	~SoundBuffer();
 	int getFormat();
 	int getChannelCount();
 	int getSamplerate();

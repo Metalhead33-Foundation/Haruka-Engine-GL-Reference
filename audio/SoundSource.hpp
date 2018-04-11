@@ -3,6 +3,7 @@
 #include "Audio.hpp"
 namespace Audio {
 
+DEFINE_CLASS(SoundSource)
 class SoundSource : public AudioSource
 {
 private:
@@ -12,7 +13,6 @@ private:
 public:
 	SoundSource();
 	SoundSource(sAudioBuffer buffer);
-	~SoundSource();
 
 	int getFormat();
 	int getChannelCount();

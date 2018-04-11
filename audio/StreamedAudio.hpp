@@ -1,39 +1,34 @@
-#ifndef STREAMEDAUDIO_HPP
-#define STREAMEDAUDIO_HPP
+#pragma once
 #include "Samplerate.hpp"
 #include "../io/SoundFile.hpp"
 #include "Audio.hpp"
 namespace Audio {
 
 DEFINE_CLASS(StreamedAudio)
-class StreamedAudio : public AudioBuffer, public AudioSource
+class StreamedAudio : public AudioSource
 {
 private:
 	StreamedAudio(const StreamedAudio&);
 	StreamedAudio& operator=(const StreamedAudio&);
-	std::vector<SoundItem> inputBuffer;
 	size_t framePosition;
 
 	const sSoundFile soundfile;
-	ALuint reverseBuffer;
-	ThreadPointer runner;
+	const ALenum format;
+	std::vector<ALuint> buffers;
+	StreamedAudio(sSoundFile src, size_t buffNum);
 protected:
 	const char* getClassName();
-	void playFull();
-	ALenum getRawFormat();
-	static void startStreaming(pStreamedAudio audio);
 public:
+	static sStreamedAudio create(sSoundFile src, size_t buffNum);
 	~StreamedAudio();
-	StreamedAudio(sSoundFile src, size_t bufferSize);
-	int getFormat();
-	int getChannelCount();
-	int getSamplerate();
-	sf_count_t getFrameCount();
 	void play();
 	void pause();
 	void stop();
 	void reset();
+
+	void bufferStart(SoundFile::FrameVector& tmpBuff);
+	void bufferOneCycle(SoundFile::FrameVector& tmpBuff);
+	void skipFrames(const STime& taimu);
 };
 
 }
-#endif // STREAMEDAUDIO_HPP

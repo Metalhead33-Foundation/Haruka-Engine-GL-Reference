@@ -14,14 +14,16 @@ SoundBuffer::SoundBuffer(sSoundFile src)
 	: samplerate(src->samplerate()), channelCount(src->channels()), format(src->format()), frameCount(src->frames())
 {
 	std::vector<SoundItem> tmpBuff(frameCount * channelCount);
-	alGenBuffers( 1, &buffer );
 	getSystem()->logError(getClassName(),"SoundBuffer",alGetError());
-	src->bufferSound(buffer,tmpBuff,nullptr);
-}
-SoundBuffer::~SoundBuffer()
-{
-	alDeleteBuffers( 1, &buffer );
-	getSystem()->logError(getClassName(),"~SoundBuffer",alGetError());
+	size_t tmpCtr = src->bufferSound(tmpBuff,nullptr);
+	if(src->channels() == 2)
+	{
+		alBufferData(buffer, STEREO_AUDIO, tmpBuff.data(), tmpCtr * src->channels() * sizeof(SoundItem), src->samplerate());
+	}
+	else
+	{
+		alBufferData(buffer, MONO_AUDIO, tmpBuff.data(), tmpCtr * src->channels() * sizeof(SoundItem), src->samplerate());
+	}
 }
 int SoundBuffer::getFormat()
 {

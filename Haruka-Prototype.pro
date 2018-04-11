@@ -12,7 +12,6 @@ SOURCES += main.cpp \
     GL/glad.c \
     GL/glad_glx.c \
     GL/GlTexture.cpp \
-    GL/RenderWindow.cpp \
     io/AssimpIO.cpp \
     io/FreeImageIoExt.cpp \
     io/SoundFile.cpp \
@@ -28,9 +27,11 @@ SOURCES += main.cpp \
     audio/SoundSource.cpp \
     audio/Audio.cpp \
     audio/OpenALWrapper.cpp \
-    sys/Time.cpp \
     sys/Clock.cpp \
-    sys/MainSystem.cpp
+    sys/MainSystem.cpp \
+    GL/GlRenderingEngine.cpp \
+    sys/GameSystem.cpp \
+    sys/STime.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -38,7 +39,6 @@ HEADERS += \
     GL/GlShaderModule.hpp \
     GL/GlShaderProgram.hpp \
     GL/GlTexture.hpp \
-    GL/RenderWindow.hpp \
     abstract/Texture.hpp \
     abstract/ShaderModule.hpp \
     abstract/ShaderProgram.hpp \
@@ -69,6 +69,9 @@ HEADERS += \
     audio/alc.h \
     audio/alext.h \
     audio/efx.h \
-    sys/Time.hpp \
     sys/Clock.hpp \
-    sys/MainSystem.hpp
+    sys/MainSystem.hpp \
+    abstract/RenderingEngine.hpp \
+    GL/GlRenderingEngine.hpp \
+    sys/GameSystem.hpp \
+    sys/STime.hpp

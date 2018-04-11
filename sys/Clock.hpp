@@ -1,19 +1,19 @@
 #ifndef CLOCK_HPP
 #define CLOCK_HPP
-#include "Time.hpp"
+#include "STime.hpp"
 
 DEFINE_CLASS(Clock)
 class Clock
 {
 private:
-	Time internalClock;
+	STime internalClock;
 	uint32_t lastClick;
 	void updateClock();
 public:
 	Clock();
-	Clock(Time& setClockStart);
-	Time getElapsedTime();
-	Time restart();
+	Clock(STime& setClockStart);
+	STime getElapsedTime();
+	STime restart();
 };
 
 #endif // CLOCK_HPP

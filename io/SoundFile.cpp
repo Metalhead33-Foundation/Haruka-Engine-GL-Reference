@@ -15,7 +15,13 @@ SoundFile::SoundFile(Abstract::sFIO nhandle, int mode,
 {
 	;
 }
-size_t SoundFile::bufferSound(ALuint& bufferref, std::vector<SoundItem>&  buff, size_t* incrementer)
+
+sf_count_t SoundFile::skipFrames(const STime& taimu)
+{
+	return seek(sf_count_t(taimu.getSeconds() * double(samplerate())), SEEK_CUR);
+}
+
+size_t SoundFile::bufferSound(FrameVector &buff, size_t* incrementer)
 {
 	size_t tmpCtr;
 	if( (buff.size() / channels()) < frames() )
@@ -27,14 +33,6 @@ size_t SoundFile::bufferSound(ALuint& bufferref, std::vector<SoundItem>&  buff, 
 		tmpCtr = readf( buff.data(), frames() / channels());
 	}
 	if(incrementer)	*incrementer += tmpCtr;
-	if(channels() == 2)
-	{
-		alBufferData(bufferref, STEREO_AUDIO, buff.data(), tmpCtr * channels() * sizeof(SoundItem), samplerate());
-	}
-	else
-	{
-		alBufferData(bufferref, MONO_AUDIO, buff.data(), tmpCtr * channels() * sizeof(SoundItem), samplerate());
-	}
 	return tmpCtr;
 }
 

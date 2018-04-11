@@ -16,7 +16,7 @@ private:
 public:
 	virtual ~MainSystem() = default;
 	error_t run(); // The actual main loop
-	virtual error_t update(Time& deltaTime) = 0;
+	virtual error_t update(STime& deltaTime) = 0;
 	virtual error_t render() = 0;
 	virtual error_t startup() = 0;
 	virtual error_t cleanup() = 0;

@@ -5,7 +5,7 @@ Clock::Clock()
 {
 	;
 }
-Clock::Clock(Time& setClockStart)
+Clock::Clock(STime& setClockStart)
 	: lastClick(SDL_GetTicks()), internalClock(setClockStart)
 {
 
@@ -16,15 +16,15 @@ void Clock::updateClock()
 	internalClock += int64_t(click - lastClick);
 	lastClick = click;
 }
-Time Clock::getElapsedTime()
+STime Clock::getElapsedTime()
 {
 	updateClock();
 	return internalClock;
 }
-Time Clock::restart()
+STime Clock::restart()
 {
 	updateClock();
-	Time tmp(internalClock.getMilliseconds());
+	STime tmp(internalClock.getMilliseconds());
 	internalClock.setMilliseconds(0);
 	return tmp;
 }

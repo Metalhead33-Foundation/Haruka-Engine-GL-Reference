@@ -1,6 +1,7 @@
 #ifndef GLSHADERMODULE_HPP
 #define GLSHADERMODULE_HPP
 #include "../abstract/ShaderModule.hpp"
+#include "../abstract/ShaderProgram.hpp"
 #include "../abstract/FIO.hpp"
 #include "glad_glx.h"
 

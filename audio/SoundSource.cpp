@@ -8,17 +8,12 @@ const char* SoundSource::getClassName()
 SoundSource::SoundSource()
 	: buffer(nullptr)
 {
-	alGenSources( 1, &source );
+	;
 }
 SoundSource::SoundSource(sAudioBuffer buffer)
 	: buffer(buffer)
 {
-	alGenSources( 1, &source );
 	if(buffer) alSourcei( source, AL_BUFFER, buffer->getBuffer() );
-}
-SoundSource::~SoundSource()
-{
-	alDeleteSources( 1, &source );
 }
 int SoundSource::getFormat()
 {

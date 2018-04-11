@@ -3,6 +3,7 @@
 #include "sndfile.hh"
 #include "../abstract/FIO.hpp"
 #include "../audio/OpenALWrapper.hpp"
+#include "../sys/STime.hpp"
 #include <vector>
 namespace Audio {
 
@@ -14,9 +15,11 @@ private:
 	SoundFile(Abstract::sFIO nhandle, int mode = SFM_READ,
 		  int format = 0, int channels = 0, int samplerate = 0);
 public:
+	typedef std::vector<SoundItem> FrameVector;
 	static sSoundFile createSoundFile(Abstract::sFIO nhandle, int mode = SFM_READ,
 		  int format = 0, int channels = 0, int samplerate = 0);
-	size_t bufferSound(ALuint& bufferref, std::vector<SoundItem>& buff, size_t* incrementer);
+	size_t bufferSound(FrameVector& buff, size_t* incrementer);
+	sf_count_t skipFrames(const STime& taimu);
 };
 
 }

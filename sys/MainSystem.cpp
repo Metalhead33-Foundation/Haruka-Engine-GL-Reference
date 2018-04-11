@@ -2,7 +2,7 @@
 
 MainSystem::error_t MainSystem::run()
 {
-	Time tempTime;
+	STime tempTime;
 	error_t returner = SYSTEM_OKAY;
 	if( (returner = startup()) == SYSTEM_ERROR ) return returner;
 	clock = sClock(new Clock());

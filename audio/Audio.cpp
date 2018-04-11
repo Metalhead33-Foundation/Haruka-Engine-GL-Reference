@@ -6,10 +6,34 @@ sAudioSystem AudioResource::getSystem()
 {
 	return SYSTEM;
 }
+ALenum AudioResource::ChannelCount2Format(int channelCount)
+{
+	if(channelCount == 2) return STEREO_AUDIO;
+	else return MONO_AUDIO;
+}
 void AudioResource::initializeSystem(int samplerate)
 {
 	SYSTEM = sAudioSystem(new AudioSystem(samplerate));
 }
+
+AudioBuffer::AudioBuffer()
+{
+	alGenBuffers(1, &buffer);
+}
+AudioSource::AudioSource()
+{
+	alGenSources(1, &source);
+}
+AudioBuffer::~AudioBuffer()
+{
+	alDeleteBuffers(1, &buffer);
+}
+AudioSource::~AudioSource()
+{
+	if(getStatus() != AL_STOPPED) alSourceStop(source);
+	alDeleteSources( 1, &source );
+}
+
 const char* AudioSource::getClassName()
 {
 	return "AudioSource";

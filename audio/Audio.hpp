@@ -21,6 +21,7 @@ class AudioResource
 	virtual ~AudioResource() = default;
 	sAudioSystem getSystem();
 	static void initializeSystem(int samplerate);
+	static ALenum ChannelCount2Format(int channelCount);
 };
 
 class AudioBuffer : public virtual AudioResource
@@ -28,7 +29,8 @@ class AudioBuffer : public virtual AudioResource
 protected:
 	ALuint buffer;
 public:
-	virtual ~AudioBuffer() = default;
+	AudioBuffer();
+	virtual ~AudioBuffer();
 	// virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate) = 0;
 	virtual int getFormat() = 0;
 	virtual int getChannelCount() = 0;
@@ -43,7 +45,8 @@ class AudioSource : public virtual AudioResource
 protected:
 	ALuint source;
 public:
-	virtual ~AudioSource() = default;
+	AudioSource();
+	virtual ~AudioSource();
 	// virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate) = 0;
 	virtual void play() = 0;
 	virtual void pause() = 0;

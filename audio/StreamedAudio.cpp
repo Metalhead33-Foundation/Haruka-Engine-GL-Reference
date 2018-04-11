@@ -9,120 +9,65 @@ const char* StreamedAudio::getClassName()
 {
 	return "StreamedAudio";
 }
-StreamedAudio::StreamedAudio(sSoundFile src, size_t bufferSize)
-	: soundfile(src), inputBuffer(bufferSize), framePosition(0), runner(nullptr)
+StreamedAudio::StreamedAudio(sSoundFile src, size_t buffNum)
+	: soundfile(src), framePosition(0), format(ChannelCount2Format(src->channels())), buffers(buffNum)
 {
-	alGenSources( 1, &source );
-	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
-	alGenBuffers( 1, &buffer );
-	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
-	alGenBuffers( 1, &reverseBuffer );
-	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
-	// alSourcei( source, AL_BUFFER, buffer );
-	// alSourcei(source, AL_LOOPING, false);
-	getSystem()->logError(getClassName(),"StreamedAudio",alGetError());
+	alGenBuffers(buffers.size(), buffers.data());
 }
-ALenum StreamedAudio::getRawFormat()
-{
-	switch(getChannelCount())
-	{
-	case 1:
-		return MONO_AUDIO;
-		break;
-	case 2:
-		return STEREO_AUDIO;
-		break;
-	default:
-		return MONO_AUDIO;
-		break;
-	}
-}
-/*void StreamedAudio::swapBuffers()
-{
-	ALuint tmp = buffer;
-	buffer = reverseBuffer;
-	reverseBuffer = tmp;
-}*/
 StreamedAudio::~StreamedAudio()
 {
-	if(getStatus() != AL_STOPPED) alSourceStop(source);
-	if(runner) runner->join();
-	alDeleteSources( 1, &source );
-	alDeleteBuffers( 1, &buffer );
-	alDeleteBuffers( 1, &reverseBuffer );
+	alDeleteBuffers(buffers.size(), buffers.data());
 }
-void StreamedAudio::startStreaming(pStreamedAudio audio)
+sStreamedAudio StreamedAudio::create(sSoundFile src, size_t buffNum)
 {
-	if(audio) audio->playFull();
+	return sStreamedAudio(new StreamedAudio(src,buffNum));
 }
-void StreamedAudio::playFull()
+void StreamedAudio::bufferStart(SoundFile::FrameVector& tmpBuff)
 {
-	ALenum lastErr;
-	if( (lastErr = alGetError()) != AL_NO_ERROR)
-	{
-		std::cout << "Error at the very start! - " << AudioSystem::translateError(lastErr) << std::endl;
-	}
-	ALuint unqueuedBuffer = 0;
-	size_t readFrames = 0;
-	size_t frameNum = getFrameCount();
-	ALint processedBuffers = 0;
-	readFrames = soundfile->bufferSound(buffer, inputBuffer, &framePosition);
-	readFrames = soundfile->bufferSound(reverseBuffer, inputBuffer, &framePosition);
-	alSourceQueueBuffers(source, 1, &buffer);
-	alSourceQueueBuffers(source, 1, &reverseBuffer);
-	alSourcePlay(source);
-	getSystem()->logError(getClassName(),"playFull",alGetError());
-	do {
-		SDL_Delay(uint32_t(float(readFrames / 2) / float(getSamplerate()) * float(1000.00)));
-		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
-		while(processedBuffers)
-		{
-			alSourceUnqueueBuffers(source, 1, &unqueuedBuffer);
-			getSystem()->logError(getClassName(),"playFull",alGetError());
-			readFrames = soundfile->bufferSound(unqueuedBuffer, inputBuffer, &framePosition);
-			alSourceQueueBuffers(source, 1, &unqueuedBuffer);
-			getSystem()->logError(getClassName(),"playFull",alGetError());
-			--processedBuffers;
-		}
-		if(framePosition >= frameNum && getLooping())
-		{
-			reset();
-		}
-	} while( framePosition < frameNum && getStatus() == AL_PLAYING);
 	reset();
+	size_t tmpCtr;
+	for(auto it = buffers.begin(); it != buffers.end(); ++it)
+	{
+		tmpCtr = soundfile->bufferSound(tmpBuff, &framePosition);
+		alBufferData(*it, format, tmpBuff.data(), tmpCtr * soundfile->channels() * sizeof(SoundItem), soundfile->samplerate());
+	}
+	alSourceQueueBuffers(source, buffers.size(), buffers.data());
 }
-int StreamedAudio::getFormat()
+void StreamedAudio::bufferOneCycle(SoundFile::FrameVector& tmpBuff)
 {
-	return soundfile->format();
-}
-int StreamedAudio::getChannelCount()
-{
-	return soundfile->channels();
-}
-int StreamedAudio::getSamplerate()
-{
-	return soundfile->samplerate();
-}
-sf_count_t StreamedAudio::getFrameCount()
-{
-	return soundfile->frames();
+	ALint processedBuffers = 0;
+	ALuint unqueuedBuffer = 0;
+	size_t tmpCtr;
+	alGetSourcei(source, AL_BUFFERS_PROCESSED, &processedBuffers);
+	while(processedBuffers)
+	{
+		alSourceUnqueueBuffers(source, 1, &unqueuedBuffer);
+		tmpCtr = soundfile->bufferSound(tmpBuff, &framePosition);
+		alBufferData(unqueuedBuffer, format, tmpBuff.data(), tmpCtr * soundfile->channels() * sizeof(SoundItem), soundfile->samplerate());
+		alSourceQueueBuffers(source, 1, &unqueuedBuffer);
+		--processedBuffers;
+	}
 }
 void StreamedAudio::play()
 {
-	if(getStatus() != AL_PLAYING ) runner = ThreadPointer(new std::thread(startStreaming,this));
+	alSourcePlay(source);
 }
 void StreamedAudio::pause()
 {
-	;
+	alSourcePause(source);
 }
 void StreamedAudio::stop()
 {
-	;
+	alSourceStop(source);
 }
 void StreamedAudio::reset()
 {
 	soundfile->seek(0, SEEK_SET);
 	framePosition = 0;
+}
+void StreamedAudio::skipFrames(const STime& taimu)
+{
+	framePosition = soundfile->skipFrames(taimu);
 }
 
 }
