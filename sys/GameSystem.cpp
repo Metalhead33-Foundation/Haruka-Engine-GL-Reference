@@ -67,7 +67,7 @@ GameSystem::error_t GameSystem::render()
 GameSystem::error_t GameSystem::startup()
 {
 	engine->startup();
-	Audio::sStreamedAudio maybeTonite = startSoundStream("maybetonight.ogg",3);
+	Audio::sStreamedAudio maybeTonite = startSoundStream("maybetonight.ogg",2);
 	maybeTonite->play();
 	return SYSTEM_OKAY;
 }
