@@ -8,7 +8,7 @@ MainSystem::error_t MainSystem::run()
 	clock = sClock(new Clock());
 	do
 	{
-		tempTime = clock->restart().getMilliseconds();
+		tempTime = clock->restart();
 		returner = update(tempTime);
 		if(returner == SYSTEM_OKAY) returner = render();
 	} while(returner == SYSTEM_OKAY);

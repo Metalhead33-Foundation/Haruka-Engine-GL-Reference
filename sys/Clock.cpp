@@ -1,7 +1,7 @@
 #include "Clock.hpp"
 
 Clock::Clock()
-	: lastClick(SDL_GetTicks()), internalClock(uint64_t(0))
+	: lastClick(SDL_GetTicks()), internalClock(int64_t(0))
 {
 	;
 }
@@ -13,7 +13,7 @@ Clock::Clock(Time& setClockStart)
 void Clock::updateClock()
 {
 	uint32_t click = SDL_GetTicks();
-	internalClock += uint64_t(click - lastClick);
+	internalClock += int64_t(click - lastClick);
 	lastClick = click;
 }
 Time Clock::getElapsedTime()

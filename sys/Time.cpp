@@ -1,5 +1,9 @@
 #include "sys/Time.hpp"
 
+const Time Time::oneSecond(1.00_s);
+const Time Time::oneMinute(1.00_m);
+const Time Time::oneHour(1.00_h);
+const Time Time::oneDay(1.00_d);
 void Time::sleep()
 {
 	SDL_Delay(milliseconds);
@@ -9,22 +13,37 @@ Time::Time()
 {
 	;
 }
-Time::Time(Time& copyConstructor)
+Time::Time(const Time& copyConstructor)
 	: milliseconds(copyConstructor.milliseconds)
 {
 	;
 }
-Time::Time(uint64_t nmilliseconds)
+Time::Time(int64_t nmilliseconds)
 	: milliseconds(nmilliseconds)
 {
 	;
 }
-Time::Time(double seconds)
-	: milliseconds(uint64_t(seconds * 1000.00))
+Time Time::asMilliseconds(int64_t milliseconds)
 {
-	;
+	return Time(milliseconds);
 }
-uint64_t Time::getMilliseconds() const
+Time Time::asSeconds(double seconds)
+{
+	return Time(oneSecond * seconds);
+}
+Time Time::asMinutes(double minutes)
+{
+	return Time(oneMinute * minutes);
+}
+Time Time::asHours(double hours)
+{
+	return Time(oneHour * hours);
+}
+Time Time::asDays(double days)
+{
+	return Time(oneDay * days);
+}
+int64_t Time::getMilliseconds() const
 {
 	return milliseconds;
 }
@@ -32,245 +51,263 @@ double Time::getSeconds() const
 {
 	return double(milliseconds) / 1000.00;
 }
-void Time::setMilliseconds(uint64_t milliseconds)
+void Time::setMilliseconds(int64_t milliseconds)
 {
 	this->milliseconds = milliseconds;
 }
 void Time::setSeconds(double seconds)
 {
-	this->milliseconds = uint64_t(seconds * 1000.00);
+	this->milliseconds = int64_t(seconds * 1000.00);
 }
 
-bool Time::operator==(Time& b) const
+bool Time::operator==(const Time& b) const
 {
 	return milliseconds == b.milliseconds;
 }
-bool Time::operator==(uint64_t& b) const
+bool Time::operator==(int64_t& b) const
 {
 	return milliseconds == b;
 }
 bool Time::operator==(double& b) const
 {
-	return milliseconds == uint64_t(b * 1000.00);
+	return milliseconds == int64_t(b * 1000.00);
 }
-bool Time::operator!=(Time& b) const
+bool Time::operator!=(const Time& b) const
 {
 	return milliseconds != b.milliseconds;
 }
-bool Time::operator!=(uint64_t& b) const
+bool Time::operator!=(int64_t& b) const
 {
 	return milliseconds != b;
 }
 bool Time::operator!=(double& b) const
 {
-	return milliseconds != uint64_t(b * 1000.00);
+	return milliseconds != int64_t(b * 1000.00);
 }
-bool Time::operator>(Time& b) const
+bool Time::operator>(const Time& b) const
 {
 	return milliseconds > b.milliseconds;
 }
-bool Time::operator>(uint64_t& b) const
+bool Time::operator>(int64_t& b) const
 {
 	return milliseconds > b;
 }
 bool Time::operator>(double& b) const
 {
-	return milliseconds > uint64_t(b * 1000.00);
+	return milliseconds > int64_t(b * 1000.00);
 }
-bool Time::operator<(Time& b) const
+bool Time::operator<(const Time& b) const
 {
 	return milliseconds < b.milliseconds;
 }
-bool Time::operator<(uint64_t& b) const
+bool Time::operator<(int64_t& b) const
 {
 	return milliseconds < b;
 }
 bool Time::operator<(double& b) const
 {
-	return milliseconds < uint64_t(b * 1000.00);
+	return milliseconds < int64_t(b * 1000.00);
 }
-bool Time::operator>=(Time& b) const
+bool Time::operator>=(const Time& b) const
 {
 	return milliseconds >= b.milliseconds;
 }
-bool Time::operator>=(uint64_t& b) const
+bool Time::operator>=(int64_t& b) const
 {
 	return milliseconds >= b;
 }
 bool Time::operator>=(double& b) const
 {
-	return milliseconds >= uint64_t(b * 1000.00);
+	return milliseconds >= int64_t(b * 1000.00);
 }
-bool Time::operator<=(Time& b) const
+bool Time::operator<=(const Time& b) const
 {
 	return milliseconds <= b.milliseconds;
 }
-bool Time::operator<=(uint64_t& b) const
+bool Time::operator<=(int64_t& b) const
 {
 	return milliseconds <= b;
 }
 bool Time::operator<=(double& b) const
 {
-	return milliseconds <= uint64_t(b * 1000.00);
+	return milliseconds <= int64_t(b * 1000.00);
 }
 
-void Time::operator=(Time& b)
+Time& Time::operator=(const Time& b)
 {
 	setMilliseconds(b.milliseconds);
+	return *this;
 }
-void Time::operator=(uint64_t b)
+Time& Time::operator=(int64_t b)
 {
 	setMilliseconds(b);
+	return *this;
 }
-void Time::operator=(double b)
+Time& Time::operator=(double b)
 {
 	setSeconds(b);
+	return *this;
 }
-void Time::operator+=(Time& b)
+Time& Time::operator+=(const Time& b)
 {
 	milliseconds += b.milliseconds;
+	return *this;
 }
-void Time::operator+=(uint64_t b)
+Time& Time::operator+=(int64_t b)
 {
 	milliseconds += b;
+	return *this;
 }
-void Time::operator+=(double b)
+Time& Time::operator+=(double b)
 {
-	milliseconds += uint64_t(b * 1000.00);
+	milliseconds += int64_t(b * 1000.00);
+	return *this;
 }
-void Time::operator-=(Time& b)
+Time& Time::operator-=(const Time& b)
 {
 	milliseconds -= b.milliseconds;
+	return *this;
 }
-void Time::operator-=(uint64_t b)
+Time& Time::operator-=(int64_t b)
 {
 	milliseconds -= b;
+	return *this;
 }
-void Time::operator-=(double b)
+Time& Time::operator-=(double b)
 {
-	milliseconds -= uint64_t(b * 1000.00);
+	milliseconds -= int64_t(b * 1000.00);
+	return *this;
 }
-void Time::operator*=(Time& b)
+Time& Time::operator*=(const Time& b)
 {
 	milliseconds *= b.milliseconds;
+	return *this;
 }
-void Time::operator*=(uint64_t b)
+Time& Time::operator*=(int64_t b)
 {
 	milliseconds *= b;
+	return *this;
 }
-void Time::operator*=(double b)
+Time& Time::operator*=(double b)
 {
-	milliseconds *= uint64_t(b * 1000.00);
+	milliseconds *= int64_t(b * 1000.00);
+	return *this;
 }
-void Time::operator/=(Time& b)
+Time& Time::operator/=(const Time& b)
 {
 	milliseconds /= b.milliseconds;
+	return *this;
 }
-void Time::operator/=(uint64_t b)
+Time& Time::operator/=(int64_t b)
 {
 	milliseconds /= b;
+	return *this;
 }
-void Time::operator/=(double b)
+Time& Time::operator/=(double b)
 {
-	milliseconds /= uint64_t(b * 1000.00);
+	milliseconds /= int64_t(b * 1000.00);
+	return *this;
 }
-void Time::operator%=(Time& b)
+Time& Time::operator%=(const Time& b)
 {
 	milliseconds %= b.milliseconds;
+	return *this;
 }
-void Time::operator%=(uint64_t b)
+Time& Time::operator%=(int64_t b)
 {
 	milliseconds %= b;
+	return *this;
 }
-void Time::operator%=(double b)
+Time& Time::operator%=(double b)
 {
-	milliseconds %= uint64_t(b * 1000.00);
+	milliseconds %= int64_t(b * 1000.00);
+	return *this;
 }
-Time Time::operator+(Time& b)
-{
-	Time tmp(milliseconds);
-	tmp += b;
-	return tmp;
-}
-Time Time::operator+(uint64_t b)
+Time Time::operator+(const Time& b) const
 {
 	Time tmp(milliseconds);
 	tmp += b;
 	return tmp;
 }
-Time Time::operator+(double b)
+Time Time::operator+(int64_t b) const
 {
 	Time tmp(milliseconds);
 	tmp += b;
 	return tmp;
 }
-Time Time::operator-(Time& b)
+Time Time::operator+(double b) const
+{
+	Time tmp(milliseconds);
+	tmp += b;
+	return tmp;
+}
+Time Time::operator-(const Time& b) const
 {
 	Time tmp(milliseconds);
 	tmp -= b;
 	return tmp;
 }
-Time Time::operator-(uint64_t b)
+Time Time::operator-(int64_t b) const
 {
 	Time tmp(milliseconds);
 	tmp -= b;
 	return tmp;
 }
-Time Time::operator-(double b)
+Time Time::operator-(double b) const
 {
 	Time tmp(milliseconds);
 	tmp -= b;
 	return tmp;
 }
-Time Time::operator*(Time& b)
+Time Time::operator*(const Time& b) const
 {
 	Time tmp(milliseconds);
 	tmp *= b;
 	return tmp;
 }
-Time Time::operator*(uint64_t b)
+Time Time::operator*(int64_t b) const
 {
 	Time tmp(milliseconds);
 	tmp *= b;
 	return tmp;
 }
-Time Time::operator*(double b)
+Time Time::operator*(double b) const
 {
 	Time tmp(milliseconds);
 	tmp *= b;
 	return tmp;
 }
-Time Time::operator/(Time& b)
+Time Time::operator/(const Time& b) const
 {
 	Time tmp(milliseconds);
 	tmp /= b;
 	return tmp;
 }
-Time Time::operator/(uint64_t b)
+Time Time::operator/(int64_t b) const
 {
 	Time tmp(milliseconds);
 	tmp /= b;
 	return tmp;
 }
-Time Time::operator/(double b)
+Time Time::operator/(double b) const
 {
 	Time tmp(milliseconds);
 	tmp /= b;
 	return tmp;
 }
-Time Time::operator%(Time& b)
+Time Time::operator%(const Time& b) const
 {
 	Time tmp(milliseconds);
 	tmp %= b;
 	return tmp;
 }
-Time Time::operator%(uint64_t b)
+Time Time::operator%(int64_t b) const
 {
 	Time tmp(milliseconds);
 	tmp %= b;
 	return tmp;
 }
-Time Time::operator%(double b)
+Time Time::operator%(double b) const
 {
 	Time tmp(milliseconds);
 	tmp %= b;
