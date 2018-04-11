@@ -1,19 +1,32 @@
-#include "AudioSystem.hpp"
+#include "Context.hpp"
 namespace Audio {
 
-AudioSystem::AudioSystem(int nSamplerate)
+Context::Context(int nSamplerate)
 {
 	ALCint contextAttr[] = {ALC_FREQUENCY,nSamplerate,0};
 	device = alcOpenDevice( NULL );
 	context = alcCreateContext( device, contextAttr );
 	alcMakeContextCurrent( context );
 }
-AudioSystem::~AudioSystem()
+Context::~Context()
 {
+	alcMakeContextCurrent( 0 );
 	alcDestroyContext( context );
 	alcCloseDevice( device );
 }
-const char* AudioSystem::translateError(ALenum err)
+void Context::makeCurrent()
+{
+	alcMakeContextCurrent( context );
+}
+void Context::process()
+{
+	alcProcessContext(context);
+}
+void Context::suspend()
+{
+	alcSuspendContext(context);
+}
+const char* Context::translateError(ALenum err)
 {
 	switch(err)
 	{
@@ -40,7 +53,7 @@ const char* AudioSystem::translateError(ALenum err)
 		break;
 	};
 }
-void AudioSystem::logError(const char* classname, const char* operation, ALenum error)
+void Context::logError(const char* classname, const char* operation, ALenum error)
 {
 	if(error != AL_NO_ERROR) {
 	errors.push_back( { classname, operation, translateError(error) }  );

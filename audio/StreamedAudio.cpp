@@ -1,5 +1,5 @@
 #include "StreamedAudio.hpp"
-#include "AudioSystem.hpp"
+#include "Context.hpp"
 #include <iostream>
 #include <SDL2/SDL_timer.h>
 
@@ -17,10 +17,6 @@ StreamedAudio::StreamedAudio(sSoundFile src, size_t buffNum)
 StreamedAudio::~StreamedAudio()
 {
 	alDeleteBuffers(buffers.size(), buffers.data());
-}
-sStreamedAudio StreamedAudio::create(sSoundFile src, size_t buffNum)
-{
-	return sStreamedAudio(new StreamedAudio(src,buffNum));
 }
 void StreamedAudio::bufferStart(SoundFile::FrameVector& tmpBuff)
 {

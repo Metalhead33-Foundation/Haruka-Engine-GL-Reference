@@ -45,18 +45,6 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 			break;
 		}
 	};
-	for(auto it = streamQueue.begin(); it != streamQueue.end();)
-	{
-		if( (*it)->getStatus() == AL_PLAYING )
-		{
-			(*it)->bufferOneCycle(audioBuffer);
-			++it;
-		}
-		else
-		{
-			it = streamQueue.erase(it);
-		}
-	}
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::render()
@@ -67,7 +55,6 @@ GameSystem::error_t GameSystem::render()
 GameSystem::error_t GameSystem::startup()
 {
 	engine->startup();
-	Audio::sStreamedAudio maybeTonite = startSoundStream("maybetonight.ogg",2);
 	maybeTonite->play();
 	return SYSTEM_OKAY;
 }
@@ -76,13 +63,4 @@ GameSystem::error_t GameSystem::cleanup()
 	engine->cleanup();
 	delete engine;
 	return SYSTEM_OKAY;
-}
-Audio::sStreamedAudio GameSystem::startSoundStream(const char* addr, size_t buffNum)
-{
-	Abstract::sFIO reada = PhysFS::FileHandle::openRead(addr);
-	Audio::sSoundFile sndfile = Audio::SoundFile::createSoundFile(reada);
-	Audio::sStreamedAudio stream = Audio::StreamedAudio::create(sndfile, buffNum);
-	stream->bufferStart(audioBuffer);
-	streamQueue.push_back(stream);
-	return stream;
 }

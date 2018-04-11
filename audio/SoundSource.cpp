@@ -10,7 +10,7 @@ SoundSource::SoundSource()
 {
 	;
 }
-SoundSource::SoundSource(sAudioBuffer buffer)
+SoundSource::SoundSource(sBuffer buffer)
 	: buffer(buffer)
 {
 	if(buffer) alSourcei( source, AL_BUFFER, buffer->getBuffer() );
@@ -60,7 +60,7 @@ void SoundSource::stop()
 		getSystem()->logError(getClassName(),"pause",alGetError());
 	}
 }
-void SoundSource::setBuffer(sAudioBuffer buffer)
+void SoundSource::setBuffer(sBuffer buffer)
 {
 	this->buffer = buffer;
 	if(buffer)

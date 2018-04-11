@@ -4,16 +4,16 @@
 namespace Audio {
 
 DEFINE_CLASS(SoundSource)
-class SoundSource : public AudioSource
+class SoundSource : public Source
 {
+	friend class System;
 private:
-	sAudioBuffer buffer;
+	sBuffer buffer;
 	SoundSource(const SoundSource&);
 	SoundSource& operator=(const SoundSource&);
-public:
 	SoundSource();
-	SoundSource(sAudioBuffer buffer);
-
+	SoundSource(sBuffer buffer);
+public:
 	int getFormat();
 	int getChannelCount();
 	int getSamplerate();
@@ -22,7 +22,7 @@ public:
 	void play();
 	void pause();
 	void stop();
-	void setBuffer(sAudioBuffer buffer);
+	void setBuffer(sBuffer buffer);
 protected:
 	const char* getClassName();
 };

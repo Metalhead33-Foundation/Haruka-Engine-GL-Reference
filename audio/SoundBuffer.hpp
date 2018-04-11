@@ -4,8 +4,9 @@
 namespace Audio {
 
 DEFINE_CLASS(SoundBuffer)
-class SoundBuffer : public AudioBuffer
+class SoundBuffer : public Buffer
 {
+	friend class System;
 private:
 	const int format,channelCount,samplerate;
 	const sf_count_t frameCount;
@@ -13,7 +14,6 @@ private:
 	SoundBuffer(const SoundBuffer&);
 	SoundBuffer& operator=(const SoundBuffer&);
 public:
-	static sAudioBuffer createSoundBuffer(sSoundFile src);
 	int getFormat();
 	int getChannelCount();
 	int getSamplerate();

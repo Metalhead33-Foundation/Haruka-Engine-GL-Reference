@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/others/Eurobeat","/",true);
 	if(loadAL())
 	{
-		Audio::AudioResource::initializeSystem(48000);
+		Audio::Resource::initializeSystem(48000);
 		GameSystem sys(Gl::RenderingEngine::createGlEngine,640,480,32000,"Hello Worold!");
 		sys.run();
 	}

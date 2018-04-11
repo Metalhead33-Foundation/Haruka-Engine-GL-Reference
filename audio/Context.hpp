@@ -8,8 +8,8 @@
 
 namespace Audio {
 
-DEFINE_CLASS(AudioSystem)
-class AudioSystem
+DEFINE_CLASS(Context)
+class Context
 {
 public:
 	struct ErrorLog
@@ -25,8 +25,11 @@ private:
 	ALCcontext* context;
 	ErrorVector errors;
 public:
-	AudioSystem(int nSamplerate);
-	~AudioSystem();
+	Context(int nSamplerate);
+	~Context();
+	void makeCurrent();
+	void process();
+	void suspend();
 	static const char* translateError(ALenum err);
 	void logError(const char* classname, const char* operation, ALenum error);
 };

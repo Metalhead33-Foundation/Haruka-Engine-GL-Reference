@@ -1,36 +1,37 @@
 #ifndef AUDIO_HPP
 #define AUDIO_HPP
 #include "../io/SoundFile.hpp"
-#include "AudioSystem.hpp"
+#include "Context.hpp"
 /* We need glm too */
 #include <glm/glm.hpp>
 
 namespace Audio {
 
-DEFINE_CLASS(AudoResource)
-DEFINE_CLASS(AudioBuffer)
-DEFINE_CLASS(AudioSource)
+DEFINE_CLASS(Resource)
+DEFINE_CLASS(Buffer)
+DEFINE_CLASS(Source)
+DEFINE_CLASS(System)
 
-class AudioResource
+class Resource
 {
 	protected:
 	virtual const char* getClassName() = 0;
 	private:
-	static sAudioSystem SYSTEM;
+	static sContext SYSTEM;
 	public:
-	virtual ~AudioResource() = default;
-	sAudioSystem getSystem();
+	virtual ~Resource() = default;
+	sContext getSystem();
 	static void initializeSystem(int samplerate);
 	static ALenum ChannelCount2Format(int channelCount);
 };
 
-class AudioBuffer : public virtual AudioResource
+class Buffer : public virtual Resource
 {
 protected:
 	ALuint buffer;
 public:
-	AudioBuffer();
-	virtual ~AudioBuffer();
+	Buffer();
+	virtual ~Buffer();
 	// virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate) = 0;
 	virtual int getFormat() = 0;
 	virtual int getChannelCount() = 0;
@@ -40,13 +41,13 @@ public:
 protected:
 	virtual const char* getClassName();
 };
-class AudioSource : public virtual AudioResource
+class Source : public virtual Resource
 {
 protected:
 	ALuint source;
 public:
-	AudioSource();
-	virtual ~AudioSource();
+	Source();
+	virtual ~Source();
 	// virtual size_t generateAudio(std::vector<float>& target, int channels, int sampleRate) = 0;
 	virtual void play() = 0;
 	virtual void pause() = 0;

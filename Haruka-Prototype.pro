@@ -22,7 +22,6 @@ SOURCES += main.cpp \
     GL/GlModel.cpp \
     io/AiModelFactory.cpp \
     audio/StreamedAudio.cpp \
-    audio/AudioSystem.cpp \
     audio/SoundBuffer.cpp \
     audio/SoundSource.cpp \
     audio/Audio.cpp \
@@ -31,7 +30,9 @@ SOURCES += main.cpp \
     sys/MainSystem.cpp \
     GL/GlRenderingEngine.cpp \
     sys/GameSystem.cpp \
-    sys/STime.cpp
+    sys/STime.cpp \
+    audio/Context.cpp \
+    audio/System.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -61,7 +62,6 @@ HEADERS += \
     abstract/FIO.hpp \
     GL/GlModel.hpp \
     io/AiModelFactory.hpp \
-    audio/AudioSystem.hpp \
     audio/SoundBuffer.hpp \
     audio/SoundSource.hpp \
     audio/OpenALWrapper.hpp \
@@ -74,4 +74,6 @@ HEADERS += \
     abstract/RenderingEngine.hpp \
     GL/GlRenderingEngine.hpp \
     sys/GameSystem.hpp \
-    sys/STime.hpp
+    sys/STime.hpp \
+    audio/Context.hpp \
+    audio/System.hpp

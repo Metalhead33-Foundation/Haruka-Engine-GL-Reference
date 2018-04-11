@@ -5,8 +5,9 @@
 namespace Audio {
 
 DEFINE_CLASS(StreamedAudio)
-class StreamedAudio : public AudioSource
+class StreamedAudio : public Source
 {
+	friend class System;
 private:
 	StreamedAudio(const StreamedAudio&);
 	StreamedAudio& operator=(const StreamedAudio&);
@@ -19,7 +20,6 @@ private:
 protected:
 	const char* getClassName();
 public:
-	static sStreamedAudio create(sSoundFile src, size_t buffNum);
 	~StreamedAudio();
 	void play();
 	void pause();

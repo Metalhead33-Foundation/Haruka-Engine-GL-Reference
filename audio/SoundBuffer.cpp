@@ -6,10 +6,6 @@ const char* SoundBuffer::getClassName()
 {
 	return "SoundBuffer";
 }
-sAudioBuffer SoundBuffer::createSoundBuffer(sSoundFile src)
-{
-	return sAudioBuffer(new SoundBuffer(src));
-}
 SoundBuffer::SoundBuffer(sSoundFile src)
 	: samplerate(src->samplerate()), channelCount(src->channels()), format(src->format()), frameCount(src->frames())
 {
