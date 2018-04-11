@@ -190,7 +190,7 @@ Time& Time::operator*=(int64_t b)
 }
 Time& Time::operator*=(double b)
 {
-	milliseconds *= int64_t(b * 1000.00);
+	milliseconds *= int64_t(b);
 	return *this;
 }
 Time& Time::operator/=(const Time& b)
@@ -205,7 +205,7 @@ Time& Time::operator/=(int64_t b)
 }
 Time& Time::operator/=(double b)
 {
-	milliseconds /= int64_t(b * 1000.00);
+	milliseconds /= int64_t(b);
 	return *this;
 }
 Time& Time::operator%=(const Time& b)
