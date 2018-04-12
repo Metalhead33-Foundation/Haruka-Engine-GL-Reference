@@ -25,7 +25,7 @@ public:
 	virtual error_t render() = 0;
 	virtual error_t startup() = 0;
 	virtual error_t cleanup() = 0;
-	virtual error_t processWindowEvents(const SDL_Event& ev) = 0;
+	virtual error_t processWindowEvent(const SDL_Event& ev) = 0;
 };
 
 #endif // MAINSYSTEM_HPP

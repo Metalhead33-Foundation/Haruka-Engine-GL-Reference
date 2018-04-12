@@ -29,7 +29,7 @@ public:
 
 }
 extern "C" {
-typedef Abstract::sRenderingEngine (*RENDERING_BACKEND_CONSTRUCTOR)(Abstract::sSettingContainer);
+typedef Abstract::sRenderingEngine (*RenderingBackendFactoryFunction)(Abstract::sSettingContainer);
 }
 
 #endif // RENDERINGENGINE_HPP

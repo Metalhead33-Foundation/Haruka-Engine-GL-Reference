@@ -16,6 +16,7 @@ sStreamedAudio System::createStreamingAudio(Abstract::sFIO reada, size_t buffNum
 {
 	Audio::sSoundFile sndfile = Audio::SoundFile::createSoundFile(reada);
 	sStreamedAudio tmp = sStreamedAudio(new StreamedAudio(sndfile,buffNum));
+	tmp->bufferStart(audioBuffer);
 	streamedSounds.push_back(tmp);
 	return tmp;
 }
@@ -40,9 +41,14 @@ sSoundSource System::createSoundSource( sBuffer buffer)
 }
 void System::processStreamedAudio()
 {
-	for(StreamingIterator it = streamedSounds.begin(); it != streamedSounds.end(); ++it)
+	for(StreamingIterator it = streamedSounds.begin(); it != streamedSounds.end();)
 	{
-		if((*it)->getStatus() == AL_PLAYING ) (*it)->bufferOneCycle(audioBuffer);
+		if(it->expired()) it = streamedSounds.erase(it);
+		else {
+			sStreamedAudio tmp = it->lock();
+			if(tmp->getStatus() == AL_PLAYING ) tmp->bufferOneCycle(audioBuffer);
+			++it;
+		}
 	}
 }
 void System::processContext()

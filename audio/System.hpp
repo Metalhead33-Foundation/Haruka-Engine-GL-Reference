@@ -11,13 +11,13 @@ namespace Audio {
 class System
 {
 public:
-	typedef std::deque<sSource> SourceQueue;
+	typedef std::deque<wSource> SourceQueue;
 	typedef SourceQueue::iterator SourceIterator;
-	typedef std::deque<sSoundSource> SoundSourceQueue;
+	typedef std::deque<wSoundSource> SoundSourceQueue;
 	typedef SoundSourceQueue::iterator SoundSourceIterator;
-	typedef std::deque<sStreamedAudio> StreamingQueue;
+	typedef std::deque<wStreamedAudio> StreamingQueue;
 	typedef StreamingQueue::iterator StreamingIterator;
-	typedef std::deque<sBuffer> BufferQueue;
+	typedef std::deque<wBuffer> BufferQueue;
 	typedef BufferQueue::iterator BufferIterator;
 private:
 	std::vector<SoundItem> audioBuffer;

@@ -14,6 +14,9 @@ int main(int argc, char *argv[])
 	if(loadAL())
 	{
 		GameSystem sys(createGlEngine,640,480,48000,32000,"Hello Worold!");
+		Audio::sSource maybetonite = sys.createStream("maybetonight.ogg","maybetonight.ogg",4);
+		maybetonite->setPitch(1.15);
+		maybetonite->play();
 		sys.run();
 	}
 	SDL_Quit();
