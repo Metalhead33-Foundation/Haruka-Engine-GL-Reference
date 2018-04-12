@@ -8,8 +8,8 @@
 class GameSystem : public MainSystem
 {
 private:
-	const Abstract::sRenderingEngine engine;
-	const Audio::sSystem soundsys;
+	Abstract::sRenderingEngine engine;
+	Audio::sSystem soundsys;
 public:
 	GameSystem(RENDERING_BACKEND_CONSTRUCTOR engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title);
 	error_t update(STime& deltaTime);

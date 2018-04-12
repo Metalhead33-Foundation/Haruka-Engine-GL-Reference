@@ -9,7 +9,7 @@ namespace Gl {
 
 GLint RenderingEngine::att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 
-RenderingEngine::RenderingEngine(Abstract::pSettingContainer nsettings)
+RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	: settings(nsettings)
 {
 	if (!gladLoadGLX(settings->sysWMinfo->info.x11.display,DefaultScreen(settings->sysWMinfo->info.x11.display))) throw std::runtime_error("Couldn't load GLX!!");
@@ -28,7 +28,7 @@ RenderingEngine::RenderingEngine(Abstract::pSettingContainer nsettings)
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
 }
 
-Abstract::pRenderingEngine RenderingEngine::createGlEngine(Abstract::pSettingContainer settings)
+Abstract::pRenderingEngine RenderingEngine::createGlEngine(Abstract::sSettingContainer settings)
 {
 	return new RenderingEngine(settings);
 }

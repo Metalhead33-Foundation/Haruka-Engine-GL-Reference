@@ -13,7 +13,7 @@ DEFINE_CLASS(RenderingEngine)
 class RenderingEngine
 {
 protected:
-	Abstract::pSettingContainer settings;
+	Abstract::sSettingContainer settings;
 public:
 	virtual ~RenderingEngine() = default;
 	virtual void switchBuffers() = 0;
@@ -28,6 +28,8 @@ public:
 };
 
 }
-typedef Abstract::pRenderingEngine (*RENDERING_BACKEND_CONSTRUCTOR)(Abstract::pSettingContainer);
+extern "C" {
+typedef Abstract::pRenderingEngine (*RENDERING_BACKEND_CONSTRUCTOR)(Abstract::sSettingContainer);
+}
 
 #endif // RENDERINGENGINE_HPP

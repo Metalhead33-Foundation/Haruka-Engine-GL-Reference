@@ -20,6 +20,3 @@ int main(int argc, char *argv[])
 	PHYSFS_deinit();
 	return 0;
 }
-int testRenderer()
-{
-}

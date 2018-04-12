@@ -14,7 +14,7 @@ private:
 	GLXContext cnt;
 
 public:
-	RenderingEngine(Abstract::pSettingContainer nsettings);
+	RenderingEngine(Abstract::sSettingContainer nsettings);
 	~RenderingEngine();
 	void switchBuffers();
 	static GLint att[];
@@ -27,7 +27,7 @@ public:
 	void startup();
 	void cleanup();
 
-	static Abstract::pRenderingEngine createGlEngine(Abstract::pSettingContainer settings);
+	static Abstract::pRenderingEngine createGlEngine(Abstract::sSettingContainer settings);
 };
 
 }

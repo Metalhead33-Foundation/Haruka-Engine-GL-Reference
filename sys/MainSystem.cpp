@@ -15,7 +15,7 @@ MainSystem::MainSystem(int w, int h, const char *title)
 }
 MainSystem::~MainSystem()
 {
-	// SDL_DestroyWindow(window->window);
+	SDL_DestroyWindow(window->window);
 }
 
 MainSystem::error_t MainSystem::run()
