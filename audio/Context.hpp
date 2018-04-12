@@ -26,7 +26,7 @@ private:
 	ErrorVector errors;
 public:
 	Context(int nSamplerate);
-	~Context();
+	virtual ~Context();
 	void makeCurrent();
 	void process();
 	void suspend();

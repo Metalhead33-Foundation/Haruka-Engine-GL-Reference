@@ -14,14 +14,15 @@ DEFINE_CLASS(System)
 
 class Resource
 {
-	protected:
+	friend class System;
+protected:
 	virtual const char* getClassName() = 0;
-	private:
+private:
 	static sContext SYSTEM;
-	public:
+public:
 	virtual ~Resource() = default;
 	sContext getSystem();
-	static void initializeSystem(int samplerate);
+	static void initializeSystem(sContext nsystem);
 	static ALenum ChannelCount2Format(int channelCount);
 };
 

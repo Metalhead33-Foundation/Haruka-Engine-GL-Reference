@@ -11,9 +11,9 @@ ALenum Resource::ChannelCount2Format(int channelCount)
 	if(channelCount == 2) return STEREO_AUDIO;
 	else return MONO_AUDIO;
 }
-void Resource::initializeSystem(int samplerate)
+void Resource::initializeSystem(sContext nsystem)
 {
-	SYSTEM = sContext(new Context(samplerate));
+	SYSTEM = nsystem;
 }
 
 Buffer::Buffer()

@@ -24,14 +24,18 @@ private:
 	SoundSourceQueue preloadedSounds;
 	StreamingQueue streamedSounds;
 	BufferQueue buffers;
+	const sContext context;
 public:
-	System();
+	System(int nSamplerate, size_t buffersize);
 	sStreamedAudio createStreamingAudio(Abstract::sFIO reada, size_t buffNum);
 	sBuffer createSoundBuffer(Abstract::sFIO reada);
 	sSoundSource createSoundSource();
 	sSoundSource createSoundSource(sBuffer buffer);
 
-	void processAudio();
+	void makeSystemCurrent();
+	void processStreamedAudio();
+	void processContext();
+	void suspendContext();
 };
 
 }

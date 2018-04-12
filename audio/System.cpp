@@ -3,9 +3,15 @@
 
 namespace Audio {
 
-System::System()
+System::System(int nSamplerate, size_t buffersize)
+	: context(sContext(new Context(nSamplerate))), audioBuffer(buffersize)
 {
-
+	Resource::initializeSystem(context);
+}
+void System::makeSystemCurrent()
+{
+	Resource::initializeSystem(context);
+	context->makeCurrent();
 }
 sStreamedAudio System::createStreamingAudio(Abstract::sFIO reada, size_t buffNum)
 {
@@ -33,12 +39,20 @@ sSoundSource System::createSoundSource( sBuffer buffer)
 	preloadedSounds.push_back(tmp);
 	return tmp;
 }
-void System::processAudio()
+void System::processStreamedAudio()
 {
 	for(StreamingIterator it = streamedSounds.begin(); it != streamedSounds.end(); ++it)
 	{
 		if((*it)->getStatus() == AL_PLAYING ) (*it)->bufferOneCycle(audioBuffer);
 	}
+}
+void System::processContext()
+{
+	context->process();
+}
+void System::suspendContext()
+{
+	context->suspend();
 }
 
 }
