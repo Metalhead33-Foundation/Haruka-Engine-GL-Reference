@@ -54,15 +54,7 @@ Audio::sSource GameSystem::createSource(const std::string& key, const std::strin
 	}
 	else
 	{
-		if(it->second.expired())
-		{
-			tmp = soundsys->createSoundSource();
-			audioBuffers.erase(it);
-		}
-		else
-		{
-			tmp = soundsys->createSoundSource(it->second.lock());
-		}
+		tmp = soundsys->createSoundSource(it->second);
 	}
 	audioSources.emplace(key, tmp);
 	return tmp;
@@ -71,16 +63,16 @@ Audio::sBuffer GameSystem::queryBuffer(const std::string& key)
 {
 	BufferIterator it = audioBuffers.find(key);
 	if(it == audioBuffers.end()) return nullptr;
-	else return it->second.lock();
+	else return it->second;
 }
 Audio::sSource GameSystem::querySource(const std::string& key)
 {
 	SourceIterator it = audioSources.find(key);
 	if(it == audioSources.end()) return nullptr;
-	else return it->second.lock();
+	else return it->second;
 }
 
-GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev)
+GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &deltaTime)
 {
 	switch (ev.type)
 	{

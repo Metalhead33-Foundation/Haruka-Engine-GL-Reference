@@ -9,8 +9,8 @@
 class GameSystem : public MainSystem
 {
 public:
-	typedef std::unordered_map<std::string, Audio::wBuffer> BufferHash;
-	typedef std::unordered_map<std::string, Audio::wSource> SourceHash;
+	typedef std::unordered_map<std::string, Audio::sBuffer> BufferHash;
+	typedef std::unordered_map<std::string, Audio::sSource> SourceHash;
 	typedef BufferHash::iterator BufferIterator;
 	typedef SourceHash::iterator SourceIterator;
 private:
@@ -24,7 +24,7 @@ public:
 	error_t render();
 	error_t startup();
 	error_t cleanup();
-	error_t processWindowEvent(const SDL_Event& ev);
+	error_t processWindowEvent(const SDL_Event& ev, STime& deltaTime);
 
 	Audio::sBuffer createBuffer(const std::string& key, const std::string& path);
 	Audio::sSource createStream(const std::string& key, const std::string& path, size_t buffNum=2);

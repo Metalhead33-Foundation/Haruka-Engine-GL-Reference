@@ -29,7 +29,7 @@ MainSystem::error_t MainSystem::run()
 		tempTime = clock->restart();
 		while(SDL_PollEvent(&ev))
 		{
-			returner = processWindowEvent(ev);
+			returner = processWindowEvent(ev, tempTime);
 			if(returner != SYSTEM_OKAY) break;
 		}
 		if(returner == SYSTEM_OKAY) returner = update(tempTime);
