@@ -2,15 +2,10 @@
 
 namespace Audio {
 
-const char* SoundBuffer::getClassName()
-{
-	return "SoundBuffer";
-}
 SoundBuffer::SoundBuffer(sSoundFile src)
 	: samplerate(src->samplerate()), channelCount(src->channels()), format(src->format()), frameCount(src->frames())
 {
 	std::vector<SoundItem> tmpBuff(frameCount * channelCount);
-	getSystem()->logError(getClassName(),"SoundBuffer",alGetError());
 	size_t tmpCtr = src->bufferSound(tmpBuff,nullptr);
 	if(src->channels() == 2)
 	{

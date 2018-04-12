@@ -2,13 +2,10 @@
 #include "Context.hpp"
 #include <iostream>
 #include <SDL2/SDL_timer.h>
+#include "AudioUtil.hpp"
 
 namespace Audio {
 
-const char* StreamedAudio::getClassName()
-{
-	return "StreamedAudio";
-}
 StreamedAudio::StreamedAudio(sSoundFile src, size_t buffNum)
 	: soundfile(src), framePosition(0), format(ChannelCount2Format(src->channels())), buffers(buffNum)
 {

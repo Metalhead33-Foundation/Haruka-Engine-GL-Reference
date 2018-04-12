@@ -7,26 +7,11 @@
 
 namespace Audio {
 
-DEFINE_CLASS(Resource)
 DEFINE_CLASS(Buffer)
 DEFINE_CLASS(Source)
 DEFINE_CLASS(System)
 
-class Resource
-{
-	friend class System;
-protected:
-	virtual const char* getClassName() = 0;
-private:
-	static sContext SYSTEM;
-public:
-	virtual ~Resource() = default;
-	sContext getSystem();
-	static void initializeSystem(sContext nsystem);
-	static ALenum ChannelCount2Format(int channelCount);
-};
-
-class Buffer : public virtual Resource
+class Buffer
 {
 protected:
 	ALuint buffer;
@@ -39,10 +24,9 @@ public:
 	virtual int getSamplerate() = 0;
 	virtual sf_count_t getFrameCount() = 0;
 	const ALuint& getBuffer() const;
-protected:
-	virtual const char* getClassName();
+	static ALenum ChannelCount2Format(int channelCount);
 };
-class Source : public virtual Resource
+class Source
 {
 protected:
 	ALuint source;
@@ -74,8 +58,6 @@ public:
 	float getAttenuation(void) const;
 	ALint getStatus(void) const;
 	bool getLooping(void) const;
-protected:
-	virtual const char* getClassName();
 };
 
 }

@@ -32,7 +32,8 @@ SOURCES += main.cpp \
     sys/GameSystem.cpp \
     sys/STime.cpp \
     audio/Context.cpp \
-    audio/System.cpp
+    audio/System.cpp \
+    audio/AudioUtil.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -76,4 +77,5 @@ HEADERS += \
     sys/GameSystem.hpp \
     sys/STime.hpp \
     audio/Context.hpp \
-    audio/System.hpp
+    audio/System.hpp \
+    audio/AudioUtil.hpp

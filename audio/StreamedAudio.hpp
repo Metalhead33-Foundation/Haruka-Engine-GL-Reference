@@ -17,8 +17,6 @@ private:
 	const ALenum format;
 	std::vector<ALuint> buffers;
 	StreamedAudio(sSoundFile src, size_t buffNum);
-protected:
-	const char* getClassName();
 public:
 	~StreamedAudio();
 	void play();

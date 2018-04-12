@@ -18,8 +18,6 @@ public:
 	int getChannelCount();
 	int getSamplerate();
 	sf_count_t getFrameCount();
-protected:
-	const char* getClassName();
 };
 
 }

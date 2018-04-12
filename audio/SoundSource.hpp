@@ -23,8 +23,6 @@ public:
 	void pause();
 	void stop();
 	void setBuffer(sBuffer buffer);
-protected:
-	const char* getClassName();
 };
 
 }

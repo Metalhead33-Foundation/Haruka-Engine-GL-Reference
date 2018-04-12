@@ -26,9 +26,11 @@ public:
 	void renderFrame();
 	void startup();
 	void cleanup();
-
-	static Abstract::pRenderingEngine createGlEngine(Abstract::sSettingContainer settings);
 };
 
+}
+
+extern "C" {
+Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings);
 }
 #endif // RENDERWINDOW_HPP

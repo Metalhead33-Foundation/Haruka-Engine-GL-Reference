@@ -1,10 +1,6 @@
 #include "SoundSource.hpp"
 namespace Audio {
 
-const char* SoundSource::getClassName()
-{
-	return "SoundSource";
-}
 SoundSource::SoundSource()
 	: buffer(nullptr)
 {
@@ -41,7 +37,6 @@ void SoundSource::play()
 	if(buffer)
 	{
 		alSourcePlay(source);
-		getSystem()->logError(getClassName(),"play",alGetError());
 	}
 }
 void SoundSource::pause()
@@ -49,7 +44,6 @@ void SoundSource::pause()
 	if(buffer)
 	{
 		alSourcePause(source);
-		getSystem()->logError(getClassName(),"pause",alGetError());
 	}
 }
 void SoundSource::stop()
@@ -57,7 +51,6 @@ void SoundSource::stop()
 	if(buffer)
 	{
 		alSourceStop(source);
-		getSystem()->logError(getClassName(),"pause",alGetError());
 	}
 }
 void SoundSource::setBuffer(sBuffer buffer)
@@ -66,7 +59,6 @@ void SoundSource::setBuffer(sBuffer buffer)
 	if(buffer)
 	{
 		alSourcei( source, AL_BUFFER, buffer->getBuffer() );
-		getSystem()->logError(getClassName(),"setBuffer",alGetError());
 	}
 }
 

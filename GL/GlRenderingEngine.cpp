@@ -5,6 +5,13 @@
 #include "GlShaderProgram.hpp"
 #include "GlTexture.hpp"
 
+
+Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings)
+{
+	return Abstract::sRenderingEngine(new Gl::RenderingEngine(settings));
+}
+
+
 namespace Gl {
 
 GLint RenderingEngine::att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
@@ -26,11 +33,6 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	if(!cnt) throw std::runtime_error("Couldn't create GLX context!");
 	glXMakeCurrent(settings->sysWMinfo->info.x11.display, settings->sysWMinfo->info.x11.window, cnt);
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
-}
-
-Abstract::pRenderingEngine RenderingEngine::createGlEngine(Abstract::sSettingContainer settings)
-{
-	return new RenderingEngine(settings);
 }
 
 RenderingEngine::~RenderingEngine()

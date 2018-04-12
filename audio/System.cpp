@@ -6,11 +6,10 @@ namespace Audio {
 System::System(int nSamplerate, size_t buffersize)
 	: context(sContext(new Context(nSamplerate))), audioBuffer(buffersize)
 {
-	Resource::initializeSystem(context);
+
 }
 void System::makeSystemCurrent()
 {
-	Resource::initializeSystem(context);
 	context->makeCurrent();
 }
 sStreamedAudio System::createStreamingAudio(Abstract::sFIO reada, size_t buffNum)

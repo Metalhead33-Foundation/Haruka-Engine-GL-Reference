@@ -11,27 +11,15 @@ namespace Audio {
 DEFINE_CLASS(Context)
 class Context
 {
-public:
-	struct ErrorLog
-	{
-		const char* classname;
-		const char* operation;
-		const char* error;
-	};
-	typedef std::deque<ErrorLog> ErrorVector;
-	typedef ErrorVector::iterator ErrorIterator;
 private:
 	ALCdevice* device;
 	ALCcontext* context;
-	ErrorVector errors;
 public:
 	Context(int nSamplerate);
 	virtual ~Context();
 	void makeCurrent();
 	void process();
 	void suspend();
-	static const char* translateError(ALenum err);
-	void logError(const char* classname, const char* operation, ALenum error);
 };
 
 }

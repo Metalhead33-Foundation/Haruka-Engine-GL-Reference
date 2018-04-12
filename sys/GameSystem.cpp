@@ -3,7 +3,7 @@
 GameSystem::GameSystem(RENDERING_BACKEND_CONSTRUCTOR engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char *title)
 	: MainSystem(w, h, title),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
-	  engine( Abstract::sRenderingEngine( engineCreator(window) )  )
+	  engine( engineCreator(window)  )
 {
 
 }
