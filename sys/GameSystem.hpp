@@ -32,6 +32,8 @@ public:
 
 	Audio::sBuffer queryBuffer(const std::string& key);
 	Audio::sSource querySource(const std::string& key);
+	void deleteBuffer(const std::string& key);
+	void deleteSource(const std::string& key);
 };
 
 #endif // GAMESYSTEM_HPP

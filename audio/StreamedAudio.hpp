@@ -15,6 +15,7 @@ private:
 
 	const sSoundFile soundfile;
 	const ALenum format;
+	ALenum originalStatus;
 	std::vector<ALuint> buffers;
 	StreamedAudio(sSoundFile src, size_t buffNum);
 public:

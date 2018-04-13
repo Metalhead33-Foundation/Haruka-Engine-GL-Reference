@@ -33,7 +33,13 @@ SOURCES += main.cpp \
     sys/STime.cpp \
     audio/Context.cpp \
     audio/System.cpp \
-    audio/AudioUtil.cpp
+    audio/AudioUtil.cpp \
+    audio/FX/Effect.cpp \
+    audio/FX/Filter.cpp \
+    audio/FX/AuxiliaryEventSlot.cpp \
+    audio/FX/LowpassFilter.cpp \
+    audio/FX/HighpassFilter.cpp \
+    audio/FX/BandpassFilter.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -78,4 +84,10 @@ HEADERS += \
     sys/STime.hpp \
     audio/Context.hpp \
     audio/System.hpp \
-    audio/AudioUtil.hpp
+    audio/AudioUtil.hpp \
+    audio/FX/Effect.hpp \
+    audio/FX/Filter.hpp \
+    audio/FX/AuxiliaryEventSlot.hpp \
+    audio/FX/LowpassFilter.hpp \
+    audio/FX/HighpassFilter.hpp \
+    audio/FX/BandpassFilter.hpp

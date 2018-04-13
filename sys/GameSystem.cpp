@@ -71,6 +71,16 @@ Audio::sSource GameSystem::querySource(const std::string& key)
 	if(it == audioSources.end()) return nullptr;
 	else return it->second;
 }
+void GameSystem::deleteBuffer(const std::string& key)
+{
+	BufferIterator it = audioBuffers.find(key);
+	if(it != audioBuffers.end()) audioBuffers.erase(it);
+}
+void GameSystem::deleteSource(const std::string& key)
+{
+	SourceIterator it = audioSources.find(key);
+	if(it != audioSources.end()) audioSources.erase(it);
+}
 
 GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &deltaTime)
 {

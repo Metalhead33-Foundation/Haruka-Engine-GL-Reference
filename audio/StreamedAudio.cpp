@@ -28,6 +28,11 @@ void StreamedAudio::bufferStart(SoundFile::FrameVector& tmpBuff)
 }
 void StreamedAudio::bufferOneCycle(SoundFile::FrameVector& tmpBuff)
 {
+	bool continueFlag = false;
+	if(getStatus() != originalStatus && framePosition < soundfile->frames() )
+	{
+		continueFlag = true;
+	}
 	ALint processedBuffers = 0;
 	ALuint unqueuedBuffer = 0;
 	size_t tmpCtr;
@@ -40,18 +45,23 @@ void StreamedAudio::bufferOneCycle(SoundFile::FrameVector& tmpBuff)
 		alSourceQueueBuffers(source, 1, &unqueuedBuffer);
 		--processedBuffers;
 	}
+	if(continueFlag) alSourcePlay(source);
+	originalStatus = getStatus();
 }
 void StreamedAudio::play()
 {
 	alSourcePlay(source);
+	originalStatus = getStatus();
 }
 void StreamedAudio::pause()
 {
 	alSourcePause(source);
+	originalStatus = getStatus();
 }
 void StreamedAudio::stop()
 {
 	alSourceStop(source);
+	originalStatus = getStatus();
 }
 void StreamedAudio::reset()
 {
