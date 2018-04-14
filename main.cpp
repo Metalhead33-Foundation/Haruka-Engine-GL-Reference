@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 		filter->setGain(0.99f);
 		filter->setHighFrequencyGain(0.11f);
 		std::cout << alGetError() << std::endl;
-		Audio::sReverbEffect eff = Audio::ReverbEffect::create();
+		Audio::sDistortionEffect eff = Audio::DistortionEffect::create();
 		std::cout << alGetError() << std::endl;
 		eff->setGain(0.99f);
 		Audio::sAuxiliaryEffectSlot aux = Audio::AuxiliaryEffectSlot::create();
@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
 		aux->setEffect(eff);
 		std::cout << alGetError() << std::endl;
 		Audio::sSource maybetonite = sys.createStream("maybetonight.ogg","maybetonight.ogg",4);
-		// maybetonite->setAuxiliaryEffectSlot(aux);
-		alSource3i(maybetonite->getSource(),AL_AUXILIARY_SEND_FILTER,aux->getAuxiliaryEffectSlot(), 0, filter->getFilter());
+		maybetonite->setAuxiliaryEffectSlot(aux);
+		// alSource3i(maybetonite->getSource(),AL_AUXILIARY_SEND_FILTER,aux->getAuxiliaryEffectSlot(), 0, filter->getFilter());
 		std::cout << alGetError() << std::endl;
-		// maybetonite->setFilter(filter);
+		maybetonite->setFilter(filter);
 		std::cout << alGetError() << std::endl;
 		maybetonite->setPitch(1.15);
 		maybetonite->play();

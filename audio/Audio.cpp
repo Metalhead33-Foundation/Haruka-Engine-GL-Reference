@@ -119,10 +119,7 @@ void Source::updateEffects()
 		{
 			alSource3i(source,AL_AUXILIARY_SEND_FILTER, auxiliaryEffectSlot->getAuxiliaryEffectSlot(), 0, filter->getFilter());
 		}
-		else
-		{
-			alSourcei(source, AL_DIRECT_FILTER, filter->getFilter());
-		}
+		alSourcei(source, AL_DIRECT_FILTER, filter->getFilter());
 	}
 	else
 	{
