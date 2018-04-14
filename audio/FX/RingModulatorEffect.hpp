@@ -1,9 +1,9 @@
 #ifndef RINGMODULATOREFFECT_HPP
 #define RINGMODULATOREFFECT_HPP
-#include "Effect.hpp"
+#include "WaveformEffect.hpp"
 namespace Audio {
 
-class RingModulatorEffect : public Effect
+class RingModulatorEffect : public WaveformEffect
 {
 public:
 	RingModulatorEffect();
@@ -12,8 +12,8 @@ public:
 	float getFrequency(void) const;
 	void setHighpassCutoff(float highpassCutoff);
 	float getHighpassCutoff(void) const;
-	void setWaveform(int waveform);
-	int getWaveform(void) const;
+	void setWaveform(Waveform waveform);
+	Waveform getWaveform(void) const;
 };
 
 }

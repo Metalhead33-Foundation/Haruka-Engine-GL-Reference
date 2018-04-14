@@ -30,15 +30,15 @@ float RingModulatorEffect::getHighpassCutoff(void) const
 	alGetEffectf(effectID, AL_RING_MODULATOR_HIGHPASS_CUTOFF, &tmp);
 	return tmp;
 }
-void RingModulatorEffect::setWaveform(int waveform)
+void RingModulatorEffect::setWaveform(Waveform waveform)
 {
 	alEffecti(effectID, AL_RING_MODULATOR_WAVEFORM, waveform);
 }
-int RingModulatorEffect::getWaveform(void) const
+RingModulatorEffect::Waveform RingModulatorEffect::getWaveform(void) const
 {
 	int tmp;
 	alGetEffecti(effectID, AL_RING_MODULATOR_WAVEFORM, &tmp);
-	return tmp;
+	return Waveform(tmp);
 }
 
 }

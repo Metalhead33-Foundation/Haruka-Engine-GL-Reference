@@ -115,4 +115,5 @@ HEADERS += \
     audio/FX/WahWahEffect.hpp \
     audio/FX/CompressorEffect.hpp \
     audio/FX/EqualizerEffect.hpp \
-    audio/FX/ChorflangEffect.hpp
+    audio/FX/ChorflangEffect.hpp \
+    audio/FX/WaveformEffect.hpp
