@@ -6,18 +6,20 @@ AuxiliaryEffectSlot::AuxiliaryEffectSlot()
 {
 	alGenAuxiliaryEffectSlots(1,&auxiliaryeffectslot);
 }
-AuxiliaryEffectSlot::AuxiliaryEffectSlot(sEffect eff)
-	: effect(eff)
+AuxiliaryEffectSlot::AuxiliaryEffectSlot(const AuxiliaryEffectSlot& cpy)
 {
-	if(effect) alAuxiliaryEffectSloti(auxiliaryeffectslot,AL_EFFECTSLOT_EFFECT,eff->getEffect());
+	alGenAuxiliaryEffectSlots(1,&auxiliaryeffectslot);
+	effect = cpy.effect;
+	filter = cpy.filter;
 }
 sAuxiliaryEffectSlot AuxiliaryEffectSlot::create()
 {
 	return sAuxiliaryEffectSlot(new AuxiliaryEffectSlot());
 }
-sAuxiliaryEffectSlot AuxiliaryEffectSlot::create(sEffect eff)
+sAuxiliaryEffectSlot AuxiliaryEffectSlot::create(sAuxiliaryEffectSlot cpy)
 {
-	return sAuxiliaryEffectSlot(new AuxiliaryEffectSlot(eff));
+	if(cpy) return sAuxiliaryEffectSlot(new AuxiliaryEffectSlot(*cpy));
+	else return sAuxiliaryEffectSlot(new AuxiliaryEffectSlot());
 }
 AuxiliaryEffectSlot::~AuxiliaryEffectSlot()
 {
@@ -56,6 +58,22 @@ void AuxiliaryEffectSlot::setEffect(sEffect eff)
 sEffect AuxiliaryEffectSlot::getEffect() const
 {
 	return effect;
+}
+void AuxiliaryEffectSlot::setFilter(sFilter flt)
+{
+	filter = flt;
+}
+sFilter AuxiliaryEffectSlot::getFilter() const
+{
+	return filter;
+}
+void AuxiliaryEffectSlot::applyToSource(ALuint& source)
+{
+	if(effect)
+	{
+		if(filter) alSource3i(source,AL_AUXILIARY_SEND_FILTER, auxiliaryeffectslot, 0, filter->getFilter());
+		else alSource3i(source,AL_AUXILIARY_SEND_FILTER, auxiliaryeffectslot, 0, AL_FILTER_NULL);
+	}
 }
 
 }

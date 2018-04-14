@@ -16,23 +16,20 @@ int main(int argc, char *argv[])
 	{
 		GameSystem sys(createGlEngine,640,480,48000,32000,"Hello Worold!");
 		Audio::sLowpassFilter filter = Audio::LowpassFilter::create();
+		Audio::sLowpassFilter silence = Audio::LowpassFilter::create();
 		filter->setGain(0.99f);
 		filter->setHighFrequencyGain(0.11f);
-		std::cout << alGetError() << std::endl;
+		silence->setGain(0.00f);
+		silence->setHighFrequencyGain(0.00f);
 		Audio::sDistortionEffect eff = Audio::DistortionEffect::create();
-		std::cout << alGetError() << std::endl;
 		eff->setGain(0.99f);
 		Audio::sAuxiliaryEffectSlot aux = Audio::AuxiliaryEffectSlot::create();
 		aux->setGain(0.99f);
-		std::cout << alGetError() << std::endl;
 		aux->setEffect(eff);
-		std::cout << alGetError() << std::endl;
+		aux->setFilter(filter);
 		Audio::sSource maybetonite = sys.createStream("maybetonight.ogg","maybetonight.ogg",4);
 		maybetonite->setAuxiliaryEffectSlot(aux);
-		// alSource3i(maybetonite->getSource(),AL_AUXILIARY_SEND_FILTER,aux->getAuxiliaryEffectSlot(), 0, filter->getFilter());
-		std::cout << alGetError() << std::endl;
-		maybetonite->setFilter(filter);
-		std::cout << alGetError() << std::endl;
+		maybetonite->setFilter(silence);
 		maybetonite->setPitch(1.15);
 		maybetonite->play();
 		sys.run();
