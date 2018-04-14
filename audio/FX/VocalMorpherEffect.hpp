@@ -3,10 +3,15 @@
 #include "WaveformEffect.hpp"
 namespace Audio {
 
+DEFINE_CLASS(VocalMorpherEffect)
 class VocalMorpherEffect : public WaveformEffect
 {
-public:
+private:
 	VocalMorpherEffect();
+	VocalMorpherEffect(const VocalMorpherEffect& cpy);
+public:
+	static sVocalMorpherEffect create();
+	static sVocalMorpherEffect create(sVocalMorpherEffect cpy);
 	virtual ALenum getEffectType();
 	void setWaveform(Waveform waveform);
 	Waveform getWaveform(void) const;

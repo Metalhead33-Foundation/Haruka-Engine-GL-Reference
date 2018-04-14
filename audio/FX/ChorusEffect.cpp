@@ -6,6 +6,25 @@ ChorusEffect::ChorusEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_CHORUS);
 }
+ChorusEffect::ChorusEffect(const ChorflangEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_CHORUS);
+	setDelay(cpy.getDelay());
+	setDepth(cpy.getDepth());
+	setFeedback(cpy.getFeedback());
+	setIsWaveformTriangle(cpy.getIsWaveformTriangle());
+	setPhase(cpy.getPhase());
+	setRate(cpy.getRate());
+}
+sChorflangEffect ChorusEffect::create()
+{
+	return sChorflangEffect(new ChorusEffect());
+}
+sChorflangEffect ChorusEffect::create(sChorflangEffect cpy)
+{
+	if(cpy) return sChorflangEffect(new ChorusEffect(*cpy));
+	else return sChorflangEffect(new ChorusEffect());
+}
 
 ALenum ChorusEffect::getEffectType()
 {

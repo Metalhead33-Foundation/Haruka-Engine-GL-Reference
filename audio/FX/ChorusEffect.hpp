@@ -6,8 +6,12 @@ namespace Audio {
 
 class ChorusEffect : public ChorflangEffect
 {
-public:
+private:
 	ChorusEffect();
+	ChorusEffect(const ChorflangEffect& cpy);
+public:
+	static sChorflangEffect create();
+	static sChorflangEffect create(sChorflangEffect cpy);
 	virtual ALenum getEffectType();
 	void setIsWaveformTriangle(bool isWaveformTriangle);
 	bool getIsWaveformTriangle(void) const;

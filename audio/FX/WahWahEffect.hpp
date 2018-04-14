@@ -4,13 +4,18 @@
 #include "../../sys/STime.hpp"
 namespace Audio {
 
+DEFINE_CLASS(WahWahEffect)
 class WahWahEffect : public Effect
 {
-public:
+private:
 	WahWahEffect();
+	WahWahEffect(const WahWahEffect& cpy);
+public:
+	static sWahWahEffect create();
+	static sWahWahEffect create(sWahWahEffect cpy);
 	virtual ALenum getEffectType();
-	void setATtackTime(const STime& time);
-	STime getATtackTime(void) const;
+	void setArtackTime(const STime& time);
+	STime getAttackTime(void) const;
 	void setReleaseTime(const STime& time);
 	STime getReleaseTime(void) const;
 	void setResonance(float resonance);

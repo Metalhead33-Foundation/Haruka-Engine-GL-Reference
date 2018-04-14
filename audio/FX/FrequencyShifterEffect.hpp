@@ -3,10 +3,15 @@
 #include "Effect.hpp"
 namespace Audio {
 
+DEFINE_CLASS(FrequencyShifterEffect)
 class FrequencyShifterEffect : public Effect
 {
-public:
+private:
 	FrequencyShifterEffect();
+	FrequencyShifterEffect(const FrequencyShifterEffect& cpy);
+public:
+	static sFrequencyShifterEffect create();
+	static sFrequencyShifterEffect create(sFrequencyShifterEffect cpy);
 	virtual ALenum getEffectType();
 	void setFrequency(float frequency);
 	float getFrequency(void) const;

@@ -5,6 +5,26 @@ VocalMorpherEffect::VocalMorpherEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_VOCAL_MORPHER);
 }
+VocalMorpherEffect::VocalMorpherEffect(const VocalMorpherEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_VOCAL_MORPHER);
+	setCoarseTuneA(cpy.getCoarseTuneA());
+	setCoarseTuneB(cpy.getCoarseTuneB());
+	setMorpherRate(cpy.getMorpherRate());
+	setPhonemeA(cpy.getPhonemeA());
+	setPhonemeB(cpy.getPhonemeB());
+	setWaveform(cpy.getWaveform());
+}
+sVocalMorpherEffect VocalMorpherEffect::create()
+{
+	return sVocalMorpherEffect(new VocalMorpherEffect());
+}
+sVocalMorpherEffect VocalMorpherEffect::create(sVocalMorpherEffect cpy)
+{
+	if(cpy) return sVocalMorpherEffect(new VocalMorpherEffect(*cpy));
+	else return sVocalMorpherEffect(new VocalMorpherEffect());
+}
+
 
 ALenum VocalMorpherEffect::getEffectType()
 {

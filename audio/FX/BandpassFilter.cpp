@@ -6,6 +6,22 @@ BandpassFilter::BandpassFilter()
 {
 	alFilteri(filterID,AL_FILTER_TYPE,AL_FILTER_BANDPASS);
 }
+BandpassFilter::BandpassFilter(const BandpassFilter& cpy)
+{
+	alFilteri(filterID,AL_FILTER_TYPE,AL_FILTER_BANDPASS);
+	setGain(cpy.getGain());
+	setHighFrequencyGain(cpy.getHighFrequencyGain());
+	setLowFrequencyGain(cpy.getLowFrequencyGain());
+}
+sBandpassFilter BandpassFilter::create()
+{
+	return sBandpassFilter(new BandpassFilter());
+}
+sBandpassFilter BandpassFilter::create(sBandpassFilter cpy)
+{
+	if(cpy) return sBandpassFilter(new BandpassFilter(*cpy));
+	else return sBandpassFilter(new BandpassFilter());
+}
 ALenum BandpassFilter::getFilterType()
 {
 	return AL_FILTER_BANDPASS;

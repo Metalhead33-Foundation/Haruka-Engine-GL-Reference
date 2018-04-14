@@ -5,6 +5,22 @@ RingModulatorEffect::RingModulatorEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_RING_MODULATOR);
 }
+RingModulatorEffect::RingModulatorEffect(const RingModulatorEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_RING_MODULATOR);
+	setFrequency(cpy.getFrequency());
+	setHighpassCutoff(cpy.getHighpassCutoff());
+	setWaveform(cpy.getWaveform());
+}
+sRingModulatorEffect RingModulatorEffect::create()
+{
+	return sRingModulatorEffect(new RingModulatorEffect());
+}
+sRingModulatorEffect RingModulatorEffect::create(sRingModulatorEffect cpy)
+{
+	if(cpy) return sRingModulatorEffect(new RingModulatorEffect(*cpy));
+	else return sRingModulatorEffect(new RingModulatorEffect());
+}
 
 ALenum RingModulatorEffect::getEffectType()
 {

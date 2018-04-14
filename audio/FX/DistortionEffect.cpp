@@ -6,6 +6,24 @@ DistortionEffect::DistortionEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_DISTORTION);
 }
+DistortionEffect::DistortionEffect(const DistortionEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_DISTORTION);
+	setEQBandwith(cpy.getEQBandwith());
+	setEQCenter(cpy.getEQCenter());
+	setEdge(cpy.getEdge());
+	setGain(cpy.getGain());
+	setLowPassCutoff(cpy.getLowPassCutoff());
+}
+sDistortionEffect DistortionEffect::create()
+{
+	return sDistortionEffect(new DistortionEffect());
+}
+sDistortionEffect DistortionEffect::create(sDistortionEffect cpy)
+{
+	if(cpy) return sDistortionEffect(new DistortionEffect(*cpy));
+	else return sDistortionEffect(new DistortionEffect());
+}
 
 ALenum DistortionEffect::getEffectType()
 {

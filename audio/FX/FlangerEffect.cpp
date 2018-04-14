@@ -7,6 +7,27 @@ FlangerEffect::FlangerEffect()
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_FLANGER);
 }
 
+FlangerEffect::FlangerEffect(const ChorflangEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_FLANGER);
+	setDelay(cpy.getDelay());
+	setDepth(cpy.getDepth());
+	setFeedback(cpy.getFeedback());
+	setIsWaveformTriangle(cpy.getIsWaveformTriangle());
+	setPhase(cpy.getPhase());
+	setRate(cpy.getRate());
+}
+
+sChorflangEffect FlangerEffect::create()
+{
+	return sChorflangEffect(new FlangerEffect());
+}
+sChorflangEffect FlangerEffect::create(sChorflangEffect cpy)
+{
+	if(cpy) return sChorflangEffect(new FlangerEffect(*cpy));
+	else return sChorflangEffect(new FlangerEffect());
+}
+
 ALenum FlangerEffect::getEffectType()
 {
 	return AL_EFFECT_FLANGER;

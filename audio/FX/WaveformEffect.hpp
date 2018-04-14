@@ -3,6 +3,7 @@
 #include "Effect.hpp"
 namespace Audio {
 
+DEFINE_CLASS(WaveformEffect)
 class WaveformEffect : public Effect
 {
 public:

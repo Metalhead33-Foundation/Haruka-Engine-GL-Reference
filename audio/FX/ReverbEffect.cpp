@@ -5,6 +5,32 @@ ReverbEffect::ReverbEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_REVERB);
 }
+ReverbEffect::ReverbEffect(const ReverbEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_REVERB);
+	setDecayHighFrequencyRatio(cpy.getDecayHighFrequencyRatio());
+	setDecayTime(cpy.getDecayTime());
+	setDensity(cpy.getDensity());
+	setDiffusion(cpy.getDiffusion());
+	setGain(cpy.getGain());
+	setHighFrequencyAirAbsorbtionGain(cpy.getHighFrequencyAirAbsorbtionGain());
+	setHighFrequencyDecayLimit(cpy.getHighFrequencyDecayLimit());
+	setHighFrequencyGain(cpy.getHighFrequencyGain());
+	setLateReverbDelay(cpy.getLateReverbDelay());
+	setLateReverbGain(cpy.getLateReverbGain());
+	setReflectionsDelay(cpy.getReflectionsDelay());
+	setReflectionsGain(cpy.getReflectionsGain());
+	setRoomRolloffFactor(cpy.getRoomRolloffFactor());
+}
+sReverbEffect ReverbEffect::create()
+{
+	return sReverbEffect(new ReverbEffect());
+}
+sReverbEffect ReverbEffect::create(sReverbEffect cpy)
+{
+	if(cpy) return sReverbEffect(new ReverbEffect(*cpy));
+	else return sReverbEffect(new ReverbEffect());
+}
 
 ALenum ReverbEffect::getEffectType()
 {
@@ -134,7 +160,7 @@ void ReverbEffect::setHighFrequencyDecayLimit(bool limit)
 {
 	alEffecti(effectID, AL_REVERB_DECAY_HFLIMIT,limit);
 }
-bool ReverbEffect::setHighFrequencyDecayLimit(void) const
+bool ReverbEffect::getHighFrequencyDecayLimit(void) const
 {
 	int tmp;
 	alGetEffecti(effectID, AL_REVERB_DECAY_HFLIMIT, &tmp);

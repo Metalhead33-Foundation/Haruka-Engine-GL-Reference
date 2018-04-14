@@ -108,5 +108,46 @@ bool Source::getLooping(void) const
 
 	return looping != 0;
 }
+void Source::updateEffects()
+{
+	alSourcei(source, AL_DIRECT_FILTER, AL_FILTER_NULL);
+	alSource3i(source,AL_AUXILIARY_SEND_FILTER, AL_EFFECTSLOT_NULL, 0, AL_FILTER_NULL);
+	if(filter)
+	{
+		if(auxiliaryEffectSlot)
+		{
+			alSource3i(source,AL_AUXILIARY_SEND_FILTER, auxiliaryEffectSlot->getAuxiliaryEffectSlot(), 0, filter->getFilter());
+		}
+		else
+		{
+			alSourcei(source, AL_DIRECT_FILTER, filter->getFilter());
+		}
+	}
+	else
+	{
+		if(auxiliaryEffectSlot)
+		{
+			alSource3i(source,AL_AUXILIARY_SEND_FILTER, auxiliaryEffectSlot->getAuxiliaryEffectSlot(), 0, AL_FILTER_NULL);
+		}
+	}
+}
+void Source::setFilter(sFilter nfilter)
+{
+	filter = nfilter;
+	updateEffects();
+}
+sFilter Source::getFilter() const
+{
+	return filter;
+}
+void Source::setAuxiliaryEffectSlot(sAuxiliaryEffectSlot aux)
+{
+	auxiliaryEffectSlot = aux;
+	updateEffects();
+}
+sAuxiliaryEffectSlot Source::getAuxiliaryEffectSlot() const
+{
+	return auxiliaryEffectSlot;
+}
 
 }

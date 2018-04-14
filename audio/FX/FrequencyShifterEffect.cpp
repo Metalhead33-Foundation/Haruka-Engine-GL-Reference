@@ -6,6 +6,22 @@ FrequencyShifterEffect::FrequencyShifterEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_FREQUENCY_SHIFTER);
 }
+FrequencyShifterEffect::FrequencyShifterEffect(const FrequencyShifterEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_FREQUENCY_SHIFTER);
+	setFrequency(cpy.getFrequency());
+	setLeftDirection(cpy.getLeftDirection());
+	setRightDirection(cpy.getRightDirection());
+}
+sFrequencyShifterEffect FrequencyShifterEffect::create()
+{
+	return sFrequencyShifterEffect(new FrequencyShifterEffect());
+}
+sFrequencyShifterEffect FrequencyShifterEffect::create(sFrequencyShifterEffect cpy)
+{
+	if(cpy) return sFrequencyShifterEffect(new FrequencyShifterEffect(*cpy));
+	else return sFrequencyShifterEffect(new FrequencyShifterEffect());
+}
 
 ALenum FrequencyShifterEffect::getEffectType()
 {

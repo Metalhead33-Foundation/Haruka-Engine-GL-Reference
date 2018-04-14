@@ -6,16 +6,33 @@ WahWahEffect::WahWahEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_AUTOWAH);
 }
+WahWahEffect::WahWahEffect(const WahWahEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_AUTOWAH);
+	setArtackTime(cpy.getAttackTime());
+	setPeakGain(cpy.getPeakGain());
+	setReleaseTime(cpy.getReleaseTime());
+	setResonance(cpy.getResonance());
+}
+sWahWahEffect WahWahEffect::create()
+{
+	return sWahWahEffect(new WahWahEffect());
+}
+sWahWahEffect WahWahEffect::create(sWahWahEffect cpy)
+{
+	if(cpy) return sWahWahEffect(new WahWahEffect(*cpy));
+	else return sWahWahEffect(new WahWahEffect());
+}
 
 ALenum WahWahEffect::getEffectType()
 {
 	return AL_EFFECT_AUTOWAH;
 }
-void WahWahEffect::setATtackTime(const STime& time)
+void WahWahEffect::setArtackTime(const STime& time)
 {
 	alEffectf(effectID, AL_AUTOWAH_ATTACK_TIME,time.getSeconds());
 }
-STime WahWahEffect::getATtackTime(void) const
+STime WahWahEffect::getAttackTime(void) const
 {
 	float tmp;
 	alGetEffectf(effectID, AL_AUTOWAH_ATTACK_TIME, &tmp);

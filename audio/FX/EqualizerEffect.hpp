@@ -3,10 +3,16 @@
 #include "Effect.hpp"
 namespace Audio {
 
+
+DEFINE_CLASS(EqualizerEffect)
 class EqualizerEffect : public Effect
 {
-public:
+private:
 	EqualizerEffect();
+	EqualizerEffect(const EqualizerEffect& cpy);
+public:
+	static sEqualizerEffect create();
+	static sEqualizerEffect create(sEqualizerEffect cpy);
 	virtual ALenum getEffectType();
 	void setLowGain(float lowGain);
 	void setLowCutoff(float lowCutoff);

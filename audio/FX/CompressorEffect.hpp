@@ -3,10 +3,15 @@
 #include "Effect.hpp"
 namespace Audio {
 
+DEFINE_CLASS(CompressorEffect)
 class CompressorEffect : public Effect
 {
-public:
+private:
 	CompressorEffect();
+	CompressorEffect(const CompressorEffect& cpy);
+public:
+	static sCompressorEffect create();
+	static sCompressorEffect create(sCompressorEffect cpy);
 	virtual ALenum getEffectType();
 	void turnOn();
 	void turnOff();

@@ -3,10 +3,15 @@
 #include "WaveformEffect.hpp"
 namespace Audio {
 
+DEFINE_CLASS(RingModulatorEffect)
 class RingModulatorEffect : public WaveformEffect
 {
-public:
+private:
 	RingModulatorEffect();
+	RingModulatorEffect(const RingModulatorEffect& cpy);
+public:
+	static sRingModulatorEffect create();
+	static sRingModulatorEffect create(sRingModulatorEffect cpy);
 	virtual ALenum getEffectType();
 	void setFrequency(float frequency);
 	float getFrequency(void) const;

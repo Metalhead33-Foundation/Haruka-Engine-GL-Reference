@@ -4,10 +4,15 @@
 
 namespace Audio {
 
+DEFINE_CLASS(LowpassFilter)
 class LowpassFilter : public Filter
 {
-public:
+private:
 	LowpassFilter();
+	LowpassFilter(const LowpassFilter& cpy);
+public:
+	static sLowpassFilter create();
+	static sLowpassFilter create(sLowpassFilter cpy);
 	void setGain(float gain);
 	float getGain() const;
 	void setHighFrequencyGain(float gain);

@@ -35,7 +35,6 @@ SOURCES += main.cpp \
     audio/AudioUtil.cpp \
     audio/FX/Effect.cpp \
     audio/FX/Filter.cpp \
-    audio/FX/AuxiliaryEventSlot.cpp \
     audio/FX/LowpassFilter.cpp \
     audio/FX/HighpassFilter.cpp \
     audio/FX/BandpassFilter.cpp \
@@ -51,7 +50,8 @@ SOURCES += main.cpp \
     audio/FX/RingModulatorEffect.cpp \
     audio/FX/WahWahEffect.cpp \
     audio/FX/CompressorEffect.cpp \
-    audio/FX/EqualizerEffect.cpp
+    audio/FX/EqualizerEffect.cpp \
+    audio/FX/AuxiliaryEffectSlot.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -94,7 +94,6 @@ HEADERS += \
     audio/AudioUtil.hpp \
     audio/FX/Effect.hpp \
     audio/FX/Filter.hpp \
-    audio/FX/AuxiliaryEventSlot.hpp \
     audio/FX/LowpassFilter.hpp \
     audio/FX/HighpassFilter.hpp \
     audio/FX/BandpassFilter.hpp \
@@ -116,4 +115,6 @@ HEADERS += \
     audio/FX/CompressorEffect.hpp \
     audio/FX/EqualizerEffect.hpp \
     audio/FX/ChorflangEffect.hpp \
-    audio/FX/WaveformEffect.hpp
+    audio/FX/WaveformEffect.hpp \
+    audio/FX/AuxiliaryEffectSlot.hpp \
+    audio/FX/AllEffects.hpp

@@ -3,10 +3,15 @@
 #include "Filter.hpp"
 namespace Audio {
 
+DEFINE_CLASS(HighpassFilter)
 class HighpassFilter : public Filter
 {
-public:
+private:
 	HighpassFilter();
+	HighpassFilter(const HighpassFilter& cpy);
+public:
+	static sHighpassFilter create();
+	static sHighpassFilter create(sHighpassFilter cpy);
 	void setGain(float gain);
 	float getGain() const;
 	void setLowFrequencyGain(float gain);

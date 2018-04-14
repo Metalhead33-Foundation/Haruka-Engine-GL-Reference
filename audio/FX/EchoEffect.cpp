@@ -6,6 +6,24 @@ EchoEffect::EchoEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_ECHO);
 }
+EchoEffect::EchoEffect(const EchoEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_ECHO);
+	setDamping(cpy.getDamping());
+	setDelay(cpy.getDelay());
+	setFeedback(cpy.getFeedback());
+	setLRDelay(cpy.getLRDelay());
+	setSpread(cpy.getSpread());
+}
+sEchoEffect EchoEffect::create()
+{
+	return sEchoEffect(new EchoEffect());
+}
+sEchoEffect EchoEffect::create(sEchoEffect cpy)
+{
+	if(cpy) return sEchoEffect(new EchoEffect(*cpy));
+	else return sEchoEffect(new EchoEffect());
+}
 
 ALenum EchoEffect::getEffectType()
 {

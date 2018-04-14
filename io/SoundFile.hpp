@@ -2,7 +2,7 @@
 #define SOUNDFILE_HPP
 #include "sndfile.hh"
 #include "../abstract/FIO.hpp"
-#include "../audio/OpenALWrapper.hpp"
+#include "../audio/AL/OpenALWrapper.hpp"
 #include "../sys/STime.hpp"
 #include <vector>
 namespace Audio {

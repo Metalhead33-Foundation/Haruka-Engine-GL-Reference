@@ -2,6 +2,8 @@
 #define AUDIO_HPP
 #include "../io/SoundFile.hpp"
 #include "Context.hpp"
+#include "FX/Filter.hpp"
+#include "FX/AuxiliaryEffectSlot.hpp"
 /* We need glm too */
 #include <glm/glm.hpp>
 
@@ -28,6 +30,10 @@ public:
 };
 class Source
 {
+private:
+	sFilter filter;
+	sAuxiliaryEffectSlot auxiliaryEffectSlot;
+	void updateEffects();
 protected:
 	ALuint source;
 public:
@@ -58,6 +64,11 @@ public:
 	float getAttenuation(void) const;
 	ALint getStatus(void) const;
 	bool getLooping(void) const;
+
+	void setFilter(sFilter nfilter);
+	sFilter getFilter() const;
+	void setAuxiliaryEffectSlot(sAuxiliaryEffectSlot aux);
+	sAuxiliaryEffectSlot getAuxiliaryEffectSlot() const;
 };
 
 }

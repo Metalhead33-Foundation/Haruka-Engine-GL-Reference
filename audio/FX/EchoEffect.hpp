@@ -4,10 +4,15 @@
 #include "../../sys/STime.hpp"
 namespace Audio {
 
+DEFINE_CLASS(EchoEffect)
 class EchoEffect : public Effect
 {
-public:
+private:
 	EchoEffect();
+	EchoEffect(const EchoEffect& cpy);
+public:
+	static sEchoEffect create();
+	static sEchoEffect create(sEchoEffect cpy);
 	virtual ALenum getEffectType();
 	void setDelay(const STime& rate);
 	STime getDelay(void) const;

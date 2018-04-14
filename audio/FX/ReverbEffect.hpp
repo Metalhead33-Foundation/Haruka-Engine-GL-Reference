@@ -4,10 +4,15 @@
 #include "../../sys/STime.hpp"
 namespace Audio {
 
+DEFINE_CLASS(ReverbEffect)
 class ReverbEffect : public Effect
 {
-public:
+private:
 	ReverbEffect();
+	ReverbEffect(const ReverbEffect& cpy);
+public:
+	static sReverbEffect create();
+	static sReverbEffect create(sReverbEffect cpy);
 	virtual ALenum getEffectType();
 	void setDensity(float density);
 	float getDensity(void) const;
@@ -34,7 +39,7 @@ public:
 	void setHighFrequencyAirAbsorbtionGain(float gain);
 	float getHighFrequencyAirAbsorbtionGain(void) const;
 	void setHighFrequencyDecayLimit(bool limit);
-	bool setHighFrequencyDecayLimit(void) const;
+	bool getHighFrequencyDecayLimit(void) const;
 };
 
 }

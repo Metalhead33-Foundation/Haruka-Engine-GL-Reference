@@ -6,6 +6,21 @@ CompressorEffect::CompressorEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_COMPRESSOR);
 }
+CompressorEffect::CompressorEffect(const CompressorEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_COMPRESSOR);
+	if(cpy.isOn()) turnOn();
+	else turnOff();
+}
+sCompressorEffect CompressorEffect::create()
+{
+	return sCompressorEffect(new CompressorEffect());
+}
+sCompressorEffect CompressorEffect::create(sCompressorEffect cpy)
+{
+	if(cpy) return sCompressorEffect(new CompressorEffect(*cpy));
+	else return sCompressorEffect(new CompressorEffect());
+}
 
 ALenum CompressorEffect::getEffectType()
 {

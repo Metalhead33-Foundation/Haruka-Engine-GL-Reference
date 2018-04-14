@@ -5,6 +5,21 @@ HighpassFilter::HighpassFilter()
 {
 	alFilteri(filterID,AL_FILTER_TYPE,AL_FILTER_HIGHPASS);
 }
+HighpassFilter::HighpassFilter(const HighpassFilter& cpy)
+{
+	alFilteri(filterID,AL_FILTER_TYPE,AL_FILTER_HIGHPASS);
+	setGain(cpy.getGain());
+	setLowFrequencyGain(cpy.getLowFrequencyGain());
+}
+sHighpassFilter HighpassFilter::create()
+{
+	return sHighpassFilter(new HighpassFilter());
+}
+sHighpassFilter HighpassFilter::create(sHighpassFilter cpy)
+{
+	if(cpy) return sHighpassFilter(new HighpassFilter(*cpy));
+	else return sHighpassFilter(new HighpassFilter());
+}
 ALenum HighpassFilter::getFilterType()
 {
 	return AL_FILTER_HIGHPASS;

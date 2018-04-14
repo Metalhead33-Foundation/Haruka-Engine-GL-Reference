@@ -6,6 +6,21 @@ PitchShifterEffect::PitchShifterEffect()
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_PITCH_SHIFTER);
 }
+PitchShifterEffect::PitchShifterEffect(const PitchShifterEffect& cpy)
+{
+	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_PITCH_SHIFTER);
+	setCoarseTune(cpy.getCoarseTune());
+	setFineTune(cpy.getFineTune());
+}
+sPitchShifterEffect PitchShifterEffect::create()
+{
+	return sPitchShifterEffect(new PitchShifterEffect());
+}
+sPitchShifterEffect PitchShifterEffect::create(sPitchShifterEffect cpy)
+{
+	if(cpy) return sPitchShifterEffect(new PitchShifterEffect(*cpy));
+	else return sPitchShifterEffect(new PitchShifterEffect());
+}
 
 ALenum PitchShifterEffect::getEffectType()
 {

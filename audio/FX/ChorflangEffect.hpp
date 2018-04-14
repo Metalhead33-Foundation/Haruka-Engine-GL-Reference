@@ -5,6 +5,7 @@
 
 namespace Audio {
 
+DEFINE_CLASS(ChorflangEffect)
 class ChorflangEffect : public Effect
 {
 public:
