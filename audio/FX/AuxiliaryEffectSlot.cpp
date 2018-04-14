@@ -9,7 +9,7 @@ AuxiliaryEffectSlot::AuxiliaryEffectSlot()
 AuxiliaryEffectSlot::AuxiliaryEffectSlot(sEffect eff)
 	: effect(eff)
 {
-	if(effect) alAuxiliaryEffectSloti(auxiliaryeffectslot,AL_EFFECTSLOT_EFFECT,effect->getEffect());
+	if(effect) alAuxiliaryEffectSloti(auxiliaryeffectslot,AL_EFFECTSLOT_EFFECT,eff->getEffect());
 }
 sAuxiliaryEffectSlot AuxiliaryEffectSlot::create()
 {

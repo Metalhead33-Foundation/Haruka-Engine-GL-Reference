@@ -59,5 +59,13 @@ void System::suspendContext()
 {
 	context->suspend();
 }
+const char* System::getDeviceName()
+{
+	return context->getDeviceName();
+}
+const char* System::getExtensionList()
+{
+	return context->getExtensionList();
+}
 
 }

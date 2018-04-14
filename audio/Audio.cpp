@@ -8,6 +8,7 @@ Buffer::Buffer()
 	alGenBuffers(1, &buffer);
 }
 Source::Source()
+	: filter(nullptr), auxiliaryEffectSlot(nullptr)
 {
 	alGenSources(1, &source);
 }

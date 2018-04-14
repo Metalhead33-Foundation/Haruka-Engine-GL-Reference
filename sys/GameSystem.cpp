@@ -21,6 +21,8 @@ GameSystem::error_t GameSystem::render()
 GameSystem::error_t GameSystem::startup()
 {
 	engine->startup();
+	std::cout << "Audio Device Name: " << soundsys->getDeviceName() << std::endl;
+	std::cout << "Audio Extension List: " << soundsys->getExtensionList() << std::endl;
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::cleanup()

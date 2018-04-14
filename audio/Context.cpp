@@ -3,7 +3,7 @@ namespace Audio {
 
 Context::Context(int nSamplerate)
 {
-	ALCint contextAttr[] = {ALC_FREQUENCY,nSamplerate,0};
+	ALCint contextAttr[] = {ALC_FREQUENCY,nSamplerate,ALC_MAX_AUXILIARY_SENDS,1,0};
 	device = alcOpenDevice( NULL );
 	context = alcCreateContext( device, contextAttr );
 	alcMakeContextCurrent( context );
@@ -25,6 +25,22 @@ void Context::process()
 void Context::suspend()
 {
 	alcSuspendContext(context);
+}
+bool Context::isExtensionPresent(const char* extName)
+{
+	return alcIsExtensionPresent(device,extName) != 0;
+}
+bool Context::isExtensionPresent(const std::string& sxtName)
+{
+	return isExtensionPresent(sxtName.c_str());
+}
+const char* Context::getDeviceName()
+{
+	return alcGetString(device,ALC_DEVICE_SPECIFIER);
+}
+const char* Context::getExtensionList()
+{
+	return alcGetString(device,ALC_EXTENSIONS);
 }
 
 }

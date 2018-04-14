@@ -20,6 +20,10 @@ public:
 	void makeCurrent();
 	void process();
 	void suspend();
+	bool isExtensionPresent(const char* extName);
+	bool isExtensionPresent(const std::string& sxtName);
+	const char* getDeviceName();
+	const char* getExtensionList();
 };
 
 }

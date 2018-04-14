@@ -36,6 +36,8 @@ public:
 	void processStreamedAudio();
 	void processContext();
 	void suspendContext();
+	const char* getDeviceName();
+	const char* getExtensionList();
 };
 
 }
