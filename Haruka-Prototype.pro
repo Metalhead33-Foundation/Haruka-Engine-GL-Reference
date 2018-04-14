@@ -25,7 +25,6 @@ SOURCES += main.cpp \
     audio/SoundBuffer.cpp \
     audio/SoundSource.cpp \
     audio/Audio.cpp \
-    audio/OpenALWrapper.cpp \
     sys/Clock.cpp \
     sys/MainSystem.cpp \
     GL/GlRenderingEngine.cpp \
@@ -39,7 +38,20 @@ SOURCES += main.cpp \
     audio/FX/AuxiliaryEventSlot.cpp \
     audio/FX/LowpassFilter.cpp \
     audio/FX/HighpassFilter.cpp \
-    audio/FX/BandpassFilter.cpp
+    audio/FX/BandpassFilter.cpp \
+    audio/AL/OpenALWrapper.cpp \
+    audio/FX/ReverbEffect.cpp \
+    audio/FX/ChorusEffect.cpp \
+    audio/FX/DistortionEffect.cpp \
+    audio/FX/EchoEffect.cpp \
+    audio/FX/FlangerEffect.cpp \
+    audio/FX/FrequencyShifterEffect.cpp \
+    audio/FX/VocalMorpherEffect.cpp \
+    audio/FX/PitchShifterEffect.cpp \
+    audio/FX/RingModulatorEffect.cpp \
+    audio/FX/WahWahEffect.cpp \
+    audio/FX/CompressorEffect.cpp \
+    audio/FX/EqualizerEffect.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -71,11 +83,6 @@ HEADERS += \
     io/AiModelFactory.hpp \
     audio/SoundBuffer.hpp \
     audio/SoundSource.hpp \
-    audio/OpenALWrapper.hpp \
-    audio/al.h \
-    audio/alc.h \
-    audio/alext.h \
-    audio/efx.h \
     sys/Clock.hpp \
     sys/MainSystem.hpp \
     abstract/RenderingEngine.hpp \
@@ -90,4 +97,21 @@ HEADERS += \
     audio/FX/AuxiliaryEventSlot.hpp \
     audio/FX/LowpassFilter.hpp \
     audio/FX/HighpassFilter.hpp \
-    audio/FX/BandpassFilter.hpp
+    audio/FX/BandpassFilter.hpp \
+    audio/AL/efx.h \
+    audio/AL/al.h \
+    audio/AL/alc.h \
+    audio/AL/alext.h \
+    audio/AL/OpenALWrapper.hpp \
+    audio/FX/ReverbEffect.hpp \
+    audio/FX/ChorusEffect.hpp \
+    audio/FX/DistortionEffect.hpp \
+    audio/FX/EchoEffect.hpp \
+    audio/FX/FlangerEffect.hpp \
+    audio/FX/FrequencyShifterEffect.hpp \
+    audio/FX/VocalMorpherEffect.hpp \
+    audio/FX/PitchShifterEffect.hpp \
+    audio/FX/RingModulatorEffect.hpp \
+    audio/FX/WahWahEffect.hpp \
+    audio/FX/CompressorEffect.hpp \
+    audio/FX/EqualizerEffect.hpp

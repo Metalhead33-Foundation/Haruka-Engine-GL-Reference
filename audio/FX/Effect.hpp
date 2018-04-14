@@ -1,6 +1,7 @@
 #ifndef EFFECT_HPP
 #define EFFECT_HPP
-#include "../Audio.hpp"
+#include "../AL/OpenALWrapper.hpp"
+#include "../../abstract/Global.hpp"
 namespace Audio {
 
 DEFINE_CLASS(Effect)

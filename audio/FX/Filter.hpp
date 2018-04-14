@@ -1,6 +1,7 @@
 #ifndef FILTER_HPP
 #define FILTER_HPP
-#include "../Audio.hpp"
+#include "../AL/OpenALWrapper.hpp"
+#include "../../abstract/Global.hpp"
 namespace Audio {
 
 DEFINE_CLASS(Filter)

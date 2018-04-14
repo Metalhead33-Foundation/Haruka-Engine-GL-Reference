@@ -4,7 +4,7 @@
 #include <deque>
 #include "../abstract/Global.hpp"
 /* OpenAL headers */
-#include "OpenALWrapper.hpp"
+#include "AL/OpenALWrapper.hpp"
 
 namespace Audio {
 

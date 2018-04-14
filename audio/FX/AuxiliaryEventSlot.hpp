@@ -1,6 +1,7 @@
 #ifndef AUXILIARYEVENTSLOT_HPP
 #define AUXILIARYEVENTSLOT_HPP
-#include "../Audio.hpp"
+#include "../AL/OpenALWrapper.hpp"
+#include "../../abstract/Global.hpp"
 namespace Audio {
 
 DEFINE_CLASS(AuxiliaryEventSlot)
