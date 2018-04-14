@@ -114,4 +114,5 @@ HEADERS += \
     audio/FX/RingModulatorEffect.hpp \
     audio/FX/WahWahEffect.hpp \
     audio/FX/CompressorEffect.hpp \
-    audio/FX/EqualizerEffect.hpp
+    audio/FX/EqualizerEffect.hpp \
+    audio/FX/ChorflangEffect.hpp

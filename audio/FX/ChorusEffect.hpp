@@ -1,11 +1,10 @@
 #ifndef CHORUSEFFECT_HPP
 #define CHORUSEFFECT_HPP
-#include "Effect.hpp"
-#include "../../sys/STime.hpp"
+#include "ChorflangEffect.hpp"
 
 namespace Audio {
 
-class ChorusEffect : public Effect
+class ChorusEffect : public ChorflangEffect
 {
 public:
 	ChorusEffect();

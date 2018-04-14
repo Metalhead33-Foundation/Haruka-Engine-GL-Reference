@@ -8,6 +8,9 @@ class CompressorEffect : public Effect
 public:
 	CompressorEffect();
 	virtual ALenum getEffectType();
+	void turnOn();
+	void turnOff();
+	bool isOn() const;
 };
 
 }
