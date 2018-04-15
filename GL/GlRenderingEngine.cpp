@@ -4,6 +4,7 @@
 #include "GlShaderModule.hpp"
 #include "GlShaderProgram.hpp"
 #include "GlTexture.hpp"
+#include "GlMesh.hpp"
 
 
 Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings)
@@ -33,6 +34,10 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	if(!cnt) throw std::runtime_error("Couldn't create GLX context!");
 	glXMakeCurrent(settings->sysWMinfo->info.x11.display, settings->sysWMinfo->info.x11.window, cnt);
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
+}
+Abstract::sMesh RenderingEngine::createMesh(Abstract::Mesh::ConstructorReference ref)
+{
+	return Mesh::createMesh(ref);
 }
 
 RenderingEngine::~RenderingEngine()

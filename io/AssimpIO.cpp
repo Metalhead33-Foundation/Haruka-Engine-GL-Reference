@@ -63,11 +63,11 @@ bool AssimpPhysFS::Exists(const char *pFile) const
 {
 	return PHYSFS_exists(pFile);
 }
-char AssimpPhysFS::GetOsSeparator() const
+char AssimpPhysFS::getOsSeparator() const
 {
 	return PHYSFS_getDirSeparator()[0];
 }
-Assimp::IOStream* AssimpPhysFS::Open(const char *pFile, const std::string& pMode)
+Assimp::IOStream* AssimpPhysFS::Open(const char *pFile, const char *pMode)
 {
 	if(Exists(pFile)) return new AssimpIOStream(PhysFS::FileHandle::openRead(pFile));
 	else return 0;

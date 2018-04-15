@@ -1,9 +1,12 @@
 #include "GameSystem.hpp"
+#include <sstream>
+#include <assimp/Importer.hpp>
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char *title)
 	: MainSystem(w, h, title),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
-	  engine(engineCreator(window))
+	  engine(engineCreator(window)),
+	  modelImporter(new AssimpPhysFS())
 {
 
 }
@@ -82,6 +85,66 @@ void GameSystem::deleteSource(const std::string& key)
 {
 	SourceIterator it = audioSources.find(key);
 	if(it != audioSources.end()) audioSources.erase(it);
+}
+Abstract::sTexture GameSystem::createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
+{
+	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
+	Abstract::sTexture tmp = engine->createTextureFromDDS(type, riidaa);
+	textures.emplace(key, tmp);
+	return tmp;
+}
+Abstract::sTexture GameSystem::createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
+{
+	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
+	Abstract::sTexture tmp = engine->createTextureFromImage(type, riidaa);
+	textures.emplace(key, tmp);
+	return tmp;
+}
+Abstract::sTexture GameSystem::queryTexture(const std::string& key)
+{
+	TextureIterator it = textures.find(key);
+	if(it == textures.end()) return nullptr;
+	else return it->second;
+}
+void GameSystem::deleteTexture(const std::string& key)
+{
+	TextureIterator it = textures.find(key);
+	if(it != textures.end()) textures.erase(it);
+}
+Abstract::sMesh GameSystem::queryMesh(const std::string& key)
+{
+	MeshIterator it = meshes.find(key);
+	if(it == meshes.end()) return nullptr;
+	else return it->second;
+}
+void GameSystem::deleteMesh(const std::string& key)
+{
+	MeshIterator it = meshes.find(key);
+	if(it != meshes.end()) meshes.erase(it);
+}
+Abstract::sMesh GameSystem::createMeshFromAI(const std::string& key, aiMesh* mesh)
+{
+	AiModelFactory::MeshCreateInfo info;
+	AiModelFactory::ProcessAiMesh(info,mesh);
+	Abstract::sMesh tmp = engine->createMesh(info);
+	meshes.emplace(key, tmp);
+	return tmp;
+}
+void GameSystem::createMeshesFromModel(const std::string& key, const aiScene* model)
+{
+	for(unsigned int i = 0; i < model->mNumMeshes;++i)
+	{
+		std::stringstream name;
+		name << key << "." << model->mMeshes[i]->mName.C_Str();
+		createMeshFromAI(name.str(),model->mMeshes[i]);
+	}
+}
+void GameSystem::createModel(const std::string& key, const std::string& path)
+{
+	Assimp::Importer importer;
+	importer.SetIOHandler(modelImporter.get());
+	const aiScene* scen = importer.ReadFile(path,0);
+	createMeshesFromModel(key,scen);
 }
 
 GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &deltaTime)

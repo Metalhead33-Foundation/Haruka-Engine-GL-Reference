@@ -22,6 +22,7 @@ public:
 	Abstract::sShaderProgram createShaderProgram();
 	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
+	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
 
 	void renderFrame();
 	void startup();

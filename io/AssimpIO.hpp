@@ -6,7 +6,7 @@
 #include "PhysFsFileHandle.hpp"
 
 DEFINE_CLASS(AssimpIOStream)
-DEFINE_CLASS(AssimpIOSystem)
+DEFINE_CLASS(AssimpPhysFS)
 
 class AssimpIOStream : public Assimp::IOStream
 {
@@ -29,8 +29,8 @@ public:
 	AssimpPhysFS();
 	~AssimpPhysFS();
 	bool Exists( const char* pFile) const;
-	char GetOsSeparator() const;
-	Assimp::IOStream* Open( const char* pFile, const std::string& pMode);
+	char getOsSeparator() const;
+	Assimp::IOStream* Open( const char* pFile, const char* pMode);
 	void Close(Assimp::IOStream* pFile);
 };
 

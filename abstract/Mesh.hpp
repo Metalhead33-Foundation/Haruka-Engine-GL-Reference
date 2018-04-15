@@ -42,6 +42,8 @@ protected:
 public:
 	virtual ~Mesh() = default;
 	virtual void draw(sShaderProgram shader) = 0;
+	TextureVector& getTextures() { return textures; }
+	void setTextures(TextureVector& text) { textures = text; }
 };
 
 }
