@@ -19,7 +19,6 @@ SOURCES += main.cpp \
     audio/Samplerate.cpp \
     GL/GlMesh.cpp \
     io/PhysFsFileHandle.cpp \
-    GL/GlModel.cpp \
     io/AiModelFactory.cpp \
     audio/StreamedAudio.cpp \
     audio/SoundBuffer.cpp \
@@ -51,7 +50,8 @@ SOURCES += main.cpp \
     audio/FX/WahWahEffect.cpp \
     audio/FX/CompressorEffect.cpp \
     audio/FX/EqualizerEffect.cpp \
-    audio/FX/AuxiliaryEffectSlot.cpp
+    audio/FX/AuxiliaryEffectSlot.cpp \
+    sys/Camera.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -76,10 +76,8 @@ HEADERS += \
     abstract/Vertex.hpp \
     abstract/Mesh.hpp \
     GL/GlMesh.hpp \
-    abstract/Model.hpp \
     io/PhysFsFileHandle.hpp \
     abstract/FIO.hpp \
-    GL/GlModel.hpp \
     io/AiModelFactory.hpp \
     audio/SoundBuffer.hpp \
     audio/SoundSource.hpp \
@@ -117,4 +115,5 @@ HEADERS += \
     audio/FX/ChorflangEffect.hpp \
     audio/FX/WaveformEffect.hpp \
     audio/FX/AuxiliaryEffectSlot.hpp \
-    audio/FX/AllEffects.hpp
+    audio/FX/AllEffects.hpp \
+    sys/Camera.hpp

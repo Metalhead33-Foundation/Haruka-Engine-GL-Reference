@@ -13,6 +13,7 @@ private:
 	XVisualInfo* vi;
 	GLXContext cnt;
 
+	bool twoDProjection;
 public:
 	RenderingEngine(Abstract::sSettingContainer nsettings);
 	~RenderingEngine();

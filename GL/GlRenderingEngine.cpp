@@ -15,10 +15,16 @@ Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings)
 
 namespace Gl {
 
-GLint RenderingEngine::att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+GLint RenderingEngine::att[] = { GLX_RGBA,
+								 GLX_X_VISUAL_TYPE_EXT,
+								 GLX_TRUE_COLOR_EXT,
+								 GLX_DEPTH_SIZE,
+								 24,
+								 GLX_DOUBLEBUFFER,
+								 None };
 
 RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
-	: settings(nsettings)
+	: settings(nsettings), twoDProjection(false)
 {
 	if (!gladLoadGLX(settings->sysWMinfo->info.x11.display,DefaultScreen(settings->sysWMinfo->info.x11.display))) throw std::runtime_error("Couldn't load GLX!!");
 	XWindowAttributes attr;

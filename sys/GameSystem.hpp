@@ -6,6 +6,7 @@
 #include "../io/PhysFsFileHandle.hpp"
 #include "../io/AiModelFactory.hpp"
 #include "../io/AssimpIO.hpp"
+#include "Camera.hpp"
 #include <assimp/scene.h>
 #include <unordered_map>
 
@@ -16,7 +17,7 @@ public:
 	{
 		Abstract::sMesh mesh;
 		Abstract::sShaderProgram shader;
-		void draw();
+		void draw(glm::mat4& projectionMatrix, glm::mat4& view, glm::mat4& model);
 	};
 	typedef std::unordered_map<std::string, Audio::sBuffer> BufferHash;
 	typedef std::unordered_map<std::string, Audio::sSource> SourceHash;
@@ -41,6 +42,9 @@ private:
 	MeshHash meshes;
 	ShaderModuleHash shaderModules;
 	ShaderProgramHash shaderPrograms;
+	Camera camera;
+	int mouseX, mouseY;
+	glm::mat4 projectionMatrix, viewMatrix, modelMatrix;
 
 	Abstract::sMesh createMeshFromAI(const std::string& key, aiMesh* mesh);
 	void createMeshesFromModel(const std::string& key, const aiScene* model);
@@ -71,6 +75,7 @@ public:
 	void deleteMesh(const std::string& key);
 	void attachTextureToMesh(const std::string& meshKey, const std::string& texKey);
 	void attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys);
+	void attachShaderToMesh(const std::string& meshKey, const std::string& progKey);
 
 	Abstract::sShaderModule createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype);
 	Abstract::sShaderModule queryShaderModule(const std::string& key);

@@ -4,6 +4,7 @@
 #include <assimp/IOSystem.hpp>
 #include "../abstract/Global.hpp"
 #include "PhysFsFileHandle.hpp"
+#include <deque>
 
 DEFINE_CLASS(AssimpIOStream)
 DEFINE_CLASS(AssimpPhysFS)
@@ -25,6 +26,10 @@ public:
 };
 class AssimpPhysFS : public Assimp::IOSystem
 {
+private:
+	typedef std::deque<sAssimpIOStream> streamContainer;
+	typedef streamContainer::iterator streamIterator;
+	std::deque<sAssimpIOStream> streams;
 public:
 	AssimpPhysFS();
 	~AssimpPhysFS();

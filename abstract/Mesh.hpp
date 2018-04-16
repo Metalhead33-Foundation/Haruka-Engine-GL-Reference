@@ -4,6 +4,7 @@
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 #include <vector>
+#include <glm/glm.hpp>
 
 namespace Abstract {
 
@@ -36,12 +37,12 @@ public:
 
 	typedef sMesh (*MeshCreatorFunction)(ConstructorReference);
 protected:
-	sVertexVector vertices;
-	sIndexVector indices;
+	VertexVector vertices;
+	IndexVector indices;
 	TextureVector textures;
 public:
 	virtual ~Mesh() = default;
-	virtual void draw(sShaderProgram shader) = 0;
+	virtual void draw(sShaderProgram shader, glm::mat4& projection, glm::mat4& view, glm::mat4& model) = 0;
 	TextureVector& getTextures() { return textures; }
 	void setTextures(TextureVector& text) { textures = text; }
 };

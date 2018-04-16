@@ -1,5 +1,5 @@
 #include "AssimpIO.hpp"
-
+#include <iostream>
 
 AssimpIOStream::AssimpIOStream(Abstract::sFIO nhandle)
 	: handle(nhandle)
@@ -12,7 +12,7 @@ AssimpIOStream::~AssimpIOStream(void)
 }
 size_t AssimpIOStream::Read( void* pvBuffer, size_t pSize, size_t pCount)
 {
-	handle->read(pvBuffer,pSize * pCount);
+	return handle->read(pvBuffer,pSize * pCount);
 }
 size_t AssimpIOStream::Write( const void* pvBuffer, size_t pSize, size_t pCount)
 {
@@ -69,10 +69,31 @@ char AssimpPhysFS::getOsSeparator() const
 }
 Assimp::IOStream* AssimpPhysFS::Open(const char *pFile, const char *pMode)
 {
-	if(Exists(pFile)) return new AssimpIOStream(PhysFS::FileHandle::openRead(pFile));
-	else return 0;
+	if(Exists(pFile))
+	{
+		/*Abstract::sFIO ftmp = PhysFS::FileHandle::openRead(pFile);
+		sAssimpIOStream tmp = sAssimpIOStream(new AssimpIOStream(ftmp));
+		streams.push_back(tmp);
+		return tmp.get();*/
+		Abstract::sFIO tmp = PhysFS::FileHandle::openRead(pFile);
+		if(tmp)	return new AssimpIOStream(tmp);
+		else return 0;
+	}
+	else
+	{
+		std::cout << "Couldn't find file!" << std::endl;
+		return 0;
+	}
 }
 void AssimpPhysFS::Close(Assimp::IOStream* pFile)
 {
+	/*for(streamIterator it = streams.begin(); it != streams.end(); ++it)
+	{
+		if(it->get() == pFile)
+		{
+			streams.erase(it);
+			break;
+		}
+	}*/
 	delete pFile;
 }

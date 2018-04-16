@@ -7,12 +7,12 @@ Abstract::sMesh Mesh::createMesh(ConstructorReference constr)
 }
 Mesh::Mesh(ConstructorReference constr)
 {
-	this->vertices = constr.vec;
-	this->indices = constr.ind;
+	this->vertices = *(constr.vec);
+	this->indices = *(constr.ind);
 	this->textures = constr.tex;
 	setupMesh();
 }
-void Mesh::draw(Abstract::sShaderProgram shader)
+void Mesh::draw(Abstract::sShaderProgram shader, glm::mat4 &projection, glm::mat4 &view, glm::mat4 &model)
 {
 	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
 	if(!gshdr) return;
@@ -27,9 +27,13 @@ void Mesh::draw(Abstract::sShaderProgram shader)
 			glBindTexture(GL_TEXTURE_2D, tex->getTextureId());
 		}
 	}
+	// Do the matrix stuff
+	gshdr->setMat4("projection", projection);
+	gshdr->setMat4("view", view);
+	gshdr->setMat4("model", model);
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices->size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	// always good practice to set everything back to defaults once configured.
@@ -60,10 +64,10 @@ void Mesh::setupMesh()
 	// A great thing about structs is that their memory layout is sequential for all its items.
 	// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
 	// again translates to 3/2 floats which translates to a byte array.
-	glBufferData(GL_ARRAY_BUFFER, vertices->size() * Vertex::vertexSize(), vertices->data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * Vertex::vertexSize(), vertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size() * sizeof(unsigned int), indices->data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
 	// set the vertex attribute pointers
 	// vertex Positions
@@ -83,7 +87,7 @@ void Mesh::setupMesh()
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),reinterpret_cast<void*>(Vertex::getBitangentOffset() ) );
 
 	glBindVertexArray(0);
-	vertices = 0;
-	indices = 0;
+	// vertices = 0;
+	// indices = 0;
 }
 }

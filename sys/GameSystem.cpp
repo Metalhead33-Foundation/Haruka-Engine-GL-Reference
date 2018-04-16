@@ -1,10 +1,14 @@
 #include "GameSystem.hpp"
 #include <sstream>
 #include <assimp/Importer.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
-void GameSystem::RenderableMesh::draw()
+void GameSystem::RenderableMesh::draw(glm::mat4 &projection, glm::mat4 &view, glm::mat4 &model)
 {
-	if(shader && mesh) mesh->draw(shader);
+	if(shader && mesh) mesh->draw(shader, projection, view, model);
 }
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char *title)
@@ -13,12 +17,18 @@ GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int
 	  engine(engineCreator(window)),
 	  modelImporter(new AssimpPhysFS())
 {
-
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 }
 
 GameSystem::error_t GameSystem::update(STime& deltaTime)
 {
 	soundsys->processStreamedAudio();
+	int mousePrevX(mouseX), mousePrevY(mouseY);
+	SDL_GetRelativeMouseState(&mouseX, &mouseY);
+	camera.ProcessMouseMovement(float(mousePrevX - mouseX),float(mousePrevY - mouseY));
+	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
+	viewMatrix = camera.GetViewMatrix();
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::render()
@@ -26,7 +36,7 @@ GameSystem::error_t GameSystem::render()
 	// engine->renderFrame();
 	for(MeshIterator it = meshes.begin(); it != meshes.end();++it)
 	{
-		it->second.draw();
+		it->second.draw(projectionMatrix, viewMatrix, modelMatrix);
 	}
 	engine->switchBuffers();
 	return SYSTEM_OKAY;
@@ -41,6 +51,12 @@ GameSystem::error_t GameSystem::startup()
 GameSystem::error_t GameSystem::cleanup()
 {
 	engine->cleanup();
+	meshes.clear();
+	textures.clear();
+	shaderModules.clear();
+	shaderPrograms.clear();
+	audioBuffers.clear();
+	audioSources.clear();
 	return SYSTEM_OKAY;
 }
 Audio::sBuffer GameSystem::createBuffer(const std::string& key, const std::string& path)
@@ -134,26 +150,39 @@ void GameSystem::deleteMesh(const std::string& key)
 }
 Abstract::sMesh GameSystem::createMeshFromAI(const std::string& key, aiMesh* mesh)
 {
+	if(!mesh) return nullptr;
 	AiModelFactory::MeshCreateInfo info;
 	AiModelFactory::ProcessAiMesh(info,mesh);
 	Abstract::sMesh tmp = engine->createMesh(info);
-	meshes.emplace(key, tmp);
+	meshes.emplace(key, RenderableMesh{tmp, 0} );
 	return tmp;
 }
 void GameSystem::createMeshesFromModel(const std::string& key, const aiScene* model)
 {
+	if(!model) return;
 	for(unsigned int i = 0; i < model->mNumMeshes;++i)
 	{
 		std::stringstream name;
 		name << key << "." << model->mMeshes[i]->mName.C_Str();
 		createMeshFromAI(name.str(),model->mMeshes[i]);
+		std::cout << key << "." << model->mMeshes[i]->mName.C_Str() << " - " << model->mMeshes[i]->mNumVertices << std::endl;
 	}
 }
 void GameSystem::createModel(const std::string& key, const std::string& path)
 {
 	Assimp::Importer importer;
 	importer.SetIOHandler(modelImporter.get());
-	const aiScene* scen = importer.ReadFile(path,0);
+	const aiScene* scen = importer.ReadFile(path,aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_PreTransformVertices |
+											aiProcess_CalcTangentSpace |
+											aiProcess_GenSmoothNormals |
+											aiProcess_Triangulate |
+											aiProcess_FixInfacingNormals |
+											aiProcess_FindInvalidData |
+											aiProcess_ValidateDataStructure | 0
+
+										 );
+	if(!scen) std::cout << "Error loading model!" << importer.GetErrorString() << std::endl;
+	std::cout << scen->mNumMeshes << std::endl;
 	createMeshesFromModel(key,scen);
 }
 Abstract::sShaderModule GameSystem::createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype)
@@ -210,6 +239,14 @@ void GameSystem::attachShaderModule(const std::string& programKey, const std::ve
 		if(modIt != shaderModules.end()) progIt->second->pushModule(modIt->second);
 	}
 }
+void GameSystem::attachShaderToMesh(const std::string& meshKey, const std::string& progKey)
+{
+	MeshIterator meshIt = meshes.find(meshKey);
+	if(meshIt == meshes.end()) return;
+	ShaderProgramIterator progIt = shaderPrograms.find(progKey);
+	if(progIt == shaderPrograms.end()) return;
+	meshIt->second.shader = progIt->second;
+}
 void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
 {
 	MeshIterator meshIt = meshes.find(meshKey);
@@ -258,6 +295,18 @@ GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &d
 		{
 			switch(ev.key.keysym.sym)
 			{
+			case SDLK_w:
+				camera.ProcessKeyboard(Camera::FORWARD, deltaTime.getSeconds());
+				break;
+			case SDLK_s:
+				camera.ProcessKeyboard(Camera::BACKWARD, deltaTime.getSeconds());
+				break;
+			case SDLK_a:
+				camera.ProcessKeyboard(Camera::LEFT, deltaTime.getSeconds());
+				break;
+			case SDLK_d:
+				camera.ProcessKeyboard(Camera::RIGHT, deltaTime.getSeconds());
+				break;
 			default: break;
 			}
 			break;
