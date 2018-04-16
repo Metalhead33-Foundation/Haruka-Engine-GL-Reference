@@ -34,6 +34,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX,
 }
 void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
 {
+	// yoffset *= -1.00f;
 	xoffset *= MouseSensitivity;
 	yoffset *= MouseSensitivity;
 
@@ -49,6 +50,14 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 			Pitch = -89.0f;
 	}
 
+/*	if (constrainPitch)
+	{
+		if (Pitch >= 89.0f)
+			Pitch = -89.0f;
+		if (Pitch <= -89.0f)
+			Pitch = 89.0f;
+	}
+*/
 	// Update Front, Right and Up Vectors using the updated Euler angles
 	updateCameraVectors();
 }

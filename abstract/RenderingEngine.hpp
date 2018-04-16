@@ -23,6 +23,7 @@ public:
 	virtual sTexture createTextureFromDDS(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sTexture createTextureFromImage(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
+	virtual void clearBackground() = 0;
 
 	virtual void renderFrame() = 0;
 	virtual void startup() = 0;

@@ -18,6 +18,7 @@ public:
 	RenderingEngine(Abstract::sSettingContainer nsettings);
 	~RenderingEngine();
 	void switchBuffers();
+	void clearBackground();
 	static GLint att[];
 	Abstract::sShaderModule createShaderModule(Abstract::ShaderModule::ShaderType ntype, Abstract::sFIO reada);
 	Abstract::sShaderProgram createShaderProgram();

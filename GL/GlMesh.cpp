@@ -16,6 +16,7 @@ void Mesh::draw(Abstract::sShaderProgram shader, glm::mat4 &projection, glm::mat
 {
 	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
 	if(!gshdr) return;
+	glUseProgram(gshdr->getShaderID());
 	uint32_t texNum = 0;
 	Texture* tex;
 	for(TextureIterator it = textures.begin(); it != textures.end(); ++it,++texNum)

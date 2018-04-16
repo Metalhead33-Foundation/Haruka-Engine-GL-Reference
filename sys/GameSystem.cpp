@@ -24,15 +24,17 @@ GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int
 GameSystem::error_t GameSystem::update(STime& deltaTime)
 {
 	soundsys->processStreamedAudio();
-	int mousePrevX(mouseX), mousePrevY(mouseY);
+	// int mousePrevX(mouseX), mousePrevY(mouseY);
 	SDL_GetRelativeMouseState(&mouseX, &mouseY);
-	camera.ProcessMouseMovement(float(mousePrevX - mouseX),float(mousePrevY - mouseY));
+	camera.ProcessMouseMovement(float(mouseX),float(mouseY));
+	// camera.ProcessMouseMovement(float(mousePrevX - mouseX),float(mousePrevY - mouseY));
 	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
 	viewMatrix = camera.GetViewMatrix();
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::render()
 {
+	engine->clearBackground();
 	// engine->renderFrame();
 	for(MeshIterator it = meshes.begin(); it != meshes.end();++it)
 	{
@@ -295,6 +297,9 @@ GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &d
 		{
 			switch(ev.key.keysym.sym)
 			{
+			case SDLK_ESCAPE:
+				return SYSTEM_EXIT;
+				break;
 			case SDLK_w:
 				camera.ProcessKeyboard(Camera::FORWARD, deltaTime.getSeconds());
 				break;

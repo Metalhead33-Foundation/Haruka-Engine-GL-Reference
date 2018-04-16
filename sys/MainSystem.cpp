@@ -8,8 +8,9 @@ MainSystem::MainSystem(int w, int h, const char *title)
 									 SDL_WINDOWPOS_CENTERED,
 									 window->w,
 									 window->h,
-									 SDL_WINDOW_ALLOW_HIGHDPI);
+									 SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_INPUT_GRABBED);
 	window->sysWMinfo = reinterpret_cast<SDL_SysWMinfo*>(malloc(sizeof(SDL_SysWMinfo)));
+	SDL_ShowCursor(SDL_DISABLE);
 	SDL_VERSION(&window->sysWMinfo->version);
 	SDL_GetWindowWMInfo(window->window, window->sysWMinfo);
 }
