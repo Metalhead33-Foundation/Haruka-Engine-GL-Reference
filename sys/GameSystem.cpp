@@ -2,6 +2,11 @@
 #include <sstream>
 #include <assimp/Importer.hpp>
 
+void GameSystem::RenderableMesh::draw()
+{
+	if(shader && mesh) mesh->draw(shader);
+}
+
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char *title)
 	: MainSystem(w, h, title),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
@@ -18,7 +23,12 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 }
 GameSystem::error_t GameSystem::render()
 {
-	engine->renderFrame();
+	// engine->renderFrame();
+	for(MeshIterator it = meshes.begin(); it != meshes.end();++it)
+	{
+		it->second.draw();
+	}
+	engine->switchBuffers();
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::startup()
@@ -115,7 +125,7 @@ Abstract::sMesh GameSystem::queryMesh(const std::string& key)
 {
 	MeshIterator it = meshes.find(key);
 	if(it == meshes.end()) return nullptr;
-	else return it->second;
+	else return it->second.mesh;
 }
 void GameSystem::deleteMesh(const std::string& key)
 {
@@ -145,6 +155,87 @@ void GameSystem::createModel(const std::string& key, const std::string& path)
 	importer.SetIOHandler(modelImporter.get());
 	const aiScene* scen = importer.ReadFile(path,0);
 	createMeshesFromModel(key,scen);
+}
+Abstract::sShaderModule GameSystem::createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype)
+{
+	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
+	Abstract::sShaderModule tmp = engine->createShaderModule(ntype, riidaa);
+	shaderModules.emplace(key, tmp);
+	return tmp;
+}
+Abstract::sShaderModule GameSystem::queryShaderModule(const std::string& key)
+{
+	ShaderModuleIterator it = shaderModules.find(key);
+	if(it == shaderModules.end()) return nullptr;
+		else return it->second;
+}
+void GameSystem::deleteShaderModule(const std::string& key)
+{
+	ShaderModuleIterator it = shaderModules.find(key);
+	if(it != shaderModules.end()) shaderModules.erase(it);
+}
+Abstract::sShaderProgram GameSystem::createShaderProgram(const std::string& key)
+{
+	Abstract::sShaderProgram tmp = engine->createShaderProgram();
+	shaderPrograms.emplace(key, tmp);
+	return tmp;
+}
+Abstract::sShaderProgram GameSystem::queryShaderProgram(const std::string& key)
+{
+	ShaderProgramIterator it = shaderPrograms.find(key);
+	if(it == shaderPrograms.end()) return nullptr;
+		else return it->second;
+}
+void GameSystem::deleteShaderProgram(const std::string& key)
+{
+	ShaderProgramIterator it = shaderPrograms.find(key);
+	if(it != shaderPrograms.end()) shaderPrograms.erase(it);
+}
+
+void GameSystem::attachShaderModule(const std::string& programKey, const std::string& moduleKey)
+{
+	ShaderProgramIterator progIt = shaderPrograms.find(programKey);
+	if(progIt == shaderPrograms.end()) return;
+	ShaderModuleIterator modIt = shaderModules.find(moduleKey);
+	if(modIt == shaderModules.end()) return;
+	progIt->second->pushModule(modIt->second);
+}
+void GameSystem::attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys)
+{
+	ShaderProgramIterator progIt = shaderPrograms.find(programKey);
+	if(progIt == shaderPrograms.end()) return;
+	for(std::vector<std::string>::const_iterator it = moduleKeys.begin(); it != moduleKeys.end();++it)
+	{
+		ShaderModuleIterator modIt = shaderModules.find(*it);
+		if(modIt != shaderModules.end()) progIt->second->pushModule(modIt->second);
+	}
+}
+void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
+{
+	MeshIterator meshIt = meshes.find(meshKey);
+	if(meshIt == meshes.end()) return;
+	TextureIterator texIt = textures.find(texKey);
+	if(texIt == textures.end()) return;
+	meshIt->second.mesh->getTextures().push_back(texIt->second);
+}
+void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys)
+{
+	MeshIterator meshIt = meshes.find(meshKey);
+	if(meshIt == meshes.end()) return;
+	if(texKeys.size())
+	{
+		Abstract::Mesh::TextureVector tempTextures(0);
+		for(std::vector<std::string>::const_iterator it = texKeys.begin(); it != texKeys.end();++it)
+		{
+			TextureIterator texIt = textures.find(*it);
+			if(texIt != textures.end()) tempTextures.push_back(texIt->second);
+		}
+		meshIt->second.mesh->setTextures(tempTextures);
+	}
+	else
+	{
+		meshIt->second.mesh->getTextures().clear();
+	}
 }
 
 GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &deltaTime)

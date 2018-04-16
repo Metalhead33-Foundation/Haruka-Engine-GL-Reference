@@ -12,6 +12,12 @@
 class GameSystem : public MainSystem
 {
 public:
+	struct RenderableMesh
+	{
+		Abstract::sMesh mesh;
+		Abstract::sShaderProgram shader;
+		void draw();
+	};
 	typedef std::unordered_map<std::string, Audio::sBuffer> BufferHash;
 	typedef std::unordered_map<std::string, Audio::sSource> SourceHash;
 	typedef BufferHash::iterator BufferIterator;
@@ -19,8 +25,12 @@ public:
 
 	typedef std::unordered_map<std::string, Abstract::sTexture> TextureHash;
 	typedef TextureHash::iterator TextureIterator;
-	typedef std::unordered_map<std::string, Abstract::sMesh> MeshHash;
+	typedef std::unordered_map<std::string, RenderableMesh> MeshHash;
 	typedef MeshHash::iterator MeshIterator;
+	typedef std::unordered_map<std::string, Abstract::sShaderModule> ShaderModuleHash;
+	typedef std::unordered_map<std::string, Abstract::sShaderProgram> ShaderProgramHash;
+	typedef ShaderModuleHash::iterator ShaderModuleIterator;
+	typedef ShaderProgramHash::iterator ShaderProgramIterator;
 private:
 	const Abstract::sRenderingEngine engine;
 	const Audio::sSystem soundsys;
@@ -29,6 +39,8 @@ private:
 	SourceHash audioSources;
 	TextureHash textures;
 	MeshHash meshes;
+	ShaderModuleHash shaderModules;
+	ShaderProgramHash shaderPrograms;
 
 	Abstract::sMesh createMeshFromAI(const std::string& key, aiMesh* mesh);
 	void createMeshesFromModel(const std::string& key, const aiScene* model);
@@ -57,6 +69,18 @@ public:
 	void createModel(const std::string& key, const std::string& path);
 	Abstract::sMesh queryMesh(const std::string& key);
 	void deleteMesh(const std::string& key);
+	void attachTextureToMesh(const std::string& meshKey, const std::string& texKey);
+	void attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys);
+
+	Abstract::sShaderModule createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype);
+	Abstract::sShaderModule queryShaderModule(const std::string& key);
+	void deleteShaderModule(const std::string& key);
+	Abstract::sShaderProgram createShaderProgram(const std::string& key);
+	Abstract::sShaderProgram queryShaderProgram(const std::string& key);
+	void deleteShaderProgram(const std::string& key);
+
+	void attachShaderModule(const std::string& programKey, const std::string& moduleKey);
+	void attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys);
 
 };
 
