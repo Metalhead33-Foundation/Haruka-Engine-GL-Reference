@@ -23,6 +23,7 @@ namespace Gl {
 Texture::Texture(textureType ntype)
 	: type(ntype)
 {
+	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &textureID);
 }
 Texture::~Texture()
@@ -58,6 +59,8 @@ const char* Texture::stringizeType()
 
 Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO reada)
 {
+	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+	std::cout << glGetError() << std::endl;
 	Abstract::sTexture tmp = Abstract::sTexture(new Texture(ntype));
 	Texture* gltex = dynamic_cast<Texture*>(tmp.get());
 	gltex->mipMapCount = 0;
@@ -67,20 +70,30 @@ Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO re
 	gltex->linearSize = gltex->height * gltex->width;
 	// if(img.getBitsPerPixel() < 24) img.convertTo24Bits();
 	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
+	std::cout << glGetError() << std::endl;
 	if(img->isTransparent())
 	{
 		img->convertTo32Bits();
+		std::cout << img->getWidth() << "x" << img->getHeight() << std::endl;
 		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
 		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
-		glTexImage2D(GL_TEXTURE_2D, GL_RGBA, 0,gltex->width,gltex->height,0, GL_BGRA, GL_UNSIGNED_BYTE, imgBuff.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,gltex->width,gltex->height,0, GL_BGRA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(imgBuff.data()) );
 	}
 	else
 	{
 		img->convertTo24Bits();
+		std::cout << img->getWidth() << "x" << img->getHeight() << std::endl;
 		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
 		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
-		glTexImage2D(GL_TEXTURE_2D, GL_RGB, 0,gltex->width,gltex->height,0, GL_BGR, GL_UNSIGNED_BYTE, imgBuff.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,gltex->width,gltex->height,0, GL_BGR, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(imgBuff.data()));
 	}
+	glFlush();
+	std::cout << glGetError() << std::endl;
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+	std::cout << glGetError() << std::endl;
 	return tmp;
 }
 

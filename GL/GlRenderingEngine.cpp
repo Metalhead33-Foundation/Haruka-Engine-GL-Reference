@@ -20,6 +20,12 @@ GLint RenderingEngine::att[] = { GLX_RGBA,
 								 GLX_TRUE_COLOR_EXT,
 								 GLX_DEPTH_SIZE,
 								 24,
+								 GLX_RED_SIZE,
+								 8,
+								 GLX_BLUE_SIZE,
+								 8,
+								 GLX_GREEN_SIZE,
+								 8,
 								 GLX_DOUBLEBUFFER,
 								 None };
 

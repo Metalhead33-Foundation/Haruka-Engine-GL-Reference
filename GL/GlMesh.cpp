@@ -17,21 +17,21 @@ void Mesh::draw(Abstract::sShaderProgram shader, glm::mat4 &projection, glm::mat
 	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
 	if(!gshdr) return;
 	glUseProgram(gshdr->getShaderID());
+	// Do the matrix stuff
+	gshdr->setMat4("projection", projection);
+	gshdr->setMat4("view", view);
+	gshdr->setMat4("model", model);
 	uint32_t texNum = 0;
 	Texture* tex;
 	for(TextureIterator it = textures.begin(); it != textures.end(); ++it,++texNum)
 	{
 		tex = dynamic_cast<Texture*>(it->get());
 		if(tex) {
-			glActiveTexture(GL_TEXTURE0 + texNum); // active proper texture unit before binding
-			glUniform1i(glGetUniformLocation(gshdr->getShaderID(), tex->stringizeType()), texNum);
+			glActiveTexture(tex->getTextureId()); // active proper texture unit before binding
 			glBindTexture(GL_TEXTURE_2D, tex->getTextureId());
+			glUniform1i(glGetUniformLocation(gshdr->getShaderID(), tex->stringizeType()), texNum);
 		}
 	}
-	// Do the matrix stuff
-	gshdr->setMat4("projection", projection);
-	gshdr->setMat4("view", view);
-	gshdr->setMat4("model", model);
 	// draw mesh
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

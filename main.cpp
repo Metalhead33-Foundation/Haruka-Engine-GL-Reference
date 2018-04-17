@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 		sys.attachShaderModule("modeldispray","modeldispray.vs");
 		moderdispray->linkShaders();
 		sys.createModel("untitled","lizardman_vessel.blend");
-		sys.createTextureFromImage("tommy","artist.png",Abstract::Texture::texture_diffuse);
+		sys.createTextureFromImage("tommy","lizardman_kochog1.jpg",Abstract::Texture::texture_diffuse);
 		sys.attachTextureToMesh("untitled.","tommy");
 		sys.attachShaderToMesh("untitled.","modeldispray");
 		std::thread trd(initialize,&sys);

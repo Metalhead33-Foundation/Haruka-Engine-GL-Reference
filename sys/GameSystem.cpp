@@ -18,7 +18,7 @@ GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int
 	  modelImporter(new AssimpPhysFS())
 {
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+	// modelMatrix = glm::scale(modelMatrix, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 }
 
 GameSystem::error_t GameSystem::update(STime& deltaTime)
@@ -26,7 +26,7 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 	soundsys->processStreamedAudio();
 	// int mousePrevX(mouseX), mousePrevY(mouseY);
 	SDL_GetRelativeMouseState(&mouseX, &mouseY);
-	camera.ProcessMouseMovement(float(mouseX),float(mouseY));
+	camera.ProcessMouseMovement(float(mouseX),float(mouseY * -1),false);
 	// camera.ProcessMouseMovement(float(mousePrevX - mouseX),float(mousePrevY - mouseY));
 	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
 	viewMatrix = camera.GetViewMatrix();
