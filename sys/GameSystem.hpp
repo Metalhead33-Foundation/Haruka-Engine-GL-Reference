@@ -9,10 +9,15 @@
 #include "Camera.hpp"
 #include <assimp/scene.h>
 #include <unordered_map>
+#include <queue>
+#include <functional>
+#include "../abstract/Future.hpp"
 
 class GameSystem : public MainSystem
 {
 public:
+	typedef std::queue<std::function<void(void)>> CommandQueue;
+
 	struct RenderableMesh
 	{
 		Abstract::sMesh mesh;
@@ -46,8 +51,31 @@ private:
 	int mouseX, mouseY;
 	glm::mat4 projectionMatrix, viewMatrix, modelMatrix;
 
-	Abstract::sMesh createMeshFromAI(const std::string& key, aiMesh* mesh);
-	void createMeshesFromModel(const std::string& key, const aiScene* model);
+	Abstract::sMesh __createMeshFromAI(const std::string& key, aiMesh* mesh);
+	void __createMeshesFromModel(const std::string& key, const aiScene* model);
+
+	CommandQueue commandQueue;
+
+	Audio::sBuffer __createBuffer(const std::string& key, const std::string& path);
+	Audio::sSource __createStream(const std::string& key, const std::string& path, size_t buffNum=2);
+	Audio::sSource __createSource(const std::string& key, const std::string& buffkey);
+	void __deleteBuffer(const std::string& key);
+	void __deleteSource(const std::string& key);
+	Abstract::sTexture __createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
+	Abstract::sTexture __createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
+	void __deleteTexture(const std::string& key);
+	void __createModel(const std::string& key, const std::string& path);
+	void __deleteMesh(const std::string& key);
+	void __attachTextureToMesh(const std::string& meshKey, const std::string& texKey);
+	void __attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys);
+	void __attachShaderToMesh(const std::string& meshKey, const std::string& progKey);
+	Abstract::sShaderModule __createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype);
+	void __deleteShaderModule(const std::string& key);
+	Abstract::sShaderProgram __createShaderProgram(const std::string& key);
+	void __deleteShaderProgram(const std::string& key);
+	void __attachShaderModule(const std::string& programKey, const std::string& moduleKey);
+	void __attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys);
+	void __linkShaders(const std::string& programKey);
 public:
 	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title);
 	error_t update(STime& deltaTime);
@@ -56,37 +84,33 @@ public:
 	error_t cleanup();
 	error_t processWindowEvent(const SDL_Event& ev, STime& deltaTime);
 
-	Audio::sBuffer createBuffer(const std::string& key, const std::string& path);
-	Audio::sSource createStream(const std::string& key, const std::string& path, size_t buffNum=2);
-	Audio::sSource createSource(const std::string& key, const std::string& buffkey);
-
 	Audio::sBuffer queryBuffer(const std::string& key);
 	Audio::sSource querySource(const std::string& key);
+	Abstract::sTexture queryTexture(const std::string& key);
+	Abstract::sMesh queryMesh(const std::string& key);
+	Abstract::sShaderModule queryShaderModule(const std::string& key);
+	Abstract::sShaderProgram queryShaderProgram(const std::string& key);
+
+	Future<Audio::sBuffer> createBuffer(const std::string& key, const std::string& path);
+	Future<Audio::sSource> createStream(const std::string& key, const std::string& path, size_t buffNum=2);
+	Future<Audio::sSource> createSource(const std::string& key, const std::string& buffkey);
 	void deleteBuffer(const std::string& key);
 	void deleteSource(const std::string& key);
-
-	Abstract::sTexture createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
-	Abstract::sTexture createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
-	Abstract::sTexture queryTexture(const std::string& key);
+	Future<Abstract::sTexture> createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
+	Future<Abstract::sTexture> createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
 	void deleteTexture(const std::string& key);
-
 	void createModel(const std::string& key, const std::string& path);
-	Abstract::sMesh queryMesh(const std::string& key);
 	void deleteMesh(const std::string& key);
 	void attachTextureToMesh(const std::string& meshKey, const std::string& texKey);
 	void attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys);
 	void attachShaderToMesh(const std::string& meshKey, const std::string& progKey);
-
-	Abstract::sShaderModule createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype);
-	Abstract::sShaderModule queryShaderModule(const std::string& key);
+	Future<Abstract::sShaderModule> createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype);
 	void deleteShaderModule(const std::string& key);
-	Abstract::sShaderProgram createShaderProgram(const std::string& key);
-	Abstract::sShaderProgram queryShaderProgram(const std::string& key);
+	Future<Abstract::sShaderProgram> createShaderProgram(const std::string& key);
 	void deleteShaderProgram(const std::string& key);
-
 	void attachShaderModule(const std::string& programKey, const std::string& moduleKey);
 	void attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys);
-
+	void linkShaders(const std::string& programKey);
 };
 
 #endif // GAMESYSTEM_HPP

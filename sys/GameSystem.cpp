@@ -30,6 +30,11 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 	// camera.ProcessMouseMovement(float(mousePrevX - mouseX),float(mousePrevY - mouseY));
 	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
 	viewMatrix = camera.GetViewMatrix();
+	while(!commandQueue.empty())
+	{
+		commandQueue.front()();
+		commandQueue.pop();
+	}
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::render()
@@ -61,21 +66,21 @@ GameSystem::error_t GameSystem::cleanup()
 	audioSources.clear();
 	return SYSTEM_OKAY;
 }
-Audio::sBuffer GameSystem::createBuffer(const std::string& key, const std::string& path)
+Audio::sBuffer GameSystem::__createBuffer(const std::string& key, const std::string& path)
 {
 	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
 	Audio::sBuffer tmp = soundsys->createSoundBuffer(riidaa);
 	audioBuffers.emplace(key, tmp);
 	return tmp;
 }
-Audio::sSource GameSystem::createStream(const std::string& key, const std::string& path, size_t buffNum)
+Audio::sSource GameSystem::__createStream(const std::string& key, const std::string& path, size_t buffNum)
 {
 	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
 	Audio::sSource tmp = soundsys->createStreamingAudio(riidaa, buffNum);
 	audioSources.emplace(key, tmp);
 	return tmp;
 }
-Audio::sSource GameSystem::createSource(const std::string& key, const std::string& buffkey)
+Audio::sSource GameSystem::__createSource(const std::string& key, const std::string& buffkey)
 {
 	BufferIterator it;
 	Audio::sSource tmp;
@@ -104,24 +109,24 @@ Audio::sSource GameSystem::querySource(const std::string& key)
 	if(it == audioSources.end()) return nullptr;
 	else return it->second;
 }
-void GameSystem::deleteBuffer(const std::string& key)
+void GameSystem::__deleteBuffer(const std::string& key)
 {
 	BufferIterator it = audioBuffers.find(key);
 	if(it != audioBuffers.end()) audioBuffers.erase(it);
 }
-void GameSystem::deleteSource(const std::string& key)
+void GameSystem::__deleteSource(const std::string& key)
 {
 	SourceIterator it = audioSources.find(key);
 	if(it != audioSources.end()) audioSources.erase(it);
 }
-Abstract::sTexture GameSystem::createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
+Abstract::sTexture GameSystem::__createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
 {
 	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
 	Abstract::sTexture tmp = engine->createTextureFromDDS(type, riidaa);
 	textures.emplace(key, tmp);
 	return tmp;
 }
-Abstract::sTexture GameSystem::createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
+Abstract::sTexture GameSystem::__createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
 {
 	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
 	Abstract::sTexture tmp = engine->createTextureFromImage(type, riidaa);
@@ -134,7 +139,7 @@ Abstract::sTexture GameSystem::queryTexture(const std::string& key)
 	if(it == textures.end()) return nullptr;
 	else return it->second;
 }
-void GameSystem::deleteTexture(const std::string& key)
+void GameSystem::__deleteTexture(const std::string& key)
 {
 	TextureIterator it = textures.find(key);
 	if(it != textures.end()) textures.erase(it);
@@ -145,12 +150,12 @@ Abstract::sMesh GameSystem::queryMesh(const std::string& key)
 	if(it == meshes.end()) return nullptr;
 	else return it->second.mesh;
 }
-void GameSystem::deleteMesh(const std::string& key)
+void GameSystem::__deleteMesh(const std::string& key)
 {
 	MeshIterator it = meshes.find(key);
 	if(it != meshes.end()) meshes.erase(it);
 }
-Abstract::sMesh GameSystem::createMeshFromAI(const std::string& key, aiMesh* mesh)
+Abstract::sMesh GameSystem::__createMeshFromAI(const std::string& key, aiMesh* mesh)
 {
 	if(!mesh) return nullptr;
 	AiModelFactory::MeshCreateInfo info;
@@ -159,18 +164,18 @@ Abstract::sMesh GameSystem::createMeshFromAI(const std::string& key, aiMesh* mes
 	meshes.emplace(key, RenderableMesh{tmp, 0} );
 	return tmp;
 }
-void GameSystem::createMeshesFromModel(const std::string& key, const aiScene* model)
+void GameSystem::__createMeshesFromModel(const std::string& key, const aiScene* model)
 {
 	if(!model) return;
 	for(unsigned int i = 0; i < model->mNumMeshes;++i)
 	{
 		std::stringstream name;
 		name << key << "." << model->mMeshes[i]->mName.C_Str();
-		createMeshFromAI(name.str(),model->mMeshes[i]);
+		__createMeshFromAI(name.str(),model->mMeshes[i]);
 		std::cout << key << "." << model->mMeshes[i]->mName.C_Str() << " - " << model->mMeshes[i]->mNumVertices << std::endl;
 	}
 }
-void GameSystem::createModel(const std::string& key, const std::string& path)
+void GameSystem::__createModel(const std::string& key, const std::string& path)
 {
 	Assimp::Importer importer;
 	importer.SetIOHandler(modelImporter.get());
@@ -185,9 +190,9 @@ void GameSystem::createModel(const std::string& key, const std::string& path)
 										 );
 	if(!scen) std::cout << "Error loading model!" << importer.GetErrorString() << std::endl;
 	std::cout << scen->mNumMeshes << std::endl;
-	createMeshesFromModel(key,scen);
+	__createMeshesFromModel(key,scen);
 }
-Abstract::sShaderModule GameSystem::createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype)
+Abstract::sShaderModule GameSystem::__createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype)
 {
 	Abstract::sFIO riidaa = PhysFS::FileHandle::openRead(path);
 	Abstract::sShaderModule tmp = engine->createShaderModule(ntype, riidaa);
@@ -200,12 +205,12 @@ Abstract::sShaderModule GameSystem::queryShaderModule(const std::string& key)
 	if(it == shaderModules.end()) return nullptr;
 		else return it->second;
 }
-void GameSystem::deleteShaderModule(const std::string& key)
+void GameSystem::__deleteShaderModule(const std::string& key)
 {
 	ShaderModuleIterator it = shaderModules.find(key);
 	if(it != shaderModules.end()) shaderModules.erase(it);
 }
-Abstract::sShaderProgram GameSystem::createShaderProgram(const std::string& key)
+Abstract::sShaderProgram GameSystem::__createShaderProgram(const std::string& key)
 {
 	Abstract::sShaderProgram tmp = engine->createShaderProgram();
 	shaderPrograms.emplace(key, tmp);
@@ -217,13 +222,13 @@ Abstract::sShaderProgram GameSystem::queryShaderProgram(const std::string& key)
 	if(it == shaderPrograms.end()) return nullptr;
 		else return it->second;
 }
-void GameSystem::deleteShaderProgram(const std::string& key)
+void GameSystem::__deleteShaderProgram(const std::string& key)
 {
 	ShaderProgramIterator it = shaderPrograms.find(key);
 	if(it != shaderPrograms.end()) shaderPrograms.erase(it);
 }
 
-void GameSystem::attachShaderModule(const std::string& programKey, const std::string& moduleKey)
+void GameSystem::__attachShaderModule(const std::string& programKey, const std::string& moduleKey)
 {
 	ShaderProgramIterator progIt = shaderPrograms.find(programKey);
 	if(progIt == shaderPrograms.end()) return;
@@ -231,7 +236,7 @@ void GameSystem::attachShaderModule(const std::string& programKey, const std::st
 	if(modIt == shaderModules.end()) return;
 	progIt->second->pushModule(modIt->second);
 }
-void GameSystem::attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys)
+void GameSystem::__attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys)
 {
 	ShaderProgramIterator progIt = shaderPrograms.find(programKey);
 	if(progIt == shaderPrograms.end()) return;
@@ -241,7 +246,7 @@ void GameSystem::attachShaderModule(const std::string& programKey, const std::ve
 		if(modIt != shaderModules.end()) progIt->second->pushModule(modIt->second);
 	}
 }
-void GameSystem::attachShaderToMesh(const std::string& meshKey, const std::string& progKey)
+void GameSystem::__attachShaderToMesh(const std::string& meshKey, const std::string& progKey)
 {
 	MeshIterator meshIt = meshes.find(meshKey);
 	if(meshIt == meshes.end()) return;
@@ -249,7 +254,7 @@ void GameSystem::attachShaderToMesh(const std::string& meshKey, const std::strin
 	if(progIt == shaderPrograms.end()) return;
 	meshIt->second.shader = progIt->second;
 }
-void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
+void GameSystem::__attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
 {
 	MeshIterator meshIt = meshes.find(meshKey);
 	if(meshIt == meshes.end()) return;
@@ -257,7 +262,7 @@ void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::stri
 	if(texIt == textures.end()) return;
 	meshIt->second.mesh->getTextures().push_back(texIt->second);
 }
-void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys)
+void GameSystem::__attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys)
 {
 	MeshIterator meshIt = meshes.find(meshKey);
 	if(meshIt == meshes.end()) return;
@@ -320,4 +325,144 @@ GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &d
 		break;
 	}
 	return SYSTEM_OKAY;
+}
+
+Future<Audio::sBuffer> GameSystem::createBuffer(const std::string& key, const std::string& path)
+{
+	Future<Audio::sBuffer> futur;
+	commandQueue.push([futur,key,path,this](){
+		futur.store(__createBuffer(key,path));
+	  });
+	return futur;
+}
+Future<Audio::sSource> GameSystem::createStream(const std::string& key, const std::string& path, size_t buffNum)
+{
+	Future<Audio::sSource> futur;
+	commandQueue.push([futur,key,path,buffNum,this](){
+		futur.store(__createStream(key,path,buffNum));
+	  });
+	return futur;
+}
+Future<Audio::sSource> GameSystem::createSource(const std::string& key, const std::string& buffkey)
+{
+	Future<Audio::sSource> futur;
+	commandQueue.push([futur,key,buffkey,this](){
+		futur.store(__createSource(key,buffkey));
+	  });
+	return futur;
+}
+void GameSystem::deleteBuffer(const std::string& key)
+{
+	commandQueue.push([key,this](){
+		__deleteBuffer(key);
+	  });
+}
+void GameSystem::deleteSource(const std::string& key)
+{
+	commandQueue.push([key,this](){
+		__deleteSource(key);
+	  });
+}
+Future<Abstract::sTexture> GameSystem::createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
+{
+	Future<Abstract::sTexture> futur;
+	commandQueue.push([futur,key,path,type,this](){
+		futur.store(__createTextureFromDDS(key,path,type));
+	  });
+	return futur;
+}
+Future<Abstract::sTexture> GameSystem::createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
+{
+	Future<Abstract::sTexture> futur;
+	commandQueue.push([futur,key,path,type,this](){
+		futur.store(__createTextureFromImage(key,path,type));
+	  });
+	return futur;
+}
+void GameSystem::deleteTexture(const std::string& key)
+{
+	commandQueue.push([key,this](){
+		__deleteTexture(key);
+	  });
+}
+void GameSystem::createModel(const std::string& key, const std::string& path)
+{
+	commandQueue.push([key,path,this](){
+		__createModel(key,path);
+	  });
+}
+void GameSystem::deleteMesh(const std::string& key)
+{
+	commandQueue.push([key,this](){
+		__deleteMesh(key);
+	  });
+}
+void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
+{
+	commandQueue.push([meshKey,texKey,this](){
+		__attachTextureToMesh(meshKey,texKey);
+	  });
+}
+void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys)
+{
+	commandQueue.push([meshKey,texKeys,this](){
+		__attachTextureToMesh(meshKey,texKeys);
+	  });
+}
+void GameSystem::attachShaderToMesh(const std::string& meshKey, const std::string& progKey)
+{
+	commandQueue.push([meshKey,progKey,this](){
+		__attachShaderToMesh(meshKey,progKey);
+	  });
+}
+Future<Abstract::sShaderModule> GameSystem::createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype)
+{
+	Future<Abstract::sShaderModule> futur;
+	commandQueue.push([futur,key,path,ntype,this](){
+		futur.store(__createShaderModule(key,path,ntype));
+	  });
+	return futur;
+}
+void GameSystem::deleteShaderModule(const std::string& key)
+{
+	commandQueue.push([key,this](){
+		__deleteShaderModule(key);
+	  });
+}
+Future<Abstract::sShaderProgram> GameSystem::createShaderProgram(const std::string& key)
+{
+	Future<Abstract::sShaderProgram> futur;
+	commandQueue.push([futur,key,this](){
+		futur.store(__createShaderProgram(key));
+	  });
+	return futur;
+}
+void GameSystem::deleteShaderProgram(const std::string& key)
+{
+	commandQueue.push([key,this](){
+		__deleteShaderProgram(key);
+	  });
+}
+void GameSystem::attachShaderModule(const std::string& programKey, const std::string& moduleKey)
+{
+	commandQueue.push([programKey,moduleKey,this](){
+		__attachShaderModule(programKey,moduleKey);
+	  });
+}
+void GameSystem::attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys)
+{
+	commandQueue.push([programKey,moduleKeys,this](){
+		__attachShaderModule(programKey,moduleKeys);
+	  });
+}
+void GameSystem::__linkShaders(const std::string& programKey)
+{
+	Abstract::sShaderProgram shad = queryShaderProgram(programKey);
+	if(shad) shad->linkShaders();
+}
+void GameSystem::linkShaders(const std::string& programKey)
+{
+	commandQueue.push([programKey,this](){
+		__linkShaders(programKey);
+	  });
 }

@@ -1,7 +1,6 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += console c++14
 CONFIG -= app_bundle
-CONFIG -= qt
 
 CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
 CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
@@ -116,4 +115,5 @@ HEADERS += \
     audio/FX/WaveformEffect.hpp \
     audio/FX/AuxiliaryEffectSlot.hpp \
     audio/FX/AllEffects.hpp \
-    sys/Camera.hpp
+    sys/Camera.hpp \
+    abstract/Future.hpp
