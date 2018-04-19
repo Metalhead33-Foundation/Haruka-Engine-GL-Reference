@@ -2,6 +2,7 @@
 #define MAINSYSTEM_HPP
 #include "Clock.hpp"
 #include "../abstract/SettingContainer.hpp"
+#include <glm/mat4x4.hpp>
 
 class MainSystem
 {
@@ -18,6 +19,7 @@ protected:
 	SDL_Event ev;
 	bool exitSignal;
 	const STime framerate;
+	glm::mat4 screenProjection;
 public:
 	MainSystem(int w, int h, const char *title, int intendedFramerate=60);
 	virtual ~MainSystem();

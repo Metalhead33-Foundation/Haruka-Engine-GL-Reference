@@ -16,14 +16,26 @@ void initialize(GameSystem* sys)
 	{
 		sys->createShaderModule("modeldispray.fs","modeldispray.fs",Abstract::ShaderModule::FRAGMENT_SHADER);
 		sys->createShaderModule("modeldispray.vs","modeldispray.vs",Abstract::ShaderModule::VERTEX_SHADER);
+		sys->createShaderModule("widget.fs","widget.fs",Abstract::ShaderModule::FRAGMENT_SHADER);
+		sys->createShaderModule("widget.vs","widget.vs",Abstract::ShaderModule::VERTEX_SHADER);
 		sys->createShaderProgram("modeldispray");
+		sys->createShaderProgram("widget");
 		sys->attachShaderModule("modeldispray","modeldispray.fs");
 		sys->attachShaderModule("modeldispray","modeldispray.vs");
+		sys->attachShaderModule("widget","widget.fs");
+		sys->attachShaderModule("widget","widget.vs");
 		sys->linkShaders("modeldispray");
+		sys->linkShaders("widget");
 		sys->createModel("untitled","lizardman_vessel.blend");
+		sys->createWidget("widget");
+		sys->createTextureFromImage("logos","200px-Le_56_Face.png",Abstract::Texture::texture_diffuse);
 		sys->createTextureFromImage("tommy","lizardman_kochog1.jpg",Abstract::Texture::texture_diffuse);
-		sys->attachTextureToMesh("untitled.","tommy");
 		sys->attachShaderToMesh("untitled.","modeldispray");
+		sys->attachTextureToMesh("untitled.","tommy");
+		sys->attachTextureToWidget("widget","logos");
+		sys->attachShaderToWidget("widget","widget");
+		sys->setWidgetPos("widget",200,200);
+		sys->setWidgetSize("widget",200,164);
 	}
 }
 int main(int argc, char *argv[])

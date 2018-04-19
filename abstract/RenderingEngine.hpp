@@ -6,6 +6,7 @@
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
 #include "Mesh.hpp"
+#include "Widget.hpp"
 #include "FIO.hpp"
 
 namespace Abstract {
@@ -23,6 +24,7 @@ public:
 	virtual sTexture createTextureFromDDS(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sTexture createTextureFromImage(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
+	virtual sWidget createWidget(int height, int width, sTexture tex = nullptr) = 0;
 	virtual void clearBackground() = 0;
 
 	virtual void renderFrame() = 0;

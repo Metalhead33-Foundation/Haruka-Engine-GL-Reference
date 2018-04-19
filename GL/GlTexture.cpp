@@ -78,6 +78,8 @@ Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO re
 		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
 		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,gltex->width,gltex->height,0, GL_BGRA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(imgBuff.data()) );
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	else
 	{

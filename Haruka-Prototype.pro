@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     audio/FX/CompressorEffect.cpp \
     audio/FX/EqualizerEffect.cpp \
     audio/FX/AuxiliaryEffectSlot.cpp \
-    sys/Camera.cpp
+    sys/Camera.cpp \
+    GL/GlWidget.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -116,4 +117,6 @@ HEADERS += \
     audio/FX/AuxiliaryEffectSlot.hpp \
     audio/FX/AllEffects.hpp \
     sys/Camera.hpp \
-    abstract/Future.hpp
+    abstract/Future.hpp \
+    abstract/Widget.hpp \
+    GL/GlWidget.hpp

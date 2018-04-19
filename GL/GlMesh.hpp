@@ -14,6 +14,7 @@ private:
 	void setupMesh();
 	Mesh(ConstructorReference constr);
 public:
+	~Mesh();
 	static Abstract::sMesh createMesh(ConstructorReference constr);
 	const GLuint& getVAO() const;
 	const GLuint& getVBO() const;

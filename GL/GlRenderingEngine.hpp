@@ -25,6 +25,7 @@ public:
 	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
+	Abstract::sWidget createWidget(int height, int width, Abstract::sTexture tex = nullptr);
 
 	void renderFrame();
 	void startup();

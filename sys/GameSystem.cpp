@@ -12,6 +12,10 @@ void GameSystem::RenderableMesh::draw(glm::mat4 &projection, glm::mat4 &view, gl
 	// Abstract::sMesh mesh = this->mesh;
 	if(shader && mesh) mesh->draw(shader, projection, view, model);
 }
+void GameSystem::RenderableWidget::draw(glm::mat4& projectionMatrix)
+{
+	if(shader && widget) widget->draw(shader,pos,projectionMatrix);
+}
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h,
 					   int samplerate, size_t audioBufferSize, const char *title, int intendedFramerate)
@@ -50,6 +54,10 @@ GameSystem::error_t GameSystem::render()
 	for(MeshIterator it = meshes.begin(); it != meshes.end();++it)
 	{
 		it->second.draw(projectionMatrix, viewMatrix, modelMatrix);
+	}
+	for(WidgetIterator it = widgets.begin(); it != widgets.end();++it)
+	{
+		it->second.draw(screenProjection);
 	}
 	engine->switchBuffers();
 	return SYSTEM_OKAY;
@@ -229,9 +237,11 @@ void GameSystem::__attachShaderToMesh(const std::string& meshKey, Abstract::sSha
 	if(meshIt == meshes.end()) return;
 	meshIt->second.shader = prog;
 }
-void GameSystem::__attachTextureToMesh(Abstract::sMesh mesh, Abstract::sTexture tex)
+void GameSystem::__attachTextureToMesh(const std::string &meshKey, Abstract::sTexture tex)
 {
-	if(mesh && tex) mesh->getTextures().push_back(tex);
+	MeshIterator meshIt = meshes.find(meshKey);
+	if(meshIt == meshes.end()) return;
+	if(meshIt->second.mesh && tex) meshIt->second.mesh->getTextures().push_back(tex);
 }
 
 GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &deltaTime)
@@ -394,30 +404,24 @@ void GameSystem::deleteMesh(const std::string& key)
 }
 void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
 {
-	MeshIterator meshIt = meshes.find(meshKey);
-	if(meshIt == meshes.end()) return;
 	TextureIterator texIt = textures.find(texKey);
 	if(texIt == textures.end()) return;
-	Abstract::sMesh mesh = meshIt->second.mesh;
 	Future<Abstract::sTexture> tex = texIt->second;
 	std::unique_lock<std::mutex> queue(commandMutex);
-	commandQueue.push([mesh,tex,this](){
-		__attachTextureToMesh(mesh,tex);
+	commandQueue.push([meshKey,tex,this](){
+		__attachTextureToMesh(meshKey,tex);
 	  });
 	queue.unlock();
 }
 void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys)
 {
-	MeshIterator meshIt = meshes.find(meshKey);
-	if(meshIt == meshes.end()) return;
-	Abstract::sMesh mesh = meshIt->second.mesh;
 	std::unique_lock<std::mutex> queue(commandMutex);
 	for(size_t i = 0; i < texKeys.size();++i) {
 		TextureIterator texIt = textures.find(texKeys[i]);
 		if(texIt != textures.end()) {
 		Future<Abstract::sTexture> tex = texIt->second;
-		commandQueue.push([mesh,tex,this](){
-			__attachTextureToMesh(mesh,tex);
+		commandQueue.push([meshKey,tex,this](){
+			__attachTextureToMesh(meshKey,tex);
 		  });
 		}
 	}
@@ -517,5 +521,122 @@ void GameSystem::linkShaders(const std::string& programKey)
 	commandQueue.push([prog,this](){
 		__linkShaders(prog);
 	  });
+	queue.unlock();
+}
+Abstract::sWidget GameSystem::queryWidget(const std::string& key)
+{
+	WidgetIterator it = widgets.find(key);
+	if(it == widgets.end()) return nullptr;
+	else return it->second.widget;
+}
+Abstract::sWidget GameSystem::__createWidget(const std::string& key)
+{
+	Abstract::sWidget tmp = engine->createWidget(0,0,nullptr);
+	widgets.emplace(key, RenderableWidget{tmp, 0, { 0, 0 } } );
+	return tmp;
+}
+void GameSystem::__attachShaderToWidget(const std::string& widgetKey, Abstract::sShaderProgram shader)
+{
+	WidgetIterator it = widgets.find(widgetKey);
+	if(it == widgets.end()) return;
+	it->second.shader = shader;
+}
+Future<Abstract::sWidget> GameSystem::createWidget(const std::string& key)
+{
+	Future<Abstract::sWidget> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,futur,this](){
+		futur.store(__createWidget(key));
+	  });
+	queue.unlock();
+	return futur;
+}
+void GameSystem::attachShaderToWidget(const std::string& widgetKey, const std::string& shaderKey)
+{
+	ShaderProgramIterator progIt = shaderPrograms.find(shaderKey);
+	if(progIt == shaderPrograms.end()) return;
+	Future<Abstract::sShaderProgram> shdr = progIt->second;
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([widgetKey,shdr,this](){
+		__attachShaderToWidget(widgetKey,shdr);
+	  });
+	queue.unlock();
+}
+void GameSystem::setWidgetPos(const std::string& key, int x, int y)
+{
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,x,y,this](){
+	WidgetIterator widgIt = widgets.find(key);
+	if(widgIt == widgets.end()) return;
+	widgIt->second.pos.x = x;
+	widgIt->second.pos.y = y;
+	});
+	queue.unlock();
+}
+void GameSystem::setWidgetPosX(const std::string& key, int x)
+{
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,x,this](){
+	WidgetIterator widgIt = widgets.find(key);
+	if(widgIt == widgets.end()) return;
+	widgIt->second.pos.x = x;
+	});
+	queue.unlock();
+}
+void GameSystem::setWidgetPosY(const std::string& key, int y)
+{
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,y,this](){
+	WidgetIterator widgIt = widgets.find(key);
+	if(widgIt == widgets.end()) return;
+	widgIt->second.pos.y = y;
+	});
+	queue.unlock();
+}
+void GameSystem::__attachTextureToWidget(const std::string& widgetKey, Abstract::sTexture texture)
+{
+	Abstract::sWidget widget = queryWidget(widgetKey);
+	if(widget) widget->setTexture(texture);
+}
+void GameSystem::attachTextureToWidget(const std::string& widgetKey, const std::string& textureKey)
+{
+	TextureIterator texIt = textures.find(textureKey);
+	if(texIt == textures.end()) return;
+	Future<Abstract::sTexture> tex = texIt->second;
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([widgetKey,tex,this](){
+		__attachTextureToWidget(widgetKey,tex);
+	  });
+	queue.unlock();
+}
+void GameSystem::setWidgetSize(const std::string& key, int x, int y)
+{
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,x,y,this](){
+	WidgetIterator widgIt = widgets.find(key);
+	if(widgIt == widgets.end()) return;
+	widgIt->second.widget->setHeight(y);
+	widgIt->second.widget->setWidth(x);
+	});
+	queue.unlock();
+}
+void GameSystem::setWidgetSizeX(const std::string& key, int x)
+{
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,x,this](){
+	WidgetIterator widgIt = widgets.find(key);
+	if(widgIt == widgets.end()) return;
+	widgIt->second.widget->setWidth(x);
+	});
+	queue.unlock();
+}
+void GameSystem::setWidgetSizeY(const std::string& key, int y)
+{
+	std::unique_lock<std::mutex> queue(commandMutex);
+	commandQueue.push([key,y,this](){
+	WidgetIterator widgIt = widgets.find(key);
+	if(widgIt == widgets.end()) return;
+	widgIt->second.widget->setHeight(y);
+	});
 	queue.unlock();
 }

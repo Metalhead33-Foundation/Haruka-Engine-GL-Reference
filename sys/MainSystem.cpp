@@ -1,8 +1,10 @@
 #include "MainSystem.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 MainSystem::MainSystem(int w, int h, const char *title, int intendedFramerate)
 	: window(Abstract::sSettingContainer(new Abstract::SettingContainer{ 0, 0, w, h, title })),
-	  framerate(STime::asSeconds(double(1.00) / double(intendedFramerate)))
+	  framerate(STime::asSeconds(double(1.00) / double(intendedFramerate))),
+	  screenProjection(glm::ortho(0.0f, float(w), float(h), 0.0f, -1.0f, 1.0f))
 {
 	window->window = SDL_CreateWindow(window->title,
 									 SDL_WINDOWPOS_CENTERED,

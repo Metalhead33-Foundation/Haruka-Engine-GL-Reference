@@ -25,6 +25,13 @@ public:
 		Abstract::sShaderProgram shader;
 		void draw(glm::mat4& projectionMatrix, glm::mat4& view, glm::mat4& model);
 	};
+	struct RenderableWidget
+	{
+		Abstract::sWidget widget;
+		Abstract::sShaderProgram shader;
+		glm::vec2 pos;
+		void draw(glm::mat4& projectionMatrix);
+	};
 	typedef std::unordered_map<std::string, Future<Audio::sBuffer>> BufferHash;
 	typedef std::unordered_map<std::string, Future<Audio::sSource>> SourceHash;
 	typedef BufferHash::iterator BufferIterator;
@@ -34,6 +41,8 @@ public:
 	typedef TextureHash::iterator TextureIterator;
 	typedef std::unordered_map<std::string, RenderableMesh> MeshHash;
 	typedef MeshHash::iterator MeshIterator;
+	typedef std::unordered_map<std::string, RenderableWidget> WidgetHash;
+	typedef WidgetHash::iterator WidgetIterator;
 	typedef std::unordered_map<std::string, Future<Abstract::sShaderModule>> ShaderModuleHash;
 	typedef std::unordered_map<std::string, Future<Abstract::sShaderProgram>> ShaderProgramHash;
 	typedef ShaderModuleHash::iterator ShaderModuleIterator;
@@ -46,6 +55,7 @@ private:
 	SourceHash audioSources;
 	TextureHash textures;
 	MeshHash meshes;
+	WidgetHash widgets;
 	ShaderModuleHash shaderModules;
 	ShaderProgramHash shaderPrograms;
 	Camera camera;
@@ -68,7 +78,7 @@ private:
 	void __deleteTexture(const std::string& key);
 	void __createModel(const std::string& key, const std::string& path);
 	void __deleteMesh(const std::string& key);
-	void __attachTextureToMesh(Abstract::sMesh mesh, Abstract::sTexture tex);
+	void __attachTextureToMesh(const std::string &meshKey, Abstract::sTexture tex);
 	void __attachShaderToMesh(const std::string &meshKey, Abstract::sShaderProgram prog);
 	Abstract::sShaderModule __createShaderModule(const std::string& key, Abstract::sFIO reedah, Abstract::ShaderModule::ShaderType ntype);
 	void __deleteShaderModule(const std::string& key);
@@ -76,6 +86,10 @@ private:
 	void __deleteShaderProgram(const std::string& key);
 	void __attachShaderModule(Abstract::sShaderProgram prog, Abstract::sShaderModule mod);
 	void __linkShaders(Abstract::sShaderProgram prog);
+
+	Abstract::sWidget __createWidget(const std::string& key);
+	void __attachShaderToWidget(const std::string& widgetKey, Abstract::sShaderProgram shader);
+	void __attachTextureToWidget(const std::string& widgetKey, Abstract::sTexture texture);
 public:
 	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title, int intendedFramerate=60);
 	error_t update(STime& deltaTime);
@@ -90,6 +104,7 @@ public:
 	Abstract::sMesh queryMesh(const std::string& key);
 	Abstract::sShaderModule queryShaderModule(const std::string& key);
 	Abstract::sShaderProgram queryShaderProgram(const std::string& key);
+	Abstract::sWidget queryWidget(const std::string& key);
 
 	Future<Audio::sBuffer> createBuffer(const std::string& key, const std::string& path);
 	Future<Audio::sSource> createStream(const std::string& key, const std::string& path, size_t buffNum=2);
@@ -111,6 +126,16 @@ public:
 	void attachShaderModule(const std::string& programKey, const std::string& moduleKey);
 	void attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys);
 	void linkShaders(const std::string& programKey);
+
+	Future<Abstract::sWidget> createWidget(const std::string& key);
+	void attachShaderToWidget(const std::string& widgetKey, const std::string& shaderKey);
+	void setWidgetPos(const std::string& key, int x, int y);
+	void setWidgetPosX(const std::string& key, int x);
+	void setWidgetPosY(const std::string& key, int y);
+	void attachTextureToWidget(const std::string& widgetKey, const std::string& textureKey);
+	void setWidgetSize(const std::string& key, int x, int y);
+	void setWidgetSizeX(const std::string& key, int x);
+	void setWidgetSizeY(const std::string& key, int y);
 };
 
 #endif // GAMESYSTEM_HPP
