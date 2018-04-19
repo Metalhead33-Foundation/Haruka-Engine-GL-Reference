@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	PhysFS::FileHandle::addToSearchPath("/home/metalhead33/printr/other","/",true);
 	if(loadAL())
 	{
-		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!");
+		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!",60);
 		std::thread trd(initialize,&sys);
 		sys.run();
 		trd.join();

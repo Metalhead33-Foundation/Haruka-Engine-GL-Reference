@@ -1,7 +1,8 @@
 #include "MainSystem.hpp"
 
-MainSystem::MainSystem(int w, int h, const char *title)
-	: window(Abstract::sSettingContainer(new Abstract::SettingContainer{ 0, 0, w, h, title }))
+MainSystem::MainSystem(int w, int h, const char *title, int intendedFramerate)
+	: window(Abstract::sSettingContainer(new Abstract::SettingContainer{ 0, 0, w, h, title })),
+	  framerate(STime::asSeconds(double(1.00) / double(intendedFramerate)))
 {
 	window->window = SDL_CreateWindow(window->title,
 									 SDL_WINDOWPOS_CENTERED,
@@ -35,6 +36,11 @@ MainSystem::error_t MainSystem::run()
 		}
 		if(returner == SYSTEM_OKAY) returner = update(tempTime);
 		if(returner == SYSTEM_OKAY) returner = render();
+		if(tempTime < framerate)
+		{
+			tempTime = framerate - tempTime;
+			tempTime.sleep();
+		}
 	} while(returner == SYSTEM_OKAY);
 	return returner;
 }

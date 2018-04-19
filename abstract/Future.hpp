@@ -9,37 +9,39 @@ class StorageBase {
   protected:
 	// Storage lock
 	volatile bool m_initialized;
+	bool m_reading = 0;
 	std::shared_timed_mutex m_access;
-	std::shared_lock<std::shared_timed_mutex> m_read;
-	std::unique_lock<std::shared_timed_mutex> m_write;
 	std::condition_variable_any m_initialize;
 	uint64_t m_count = 0;
 
   public:
-	StorageBase( ) : m_initialized( false ), m_read(m_access, std::defer_lock), m_write(m_access, std::defer_lock) {}
+	StorageBase( ) : m_initialized( false ) {}
 
   public:
 	// Locking functions
-	void readLock( ) { m_read.lock(); }
-	void writeLock( ) { m_write.lock( ); }
+	void readLock( ) { m_access.lock_shared(); m_reading = true; }
+	void writeLock( ) { m_access.lock( ); m_reading = false; }
 	void unlock( ) {
-	if(m_read)m_read.unlock( );
-	if(m_write)m_write.unlock();
+		if(m_reading) {
+			m_access.unlock_shared();
+		} else {
+			m_access.unlock( );
+		}
 	}
 
 	// Wait function, call after locking
 	void waitInitialized( ) {
-	while ( !m_initialized ) {
-		m_initialize.wait( m_read );
-	}
+		while ( !m_initialized ) {
+			m_initialize.wait( m_access );
+		}
 	}
 
 	// Initialized notify function
 	void initialized( ) {
-	if ( !m_initialized ) {
-		m_initialized = true;
-		m_initialize.notify_all();
-	}
+		if ( !m_initialized ) {
+			m_initialized = true;
+			m_initialize.notify_all();
+		}
 	}
 
 	bool isInitialized( ) { return m_initialized; }

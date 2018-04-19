@@ -8,11 +8,14 @@
 
 void GameSystem::RenderableMesh::draw(glm::mat4 &projection, glm::mat4 &view, glm::mat4 &model)
 {
+	Abstract::sShaderProgram shader = this->shader;
+	Abstract::sMesh mesh = this->mesh;
 	if(shader && mesh) mesh->draw(shader, projection, view, model);
 }
 
-GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char *title)
-	: MainSystem(w, h, title),
+GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h,
+					   int samplerate, size_t audioBufferSize, const char *title, int intendedFramerate)
+	: MainSystem(w, h, title,intendedFramerate),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
 	  engine(engineCreator(window)),
 	  modelImporter(new AssimpPhysFS())
@@ -24,17 +27,20 @@ GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int
 GameSystem::error_t GameSystem::update(STime& deltaTime)
 {
 	soundsys->processStreamedAudio();
-	// int mousePrevX(mouseX), mousePrevY(mouseY);
 	SDL_GetRelativeMouseState(&mouseX, &mouseY);
 	camera.ProcessMouseMovement(float(mouseX),float(mouseY * -1),false);
-	// camera.ProcessMouseMovement(float(mousePrevX - mouseX),float(mousePrevY - mouseY));
 	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
 	viewMatrix = camera.GetViewMatrix();
+	std::unique_lock<std::mutex> queue(commandMutex);
 	while(!commandQueue.empty())
 	{
-		commandQueue.front()();
+		auto func = commandQueue.front();
 		commandQueue.pop();
+		queue.unlock();
+		func();
+		queue.lock();
 	}
+	queue.unlock();
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::render()
@@ -330,130 +336,168 @@ GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &d
 Future<Audio::sBuffer> GameSystem::createBuffer(const std::string& key, const std::string& path)
 {
 	Future<Audio::sBuffer> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([futur,key,path,this](){
 		futur.store(__createBuffer(key,path));
 	  });
+	queue.unlock();
 	return futur;
 }
 Future<Audio::sSource> GameSystem::createStream(const std::string& key, const std::string& path, size_t buffNum)
 {
 	Future<Audio::sSource> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([futur,key,path,buffNum,this](){
 		futur.store(__createStream(key,path,buffNum));
 	  });
+	queue.unlock();
 	return futur;
 }
 Future<Audio::sSource> GameSystem::createSource(const std::string& key, const std::string& buffkey)
 {
 	Future<Audio::sSource> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([futur,key,buffkey,this](){
 		futur.store(__createSource(key,buffkey));
 	  });
+	queue.unlock();
 	return futur;
 }
 void GameSystem::deleteBuffer(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,this](){
 		__deleteBuffer(key);
 	  });
+	queue.unlock();
 }
 void GameSystem::deleteSource(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,this](){
 		__deleteSource(key);
 	  });
+	queue.unlock();
 }
 Future<Abstract::sTexture> GameSystem::createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
 {
 	Future<Abstract::sTexture> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([futur,key,path,type,this](){
 		futur.store(__createTextureFromDDS(key,path,type));
 	  });
+	queue.unlock();
 	return futur;
 }
 Future<Abstract::sTexture> GameSystem::createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type)
 {
 	Future<Abstract::sTexture> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([futur,key,path,type,this](){
 		futur.store(__createTextureFromImage(key,path,type));
 	  });
+	queue.unlock();
 	return futur;
 }
 void GameSystem::deleteTexture(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,this](){
 		__deleteTexture(key);
 	  });
+	queue.unlock();
 }
 void GameSystem::createModel(const std::string& key, const std::string& path)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,path,this](){
 		__createModel(key,path);
 	  });
+	queue.unlock();
 }
 void GameSystem::deleteMesh(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,this](){
 		__deleteMesh(key);
 	  });
+	queue.unlock();
 }
 void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::string& texKey)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([meshKey,texKey,this](){
 		__attachTextureToMesh(meshKey,texKey);
 	  });
+	queue.unlock();
 }
 void GameSystem::attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([meshKey,texKeys,this](){
 		__attachTextureToMesh(meshKey,texKeys);
 	  });
+	queue.unlock();
 }
 void GameSystem::attachShaderToMesh(const std::string& meshKey, const std::string& progKey)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([meshKey,progKey,this](){
 		__attachShaderToMesh(meshKey,progKey);
 	  });
+	queue.unlock();
 }
 Future<Abstract::sShaderModule> GameSystem::createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype)
 {
 	Future<Abstract::sShaderModule> futur;
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([futur,key,path,ntype,this](){
 		futur.store(__createShaderModule(key,path,ntype));
 	  });
+	queue.unlock();
 	return futur;
 }
 void GameSystem::deleteShaderModule(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,this](){
 		__deleteShaderModule(key);
 	  });
+	queue.unlock();
 }
 Future<Abstract::sShaderProgram> GameSystem::createShaderProgram(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	Future<Abstract::sShaderProgram> futur;
 	commandQueue.push([futur,key,this](){
 		futur.store(__createShaderProgram(key));
 	  });
 	return futur;
+	queue.unlock();
 }
 void GameSystem::deleteShaderProgram(const std::string& key)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([key,this](){
 		__deleteShaderProgram(key);
 	  });
+	queue.unlock();
 }
 void GameSystem::attachShaderModule(const std::string& programKey, const std::string& moduleKey)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([programKey,moduleKey,this](){
 		__attachShaderModule(programKey,moduleKey);
 	  });
+	queue.unlock();
 }
 void GameSystem::attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([programKey,moduleKeys,this](){
 		__attachShaderModule(programKey,moduleKeys);
 	  });
+	queue.unlock();
 }
 void GameSystem::__linkShaders(const std::string& programKey)
 {
@@ -462,7 +506,9 @@ void GameSystem::__linkShaders(const std::string& programKey)
 }
 void GameSystem::linkShaders(const std::string& programKey)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push([programKey,this](){
 		__linkShaders(programKey);
 	  });
+	queue.unlock();
 }

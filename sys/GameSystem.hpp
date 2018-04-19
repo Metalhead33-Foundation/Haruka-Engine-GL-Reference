@@ -12,6 +12,7 @@
 #include <queue>
 #include <functional>
 #include "../abstract/Future.hpp"
+#include <mutex>
 
 class GameSystem : public MainSystem
 {
@@ -55,6 +56,7 @@ private:
 	void __createMeshesFromModel(const std::string& key, const aiScene* model);
 
 	CommandQueue commandQueue;
+	std::mutex commandMutex;
 
 	Audio::sBuffer __createBuffer(const std::string& key, const std::string& path);
 	Audio::sSource __createStream(const std::string& key, const std::string& path, size_t buffNum=2);
@@ -77,7 +79,7 @@ private:
 	void __attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys);
 	void __linkShaders(const std::string& programKey);
 public:
-	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title);
+	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title, int intendedFramerate=60);
 	error_t update(STime& deltaTime);
 	error_t render();
 	error_t startup();

@@ -17,8 +17,9 @@ protected:
 	const Abstract::sSettingContainer window;
 	SDL_Event ev;
 	bool exitSignal;
+	const STime framerate;
 public:
-	MainSystem(int w, int h, const char *title);
+	MainSystem(int w, int h, const char *title, int intendedFramerate=60);
 	virtual ~MainSystem();
 	error_t run(); // The actual main loop
 	virtual error_t update(STime& deltaTime) = 0;

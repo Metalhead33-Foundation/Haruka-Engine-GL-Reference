@@ -6,7 +6,7 @@ const STime STime::oneHour(1.00_h);
 const STime STime::oneDay(1.00_d);
 void STime::sleep()
 {
-	SDL_Delay(milliseconds);
+	if(milliseconds > 0) SDL_Delay(milliseconds);
 }
 STime::STime()
 	: milliseconds(0)
