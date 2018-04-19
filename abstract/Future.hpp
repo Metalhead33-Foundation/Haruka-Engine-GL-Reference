@@ -123,12 +123,13 @@ template < class Type > class Future {
 	m_ptr->initialized( );
 	m_ptr->unlock( );
 	}
+	bool isInitialized( ) { return m_ptr->isInitialized(); }
 
 	// Read access, only accessible after initialized
-	operator Type( ) {
+	operator Type( ) const {
 	m_ptr->readLock( );
 	m_ptr->waitInitialized( );
-	Type data = ( *m_ptr.data( ) );
+	Type data = ( *m_ptr.get( ) );
 	m_ptr->unlock( );
 	return data;
 	}

@@ -25,17 +25,17 @@ public:
 		Abstract::sShaderProgram shader;
 		void draw(glm::mat4& projectionMatrix, glm::mat4& view, glm::mat4& model);
 	};
-	typedef std::unordered_map<std::string, Audio::sBuffer> BufferHash;
-	typedef std::unordered_map<std::string, Audio::sSource> SourceHash;
+	typedef std::unordered_map<std::string, Future<Audio::sBuffer>> BufferHash;
+	typedef std::unordered_map<std::string, Future<Audio::sSource>> SourceHash;
 	typedef BufferHash::iterator BufferIterator;
 	typedef SourceHash::iterator SourceIterator;
 
-	typedef std::unordered_map<std::string, Abstract::sTexture> TextureHash;
+	typedef std::unordered_map<std::string, Future<Abstract::sTexture>> TextureHash;
 	typedef TextureHash::iterator TextureIterator;
 	typedef std::unordered_map<std::string, RenderableMesh> MeshHash;
 	typedef MeshHash::iterator MeshIterator;
-	typedef std::unordered_map<std::string, Abstract::sShaderModule> ShaderModuleHash;
-	typedef std::unordered_map<std::string, Abstract::sShaderProgram> ShaderProgramHash;
+	typedef std::unordered_map<std::string, Future<Abstract::sShaderModule>> ShaderModuleHash;
+	typedef std::unordered_map<std::string, Future<Abstract::sShaderProgram>> ShaderProgramHash;
 	typedef ShaderModuleHash::iterator ShaderModuleIterator;
 	typedef ShaderProgramHash::iterator ShaderProgramIterator;
 private:
@@ -58,26 +58,24 @@ private:
 	CommandQueue commandQueue;
 	std::mutex commandMutex;
 
-	Audio::sBuffer __createBuffer(const std::string& key, const std::string& path);
-	Audio::sSource __createStream(const std::string& key, const std::string& path, size_t buffNum=2);
-	Audio::sSource __createSource(const std::string& key, const std::string& buffkey);
+	Audio::sBuffer __createBuffer(const std::string& key, Abstract::sFIO reedah);
+	Audio::sSource __createStream(const std::string& key, Abstract::sFIO reedah, size_t buffNum=2);
+	Audio::sSource __createSource(const std::string& key, Audio::sBuffer buff);
 	void __deleteBuffer(const std::string& key);
 	void __deleteSource(const std::string& key);
-	Abstract::sTexture __createTextureFromDDS(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
-	Abstract::sTexture __createTextureFromImage(const std::string& key, const std::string& path, Abstract::Texture::textureType type);
+	Abstract::sTexture __createTextureFromDDS(const std::string& key, Abstract::sFIO reedah, Abstract::Texture::textureType type);
+	Abstract::sTexture __createTextureFromImage(const std::string& key, Abstract::sFIO reedah, Abstract::Texture::textureType type);
 	void __deleteTexture(const std::string& key);
 	void __createModel(const std::string& key, const std::string& path);
 	void __deleteMesh(const std::string& key);
-	void __attachTextureToMesh(const std::string& meshKey, const std::string& texKey);
-	void __attachTextureToMesh(const std::string& meshKey, const std::vector<std::string>& texKeys);
-	void __attachShaderToMesh(const std::string& meshKey, const std::string& progKey);
-	Abstract::sShaderModule __createShaderModule(const std::string& key, const std::string& path, Abstract::ShaderModule::ShaderType ntype);
+	void __attachTextureToMesh(Abstract::sMesh mesh, Abstract::sTexture tex);
+	void __attachShaderToMesh(const std::string &meshKey, Abstract::sShaderProgram prog);
+	Abstract::sShaderModule __createShaderModule(const std::string& key, Abstract::sFIO reedah, Abstract::ShaderModule::ShaderType ntype);
 	void __deleteShaderModule(const std::string& key);
 	Abstract::sShaderProgram __createShaderProgram(const std::string& key);
 	void __deleteShaderProgram(const std::string& key);
-	void __attachShaderModule(const std::string& programKey, const std::string& moduleKey);
-	void __attachShaderModule(const std::string& programKey, const std::vector<std::string>& moduleKeys);
-	void __linkShaders(const std::string& programKey);
+	void __attachShaderModule(Abstract::sShaderProgram prog, Abstract::sShaderModule mod);
+	void __linkShaders(Abstract::sShaderProgram prog);
 public:
 	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title, int intendedFramerate=60);
 	error_t update(STime& deltaTime);
