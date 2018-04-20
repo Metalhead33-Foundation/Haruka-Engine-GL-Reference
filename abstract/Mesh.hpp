@@ -27,7 +27,6 @@ public:
 	{
 		sVertexVector vec;
 		sIndexVector ind;
-		TextureVector tex;
 	};
 	typedef MeshConstructor& ConstructorReference;
 	typedef std::vector<MeshConstructor> ConstructorArray;
@@ -39,12 +38,10 @@ public:
 protected:
 	VertexVector vertices;
 	IndexVector indices;
-	TextureVector textures;
 public:
 	virtual ~Mesh() = default;
-	virtual void draw(sShaderProgram shader, glm::mat4& projection, glm::mat4& view, glm::mat4& model) = 0;
-	TextureVector& getTextures() { return textures; }
-	void setTextures(TextureVector& text) { textures = text; }
+	virtual void draw(sShaderProgram shader, const TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) = 0;
+
 };
 
 }

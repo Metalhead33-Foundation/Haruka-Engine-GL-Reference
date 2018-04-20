@@ -8,12 +8,23 @@ namespace Gl {
 
 class RenderingEngine : public Abstract::RenderingEngine
 {
+public:
+	struct Quad
+	{
+		GLuint quadArrayId;
+		GLuint quadBufferId;
+		Quad();
+		~Quad();
+		void draw();
+	};
+	typedef std::shared_ptr<Quad> sQuad;
 private:
 	const Abstract::sSettingContainer settings;
 	XVisualInfo* vi;
 	GLXContext cnt;
 
 	bool twoDProjection;
+	static sQuad QUAD;
 public:
 	RenderingEngine(Abstract::sSettingContainer nsettings);
 	~RenderingEngine();
@@ -25,7 +36,8 @@ public:
 	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
-	Abstract::sWidget createWidget(int height, int width, Abstract::sTexture tex = nullptr);
+	void renderWidget(const Abstract::WidgetProperties& widget, glm::mat4& projection, Abstract::sShaderProgram shader);
+	MeshCreator getMeshCreator() const;
 
 	void renderFrame();
 	void startup();

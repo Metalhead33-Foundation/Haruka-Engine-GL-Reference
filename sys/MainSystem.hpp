@@ -4,6 +4,7 @@
 #include "../abstract/SettingContainer.hpp"
 #include <glm/mat4x4.hpp>
 
+DEFINE_CLASS(MainSystem)
 class MainSystem
 {
 public:

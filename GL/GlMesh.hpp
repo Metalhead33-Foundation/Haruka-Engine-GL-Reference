@@ -19,7 +19,7 @@ public:
 	const GLuint& getVAO() const;
 	const GLuint& getVBO() const;
 	const GLuint& getEBO() const;
-	void draw(Abstract::sShaderProgram shader, glm::mat4& projection, glm::mat4& view, glm::mat4& model);
+	void draw(Abstract::sShaderProgram shader, const TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 };
 
 }

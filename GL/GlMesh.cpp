@@ -9,7 +9,6 @@ Mesh::Mesh(ConstructorReference constr)
 {
 	this->vertices = *(constr.vec);
 	this->indices = *(constr.ind);
-	this->textures = constr.tex;
 	setupMesh();
 }
 Mesh::~Mesh()
@@ -18,18 +17,18 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 }
-void Mesh::draw(Abstract::sShaderProgram shader, glm::mat4 &projection, glm::mat4 &view, glm::mat4 &model)
+void Mesh::draw(Abstract::sShaderProgram shader, const TextureVector &textures, const glm::mat4 &projection, const glm::mat4 &view, const glm::mat4 &model)
 {
 	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
 	if(!gshdr) return;
-	glUseProgram(gshdr->getShaderID());
+	gshdr->useShader();
 	// Do the matrix stuff
 	gshdr->setMat4("projection", projection);
 	gshdr->setMat4("view", view);
 	gshdr->setMat4("model", model);
 	uint32_t texNum = 0;
 	Texture* tex;
-	for(TextureIterator it = textures.begin(); it != textures.end(); ++it,++texNum)
+	for(auto it = textures.begin(); it != textures.end(); ++it,++texNum)
 	{
 		tex = dynamic_cast<Texture*>(it->get());
 		if(tex) {

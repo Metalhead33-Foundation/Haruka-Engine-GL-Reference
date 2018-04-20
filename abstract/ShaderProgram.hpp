@@ -12,6 +12,7 @@ public:
 	virtual void pushModule(sShaderModule mod) = 0;
 	virtual void popModule() = 0;
 	virtual bool linkShaders() = 0;
+	virtual void useShader() = 0;
 
 	virtual void setBool(const char* name, bool value) const = 0;
 	virtual void setInt(const char* name, int value) const = 0;

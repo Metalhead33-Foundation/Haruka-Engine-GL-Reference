@@ -12,6 +12,7 @@ public:
 	typedef ModuleVector::iterator ModuleIterator;
 private:
 	GLuint shaderID;
+	static GLuint lastUsedId;
 	ModuleVector modules;
 	ShaderProgram();
 public:
@@ -20,6 +21,7 @@ public:
 	void pushModule(Abstract::sShaderModule mod);
 	void popModule();
 	bool linkShaders();
+	void useShader();
 	const GLuint& getShaderID() const;
 	virtual void setBool(const char* name, bool value) const;
 	virtual void setInt(const char* name, int value) const;

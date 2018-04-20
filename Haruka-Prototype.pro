@@ -51,7 +51,12 @@ SOURCES += main.cpp \
     audio/FX/EqualizerEffect.cpp \
     audio/FX/AuxiliaryEffectSlot.cpp \
     sys/Camera.cpp \
-    GL/GlWidget.cpp
+    sys/ResourceManager.cpp \
+    sys/proxy/ProxyTexture.cpp \
+    sys/proxy/ProxyShaderModule.cpp \
+    sys/proxy/ProxyWidget.cpp \
+    sys/proxy/ProxyShaderProgram.cpp \
+    sys/proxy/ProxyModel.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -118,5 +123,10 @@ HEADERS += \
     audio/FX/AllEffects.hpp \
     sys/Camera.hpp \
     abstract/Future.hpp \
-    abstract/Widget.hpp \
-    GL/GlWidget.hpp
+    abstract/HashTrait.hpp \
+    sys/ResourceManager.hpp \
+    sys/proxy/ProxyTexture.hpp \
+    sys/proxy/ProxyShaderModule.hpp \
+    sys/proxy/ProxyWidget.hpp \
+    sys/proxy/ProxyShaderProgram.hpp \
+    sys/proxy/ProxyModel.hpp

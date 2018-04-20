@@ -9,7 +9,7 @@ public:
 	typedef Abstract::Mesh::TextureVector TextureVector;
 	typedef Abstract::Mesh::MeshConstructor MeshCreateInfo;
 	static void ProcessAiMesh(MeshCreateInfo& constr, aiMesh* mesh);
-	static Abstract::sMesh buildMesh(aiMesh* mesh,MeshCreator createFunction, TextureVector& textures);
+	static Abstract::sMesh buildMesh(aiMesh* mesh, MeshCreator createFunction);
 };
 
 

@@ -2,6 +2,7 @@
 #include <stdexcept>
 namespace Gl {
 
+GLuint ShaderProgram::lastUsedId = 0;
 Abstract::sShaderProgram ShaderProgram::createShaderProgram()
 {
 	return Abstract::sShaderProgram(new ShaderProgram());
@@ -17,6 +18,14 @@ ShaderProgram::~ShaderProgram()
 const GLuint& ShaderProgram::getShaderID() const
 {
 	return shaderID;
+}
+void ShaderProgram::useShader()
+{
+	if(lastUsedId != shaderID)
+	{
+		glUseProgram(shaderID);
+		lastUsedId = shaderID;
+	}
 }
 void ShaderProgram::pushModule(Abstract::sShaderModule mod)
 {

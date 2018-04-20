@@ -5,8 +5,7 @@
 #include "GlShaderProgram.hpp"
 #include "GlTexture.hpp"
 #include "GlMesh.hpp"
-#include "GlWidget.hpp"
-
+#include <glm/gtc/matrix_transform.hpp>
 
 Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings)
 {
@@ -15,6 +14,43 @@ Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings)
 
 
 namespace Gl {
+
+RenderingEngine::sQuad RenderingEngine::QUAD = nullptr;
+RenderingEngine::Quad::Quad()
+{
+	GLfloat vertices[] = {
+		// Pos      // Tex
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
+
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenVertexArrays(1, &quadArrayId);
+	glGenBuffers(1, &quadBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, quadBufferId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindVertexArray(quadArrayId);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+RenderingEngine::Quad::~Quad()
+{
+	glDeleteVertexArrays(1,&quadArrayId);
+	glDeleteBuffers(1, &quadBufferId);
+}
+void RenderingEngine::Quad::draw()
+{
+	glBindVertexArray(quadArrayId);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+}
 
 GLint RenderingEngine::att[] = { GLX_RGBA,
 								 GLX_X_VISUAL_TYPE_EXT,
@@ -47,20 +83,47 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	if(!cnt) throw std::runtime_error("Couldn't create GLX context!");
 	glXMakeCurrent(settings->sysWMinfo->info.x11.display, settings->sysWMinfo->info.x11.window, cnt);
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
-	Widget::initializeQuad();
+	QUAD = sQuad(new Quad());
+}
+void RenderingEngine::renderWidget(const Abstract::WidgetProperties &widget, glm::mat4& projection, Abstract::sShaderProgram shader)
+{
+	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
+	if(!gshdr) return;
+	gshdr->useShader();
+	// Do the matrix stuff
+	glm::mat4 model;
+	model = glm::translate(model, glm::vec3(widget.pos, 0.0f));
+	model = glm::translate(model, glm::vec3(0.5f * widget.size.x, 0.5f * widget.size.y, 0.0f));
+	model = glm::translate(model, glm::vec3(-0.5f * widget.size.x, -0.5f * widget.size.y, 0.0f));
+	model = glm::scale(model, glm::vec3(widget.size, 1.0f));
+
+	gshdr->setMat4("projection", projection);
+	gshdr->setMat4("model", model);
+	Texture* tex;
+	tex = dynamic_cast<Texture*>(widget.texture.get());
+	if(tex) {
+		glActiveTexture(tex->getTextureId()); // active proper texture unit before binding
+		glBindTexture(GL_TEXTURE_2D, tex->getTextureId());
+		glUniform1i(glGetUniformLocation(gshdr->getShaderID(), tex->stringizeType()), 0);
+	}
+	// draw mesh
+	QUAD->draw();
+
+	// always good practice to set everything back to defaults once configured.
+	glActiveTexture(GL_TEXTURE0);
 }
 Abstract::sMesh RenderingEngine::createMesh(Abstract::Mesh::ConstructorReference ref)
 {
 	return Mesh::createMesh(ref);
 }
-Abstract::sWidget RenderingEngine::createWidget(int height, int width, Abstract::sTexture tex)
+RenderingEngine::MeshCreator RenderingEngine::getMeshCreator() const
 {
-	return Widget::create(height, width, tex);
+	return Mesh::createMesh;
 }
 
 RenderingEngine::~RenderingEngine()
 {
-	Widget::deinitializeQuad();
+	QUAD = nullptr;
 	glXMakeCurrent(settings->sysWMinfo->info.x11.display, None, NULL);
 	glXDestroyContext(settings->sysWMinfo->info.x11.display, cnt);
 }

@@ -49,10 +49,9 @@ void AiModelFactory::ProcessAiMesh(MeshCreateInfo &constr, aiMesh* mesh)
 		for(size_t j = 0; j < face->mNumIndices; j++) constr.ind->push_back(face->mIndices[j]);
 	}
 }
-Abstract::sMesh AiModelFactory::buildMesh(aiMesh* mesh,MeshCreator createFunction, TextureVector& textures)
+Abstract::sMesh AiModelFactory::buildMesh(aiMesh* mesh,MeshCreator createFunction)
 {
 	MeshCreateInfo info;
-	info.tex = textures;
 	ProcessAiMesh(info, mesh);
 	return createFunction(info);
 }

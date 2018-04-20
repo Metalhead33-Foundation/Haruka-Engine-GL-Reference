@@ -14,7 +14,7 @@ public:
 	static sWahWahEffect create();
 	static sWahWahEffect create(sWahWahEffect cpy);
 	virtual ALenum getEffectType();
-	void setArtackTime(const STime& time);
+	void setAttackTime(const STime& time);
 	STime getAttackTime(void) const;
 	void setReleaseTime(const STime& time);
 	STime getReleaseTime(void) const;

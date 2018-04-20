@@ -9,7 +9,7 @@ WahWahEffect::WahWahEffect()
 WahWahEffect::WahWahEffect(const WahWahEffect& cpy)
 {
 	alEffecti(effectID,AL_EFFECT_TYPE, AL_EFFECT_AUTOWAH);
-	setArtackTime(cpy.getAttackTime());
+	setAttackTime(cpy.getAttackTime());
 	setPeakGain(cpy.getPeakGain());
 	setReleaseTime(cpy.getReleaseTime());
 	setResonance(cpy.getResonance());
@@ -28,7 +28,7 @@ ALenum WahWahEffect::getEffectType()
 {
 	return AL_EFFECT_AUTOWAH;
 }
-void WahWahEffect::setArtackTime(const STime& time)
+void WahWahEffect::setAttackTime(const STime& time)
 {
 	alEffectf(effectID, AL_AUTOWAH_ATTACK_TIME,time.getSeconds());
 }
