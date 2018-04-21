@@ -95,6 +95,11 @@ ModelProxy::ModelProxy(const std::string& id)
 {
 	;
 }
+ModelProxy::ModelProxy(const std::string& id, const std::string& loadpath)
+	: Id(id), isConstructed(false), loadPath(loadpath)
+{
+	;
+}
 glm::mat4& ModelProxy::getModelPosition()
 {
 	return modelPosition;
@@ -109,6 +114,11 @@ void ModelProxy::attachTexture(const std::string& meshKey, TextureReference tex)
 	if(it != meshes.end())
 	{
 		it->second.attachTexture(tex);
+	}
+	else
+	{
+		auto bah = meshes.emplace(meshKey, nullptr);
+		if(bah.second) bah.first->second.attachTexture(tex);
 	}
 }
 void ModelProxy::detachTexture(const std::string& meshKey, TextureReference tex)
@@ -125,6 +135,11 @@ void ModelProxy::attachShader(const std::string& meshKey, ShaderProgramReference
 	if(it != meshes.end())
 	{
 		it->second.attachShader(progref);
+	}
+	else
+	{
+		auto bah = meshes.emplace(meshKey, nullptr);
+		if(bah.second) bah.first->second.attachShader(progref);
 	}
 }
 void ModelProxy::detachShader(const std::string& meshKey)
@@ -161,7 +176,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 			auto crt = meshes.find(meshname);
 			// Associate the textures that are pre-set inside the proxy
 			if(crt == meshes.end()) {
-				auto crt2 = meshes.emplace(meshname);
+				auto crt2 = meshes.emplace(meshname, nullptr);
 				if(crt2.second) crt = crt2.first;
 				else crt = meshes.end();
 			}
@@ -202,18 +217,34 @@ ModelReference ModelManager::query(const ModelProxy& proxy)
 	modmp.finish();
 	return ref;
 }
+ModelReference ModelManager::query(const std::string& key)
+{
+	auto it = modmp.find(key);
+	ModelReference ref;
+	if(it == modmp.end())
+	{
+		ref = ModelReference();
+	}
+	else
+	{
+		ref = it->second;
+	}
+	modmp.finish();
+	return ref;
+}
 ModelReference ModelManager::commit(ModelProxy& proxy)
 {
-	auto ref = modmp.getEntry(proxy.Id);
-	if(ref->isInitialized()) {
+	auto ref = query(proxy.Id);
+	if(ref) {
 		//// The model is already loaded, so we just need to update the properties
-		Storage<ModelProxy> &prxy = *ref;
+		auto ref2 = modmp.getEntry(proxy.Id);
+		Storage<ModelProxy> &prxy = *ref2;
 		prxy.invalidate(); // Invalidate the current stored value so it locks
 
 		// Async update the new shaders and textures
-		pushCommand([proxy,ref,this](pGameSystem sys) {
+		pushCommand([proxy,ref2,this](pGameSystem sys) {
 			// Get the actual rendering model
-			Storage<ModelProxy> &prxy = *ref;
+			Storage<ModelProxy> &prxy = *ref2;
 
 			// Start setting the new properties
 			prxy.beginSet();
@@ -235,24 +266,23 @@ ModelReference ModelManager::commit(ModelProxy& proxy)
 		});
 
 		// Return the reference which points to the actual rendering Model
-		return ref;
+		return ref2;
 	} else {
 		//// Create a new mesh
 		if(loadModel(proxy)) {
-			pushCommand( [proxy, ref, this](pGameSystem sys) {
+			auto ref2 = modmp.getEntry(proxy.Id);
+			pushCommand( [proxy, ref2, this](pGameSystem sys) {
 				// If it went ok, fill in the actual data
-				Storage<ModelProxy> &prxy = *ref;
+				Storage<ModelProxy> &prxy = *ref2;
 				prxy.beginSet();
 				prxy->meshes = proxy.meshes;
 				for(auto it = prxy->meshes.begin(); it != prxy->meshes.end();++it)
 					it->second.build(sys->getEngine()->getMeshCreator());
 				prxy.endSet();
 			});
-		} else {
-			// Else, invalidate the reference since it actually failed
-			ref->unset();
+			return ref2;
 		}
-		return ref;
+		else return ref;
 	}
 }
 

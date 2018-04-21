@@ -72,6 +72,21 @@ void WidgetManager::draw(glm::mat4& projection)
 		}
 	}
 }
+WidgetReference WidgetManager::query(const std::string& key)
+{
+	auto it = widgmp.find(key);
+	WidgetReference ref;
+	if(it == widgmp.end())
+	{
+		ref = WidgetReference();
+	}
+	else
+	{
+		ref = it->second;
+	}
+	widgmp.finish();
+	return ref;
+}
 WidgetReference WidgetManager::query(const WidgetProxy& proxy)
 {
 	auto it = widgmp.find(proxy.Id);

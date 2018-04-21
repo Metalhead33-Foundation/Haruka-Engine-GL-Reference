@@ -35,6 +35,21 @@ const Abstract::sShaderProgram ShaderProgramProxy::getProgram() const
 {
 	return prog;
 }
+ShaderProgramReference ShaderProgramManager::query(const std::string& key)
+{
+	auto it = progmp.find(key);
+	ShaderProgramReference ref;
+	if(it == progmp.end())
+	{
+		ref = ShaderProgramReference();
+	}
+	else
+	{
+		ref = it->second;
+	}
+	progmp.finish();
+	return ref;
+}
 ShaderProgramReference ShaderProgramManager::query(const ShaderProgramProxy& proxy)
 {
 	auto it = progmp.find(proxy.Id);
@@ -63,7 +78,7 @@ ShaderProgramReference ShaderProgramManager::commit(const ShaderProgramProxy& pr
 			if(proxy->prog) {
 			for(auto it = modref.begin(); it != modref.end(); ++it)
 			{
-				ReadReference<ShaderModpuleProxy> read(*it);
+				ReadReference<ShaderModuleProxy> read(*it);
 				proxy->prog->pushModule(read->getModule());
 			}
 			proxy->prog->linkShaders();

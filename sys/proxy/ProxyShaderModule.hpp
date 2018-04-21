@@ -4,10 +4,10 @@
 #include "../../abstract/ShaderModule.hpp"
 #include "../../abstract/HashTrait.hpp"
 
-DEFINE_CLASS(ShaderModpuleProxy)
+DEFINE_CLASS(ShaderModuleProxy)
 DEFINE_CLASS(ShaderModuleManager)
-typedef Reference<ShaderModpuleProxy> ShaderModuleReference;
-class ShaderModpuleProxy
+typedef Reference<ShaderModuleProxy> ShaderModuleReference;
+class ShaderModuleProxy
 {
 public:
 	friend class ShaderModuleManager;
@@ -17,9 +17,10 @@ private:
 	Abstract::sShaderModule mod;
 	std::string loadPath;
 public:
-	ShaderModpuleProxy();
-	ShaderModpuleProxy(const ShaderModpuleProxy& cpy);
-	ShaderModpuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu);
+	ShaderModuleProxy();
+	ShaderModuleProxy(const ShaderModuleProxy& cpy);
+	ShaderModuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu);
+	ShaderModuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu, const std::string& loadpath);
 	std::string& getLoadPath();
 	void setLoadPath(const std::string& newPath);
 	const Abstract::sShaderModule getModule() const;
@@ -28,16 +29,17 @@ public:
 class ShaderModuleManager : public ResourceManager
 {
 public:
-	friend class ShaderModpuleProxy;
-	typedef MapTrait<ShaderModpuleProxy,std::string> ShaderModuleMap;
+	friend class ShaderModuleProxy;
+	typedef MapTrait<ShaderModuleProxy,std::string> ShaderModuleMap;
 	typedef ShaderModuleMap::HashIterator ShaderModuleIterator;
 private:
 	ShaderModuleMap modmp;
 public:
 	ShaderModuleManager() = default;
 	~ShaderModuleManager() = default;
-	ShaderModuleReference query(const ShaderModpuleProxy& proxy);
-	ShaderModuleReference commit(const ShaderModpuleProxy& proxy);
+	ShaderModuleReference query(const ShaderModuleProxy& proxy);
+	ShaderModuleReference query(const std::string& key);
+	ShaderModuleReference commit(const ShaderModuleProxy& proxy);
 };
 
 #endif // PROXYSHADERPMODULE_HPP

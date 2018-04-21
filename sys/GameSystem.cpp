@@ -133,11 +133,11 @@ ModelReference GameSystem::commitModel(ModelProxy& proxy)
 {
 	return modelManager.commit(proxy);
 }
-ShaderModuleReference GameSystem::queryShaderModule(const ShaderModpuleProxy& proxy)
+ShaderModuleReference GameSystem::queryShaderModule(const ShaderModuleProxy& proxy)
 {
 	return moduleManager.query(proxy);
 }
-ShaderModuleReference GameSystem::commitShaderModule(const ShaderModpuleProxy& proxy)
+ShaderModuleReference GameSystem::commitShaderModule(const ShaderModuleProxy& proxy)
 {
 	return moduleManager.commit(proxy);
 }
@@ -164,4 +164,24 @@ WidgetReference GameSystem::queryWidget(const WidgetProxy& proxy)
 WidgetReference GameSystem::commitWidget(const WidgetProxy& proxy)
 {
 	return widgetManager.commit(proxy);
+}
+ModelReference GameSystem::queryModel(const std::string& key)
+{
+	return modelManager.query(key);
+}
+ShaderModuleReference GameSystem::queryShaderModule(const std::string& key)
+{
+	return moduleManager.query(key);
+}
+ShaderProgramReference GameSystem::queryShaderProgram(const std::string& key)
+{
+	return programManager.query(key);
+}
+TextureReference GameSystem::queryTexture(const std::string& key)
+{
+	return textureManager.query(key);
+}
+WidgetReference GameSystem::queryWidget(const std::string& key)
+{
+	return widgetManager.query(key);
 }

@@ -1,34 +1,55 @@
 #include "ProxyShaderModule.hpp"
 #include "../GameSystem.hpp"
 
-ShaderModpuleProxy::ShaderModpuleProxy()
+ShaderModuleProxy::ShaderModuleProxy()
 	: Id(""), type(Abstract::ShaderModule::COMPUTE_SHADER), mod(nullptr)
 {
 	;
 }
-ShaderModpuleProxy::ShaderModpuleProxy(const ShaderModpuleProxy& cpy)
+ShaderModuleProxy::ShaderModuleProxy(const ShaderModuleProxy& cpy)
 	: Id(cpy.Id), type(cpy.type), mod(cpy.mod), loadPath(cpy.loadPath)
 {
 	;
 }
-ShaderModpuleProxy::ShaderModpuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu)
+ShaderModuleProxy::ShaderModuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu)
 	: Id(id), type(taipu), mod(nullptr)
 {
 	;
 }
-std::string& ShaderModpuleProxy::getLoadPath()
+ShaderModuleProxy::ShaderModuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu,
+									 const std::string& loadpath)
+	: Id(id), type(taipu), mod(nullptr), loadPath(loadpath)
+{
+	;
+}
+std::string& ShaderModuleProxy::getLoadPath()
 {
 	return loadPath;
 }
-void ShaderModpuleProxy::setLoadPath(const std::string& newPath)
+void ShaderModuleProxy::setLoadPath(const std::string& newPath)
 {
 	loadPath = newPath;
 }
-const Abstract::sShaderModule ShaderModpuleProxy::getModule() const
+const Abstract::sShaderModule ShaderModuleProxy::getModule() const
 {
 	return mod;
 }
-ShaderModuleReference ShaderModuleManager::query(const ShaderModpuleProxy& proxy)
+ShaderModuleReference ShaderModuleManager::query(const std::string& key)
+{
+	auto it = modmp.find(key);
+	ShaderModuleReference ref;
+	if(it == modmp.end())
+	{
+		ref = ShaderModuleReference();
+	}
+	else
+	{
+		ref = it->second;
+	}
+	modmp.finish();
+	return ref;
+}
+ShaderModuleReference ShaderModuleManager::query(const ShaderModuleProxy& proxy)
 {
 	auto it = modmp.find(proxy.Id);
 	ShaderModuleReference ref;
@@ -43,7 +64,7 @@ ShaderModuleReference ShaderModuleManager::query(const ShaderModpuleProxy& proxy
 	modmp.finish();
 	return ref;
 }
-ShaderModuleReference ShaderModuleManager::commit(const ShaderModpuleProxy& proxy)
+ShaderModuleReference ShaderModuleManager::commit(const ShaderModuleProxy& proxy)
 {
 	auto ref = modmp.getEntry(proxy.Id, proxy.type);
 	if(ref->isInitialized()) return ref;
@@ -51,7 +72,7 @@ ShaderModuleReference ShaderModuleManager::commit(const ShaderModpuleProxy& prox
 	Abstract::sFIO reedah = PhysFS::FileHandle::openRead(proxy.loadPath);
 	pushCommand(
 				[ref,reedah,type](pGameSystem sys) {
-			Storage<ShaderModpuleProxy> &proxy = *ref;
+			Storage<ShaderModuleProxy> &proxy = *ref;
 			proxy.beginSet();
 			proxy->mod = sys->getEngine()->createShaderModule(type,reedah);
 			proxy.endSet();

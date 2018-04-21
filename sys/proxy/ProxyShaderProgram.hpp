@@ -36,6 +36,7 @@ public:
 	ShaderProgramManager() = default;
 	~ShaderProgramManager() = default;
 	ShaderProgramReference query(const ShaderProgramProxy& proxy);
+	ShaderProgramReference query(const std::string& key);
 	ShaderProgramReference commit(const ShaderProgramProxy& proxy);
 };
 

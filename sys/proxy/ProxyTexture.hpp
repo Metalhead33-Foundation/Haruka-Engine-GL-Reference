@@ -25,6 +25,7 @@ public:
 	TextureProxy();
 	TextureProxy(const TextureProxy& cpy);
 	TextureProxy(const std::string& id, Abstract::Texture::textureType taipu);
+	TextureProxy(const std::string& id, Abstract::Texture::textureType taipu, const std::string& loadpath);
 	uint32_t getHeight() const;
 	uint32_t getWidth() const;
 	uint32_t getLinearSize() const;
@@ -46,6 +47,7 @@ public:
 	TextureManager() = default;
 	~TextureManager() = default;
 	TextureReference query(const TextureProxy& proxy);
+	TextureReference query(const std::string& key);
 	TextureReference commit(const TextureProxy& proxy);
 
 };

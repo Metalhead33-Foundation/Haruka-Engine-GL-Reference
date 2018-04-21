@@ -20,6 +20,12 @@ TextureProxy::TextureProxy(const std::string& id, Abstract::Texture::textureType
 {
 	;
 }
+TextureProxy::TextureProxy(const std::string& id, Abstract::Texture::textureType taipu,
+						   const std::string& loadpath)
+	: Id(id), type(taipu), tex(nullptr), loadPath(loadpath)
+{
+	;
+}
 uint32_t TextureProxy::getHeight() const
 {
 	return height;
@@ -47,6 +53,21 @@ void TextureProxy::setLoadPath(const std::string& newPath)
 const Abstract::sTexture TextureProxy::getTexture() const
 {
 	return tex;
+}
+TextureReference TextureManager::query(const std::string& key)
+{
+	auto it = texmp.find(key);
+	TextureReference ref;
+	if(it == texmp.end())
+	{
+		ref = TextureReference();
+	}
+	else
+	{
+		ref = it->second;
+	}
+	texmp.finish();
+	return ref;
 }
 TextureReference TextureManager::query(const TextureProxy& proxy)
 {

@@ -48,6 +48,7 @@ public:
 	~WidgetManager();
 	void draw(glm::mat4 &projection);
 	WidgetReference query(const WidgetProxy& proxy);
+	WidgetReference query(const std::string& key);
 	WidgetReference commit(const WidgetProxy& proxy);
 };
 

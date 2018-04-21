@@ -60,14 +60,21 @@ public:
 	const sAssimpPhysFS getModelImporter() const;
 
 	ModelReference queryModel(const ModelProxy& proxy);
-	ModelReference commitModel(ModelProxy &proxy);
-	ShaderModuleReference queryShaderModule(const ShaderModpuleProxy& proxy);
-	ShaderModuleReference commitShaderModule(const ShaderModpuleProxy& proxy);
+	ShaderModuleReference queryShaderModule(const ShaderModuleProxy& proxy);
 	ShaderProgramReference queryShaderProgram(const ShaderProgramProxy& proxy);
-	ShaderProgramReference commitShaderProgram(const ShaderProgramProxy& proxy);
 	TextureReference queryTexture(const TextureProxy& proxy);
-	TextureReference commitTexture(const TextureProxy& proxy);
 	WidgetReference queryWidget(const WidgetProxy& proxy);
+
+	ModelReference queryModel(const std::string& key);
+	ShaderModuleReference queryShaderModule(const std::string& key);
+	ShaderProgramReference queryShaderProgram(const std::string& key);
+	TextureReference queryTexture(const std::string& key);
+	WidgetReference queryWidget(const std::string& key);
+
+	ModelReference commitModel(ModelProxy &proxy);
+	ShaderModuleReference commitShaderModule(const ShaderModuleProxy& proxy);
+	ShaderProgramReference commitShaderProgram(const ShaderProgramProxy& proxy);
+	TextureReference commitTexture(const TextureProxy& proxy);
 	WidgetReference commitWidget(const WidgetProxy& proxy);
 };
 

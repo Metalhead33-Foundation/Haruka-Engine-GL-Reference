@@ -44,6 +44,7 @@ public:
 	ModelProxy();
 	ModelProxy(const ModelProxy& cpy);
 	ModelProxy(const std::string& id);
+	ModelProxy(const std::string& id, const std::string& loadpath);
 
 	void draw(const glm::mat4& projection, const glm::mat4& view) const;
 	glm::mat4& getModelPosition();
@@ -68,6 +69,7 @@ public:
 	ModelManager() = default;
 	~ModelManager() = default;
 	ModelReference query(const ModelProxy& proxy);
+	ModelReference query(const std::string& key);
 	ModelReference commit(ModelProxy& proxy);
 	void draw(const glm::mat4 &projection, const glm::mat4 &view);
 	bool loadModel(ModelProxy& model);
