@@ -24,6 +24,7 @@ public:
 	std::string& getLoadPath();
 	void setLoadPath(const std::string& newPath);
 	const Abstract::sShaderModule getModule() const;
+	const std::string& getId() const;
 };
 
 class ShaderModuleManager : public ResourceManager

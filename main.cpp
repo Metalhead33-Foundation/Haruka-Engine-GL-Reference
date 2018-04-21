@@ -17,7 +17,7 @@ void loadTextures(pGameSystem sys);
 void loadShaders(pGameSystem sys);
 void initialize(pGameSystem sys)
 {
-	std::cout << "Beginning initialization!" << std::endl;
+	std::cout << "[SYSTEM] Beginning initialization!" << std::endl;
 	std::thread textures(loadTextures, sys);
 	std::thread shaders(loadShaders, sys);
 	textures.join();
@@ -26,7 +26,8 @@ void initialize(pGameSystem sys)
 	std::thread widgets(loadWidgets, sys);
 	models.join();
 	widgets.join();
-	std::cout << "Initialization complete!" << std::endl;
+	// sys->wait();
+	std::cout << "[SYSTEM] Initialization complete!" << std::endl;
 }
 int main(int argc, char *argv[])
 {
@@ -41,13 +42,14 @@ int main(int argc, char *argv[])
 		sys.run();
 		trd.join();
 	}
+	std::cout << "[SYSTEM] Shutdown!" << std::endl;
 	SDL_Quit();
 	PHYSFS_deinit();
 	return 0;
 }
 void loadModels(pGameSystem sys)
 {
-	std::cout << "Loading models!" << std::endl;
+	std::cout << "[MODELS] Loading models!" << std::endl;
 	ModelProxy vasa("vasa");
 	vasa.setLoadPath("lizardman_vessel.blend");
 	vasa.attachShader("0", sys->queryShaderProgram("modeldispray"));
@@ -57,22 +59,23 @@ void loadModels(pGameSystem sys)
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -1.75f, 0.0f));
 	vasa.setModelPosition(modelMatrix);
 	sys->commitModel(vasa);
-	std::cout << "Models loaded!" << std::endl;
+	std::cout << "[MODELS] Models loaded!" << std::endl;
 }
 void loadWidgets(pGameSystem sys)
 {
-	std::cout << "Loading widgets!" << std::endl;
+	std::cout << "[WIDGETS] Loading widgets!" << std::endl;
 	WidgetProxy amerimutt("amerimutt",0);
 	amerimutt.setSize(glm::vec2(300,300));
 	amerimutt.setPos(glm::vec2(300,300));
 	amerimutt.setShader(sys->queryShaderProgram("widget"));
+	if(amerimutt.getShader() == nullptr) std::cout << "Invalid shader!" << std::endl;
 	amerimutt.setTexture(sys->queryTexture("amerimutt"));
 	sys->commitWidget(amerimutt);
-	std::cout << "Widgets loaded!" << std::endl;
+	std::cout << "[WIDGETS] Widgets loaded!" << std::endl;
 }
 void loadTextures(pGameSystem sys)
 {
-	std::cout << "Loading textures!" << std::endl;
+	std::cout << "[TEXTURES] Loading textures!" << std::endl;
 	std::vector<TextureProxy> textures;
 	textures.push_back(TextureProxy("vasa",Abstract::Texture::texture_diffuse, "lizardman_kochog1.jpg"));
 	textures.push_back(TextureProxy("amerimutt",Abstract::Texture::texture_diffuse, "200px-Le_56_Face.png"));
@@ -80,11 +83,13 @@ void loadTextures(pGameSystem sys)
 	{
 		sys->commitTexture(*it);
 	}
-	std::cout << "Textures loaded!" << std::endl;
+	STime waiter = STime::asSeconds(0.2);
+	waiter.sleep();
+	std::cout << "[TEXTURES] Textures loaded!" << std::endl;
 }
 void loadShaders(pGameSystem sys)
 {
-	std::cout << "Loading shaders!" << std::endl;
+	std::cout << "[SHADERS] Loading shaders!" << std::endl;
 	std::vector<ShaderModuleProxy> modules;
 	std::vector<ShaderProgramProxy> programs;
 	ShaderProgramProxy prog1("modeldispray");
@@ -105,5 +110,7 @@ void loadShaders(pGameSystem sys)
 	}
 	sys->commitShaderProgram(prog2);
 	modules.clear();
-	std::cout << "Shaders loaded!" << std::endl;
+	STime waiter = STime::asSeconds(0.2);
+	waiter.sleep();
+	std::cout << "[SHADERS] Shaders loaded!" << std::endl;
 }

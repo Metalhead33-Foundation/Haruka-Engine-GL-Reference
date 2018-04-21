@@ -54,8 +54,8 @@ GameSystem::error_t GameSystem::render()
 GameSystem::error_t GameSystem::startup()
 {
 	engine->startup();
-	std::cout << "Audio Device Name: " << soundsys->getDeviceName() << std::endl;
-	std::cout << "Audio Extension List: " << soundsys->getExtensionList() << std::endl;
+	/*std::cout << "Audio Device Name: " << soundsys->getDeviceName() << std::endl;
+	std::cout << "Audio Extension List: " << soundsys->getExtensionList() << std::endl;*/
 	return SYSTEM_OKAY;
 }
 GameSystem::error_t GameSystem::cleanup()
@@ -184,4 +184,16 @@ TextureReference GameSystem::queryTexture(const std::string& key)
 WidgetReference GameSystem::queryWidget(const std::string& key)
 {
 	return widgetManager.query(key);
+}
+void GameSystem::wait()
+{
+	bool waiting = true;
+	pushCommand(
+				[waiting](pGameSystem sys) mutable -> bool
+	{
+		waiting = false;
+		return waiting;
+	}
+	);
+	while(waiting);
 }

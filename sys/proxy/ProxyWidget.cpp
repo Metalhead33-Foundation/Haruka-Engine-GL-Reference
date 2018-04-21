@@ -23,6 +23,8 @@ const Abstract::sShaderProgram WidgetProxy::getShader() const
 void WidgetProxy::setShader(ShaderProgramReference shadr)
 {
 	ReadReference<ShaderProgramProxy> shdr(shadr);
+	std::cout << "[WIDGETS/SHADERS] Attaching the shader \"" << shdr->getId() << "\" ("
+			  << shdr->getProgram().get() << ") to the widget \"" << Id << "\"." << std::endl;
 	shader = shdr->getProgram();
 }
 const Abstract::sTexture WidgetProxy::getTexture() const
@@ -32,6 +34,8 @@ const Abstract::sTexture WidgetProxy::getTexture() const
 void WidgetProxy::setTexture(TextureReference text)
 {
 	ReadReference<TextureProxy> texture(text);
+	std::cout << "[WIDGETS/TEXTURES] Attaching the textuer \"" << texture->getId() << "\" ("
+			  << texture->getTexture().get() << ") to the widget \"" << Id << "\"." << std::endl;
 	properties.texture = texture->getTexture();
 }
 const glm::vec2 &WidgetProxy::getSize() const
@@ -41,6 +45,10 @@ const glm::vec2 &WidgetProxy::getSize() const
 void WidgetProxy::setSize(const glm::vec2& setto)
 {
 	properties.size = setto;
+}
+const std::string& WidgetProxy::getId() const
+{
+	return Id;
 }
 const glm::vec2 &WidgetProxy::getPos() const
 {
@@ -68,7 +76,12 @@ void WidgetManager::draw(glm::mat4& projection)
 		for(auto widgIt = canvasIt->begin(); widgIt != canvasIt->end(); ++widgIt)
 		{
 			ReadReference<WidgetProxy> widget(*widgIt);
+			if(widget->getShader()) {
+			std::cout << "[SYSTEM] Drawing widget \"" << widget->Id
+					  << "\" with the shader [" << widget->getShader().get()
+					  << "]." << std::endl;
 			SYS->getEngine()->renderWidget(widget->properties,projection,widget->shader);
+			}
 		}
 	}
 }
@@ -131,6 +144,7 @@ WidgetReference WidgetManager::commit(const WidgetProxy& proxy)
 	   layers[proxy.layer % layers.size()].push_back(ref);
 	}
 	prxy.endSet();
+	std::cout << "[WIDGETS] Widget \"" << prxy->Id << "\" initialized." << std::endl;
 
 	return ref;
 }

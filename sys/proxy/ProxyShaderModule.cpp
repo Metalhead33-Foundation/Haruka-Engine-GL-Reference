@@ -34,6 +34,10 @@ const Abstract::sShaderModule ShaderModuleProxy::getModule() const
 {
 	return mod;
 }
+const std::string& ShaderModuleProxy::getId() const
+{
+	return Id;
+}
 ShaderModuleReference ShaderModuleManager::query(const std::string& key)
 {
 	auto it = modmp.find(key);
@@ -75,6 +79,7 @@ ShaderModuleReference ShaderModuleManager::commit(const ShaderModuleProxy& proxy
 			Storage<ShaderModuleProxy> &proxy = *ref;
 			proxy.beginSet();
 			proxy->mod = sys->getEngine()->createShaderModule(type,reedah);
+			std::cout << "[SHADERS] Shader module \"" << proxy->Id << "\" initialized." << std::endl;
 			proxy.endSet();
 		}
 	);

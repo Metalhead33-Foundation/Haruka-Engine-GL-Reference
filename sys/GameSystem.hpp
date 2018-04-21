@@ -59,6 +59,8 @@ public:
 	const Audio::sSystem getSoundsys() const;
 	const sAssimpPhysFS getModelImporter() const;
 
+	void wait();
+
 	ModelReference queryModel(const ModelProxy& proxy);
 	ShaderModuleReference queryShaderModule(const ShaderModuleProxy& proxy);
 	ShaderProgramReference queryShaderProgram(const ShaderProgramProxy& proxy);

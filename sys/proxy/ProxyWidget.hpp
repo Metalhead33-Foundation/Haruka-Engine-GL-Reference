@@ -28,6 +28,7 @@ public:
 	void setSize(const glm::vec2& setto);
 	const glm::vec2& getPos() const;
 	void setPos(const glm::vec2& setto);
+	const std::string& getId() const;
 };
 
 class WidgetManager : public ResourceManager

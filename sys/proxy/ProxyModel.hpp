@@ -56,6 +56,7 @@ public:
 
 	const std::string& getLoadPath();
 	void setLoadPath(const std::string& path);
+	const std::string& getId() const;
 };
 class ModelManager : public ResourceManager
 {

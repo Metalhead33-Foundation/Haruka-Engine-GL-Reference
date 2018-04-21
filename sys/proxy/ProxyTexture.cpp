@@ -54,6 +54,10 @@ const Abstract::sTexture TextureProxy::getTexture() const
 {
 	return tex;
 }
+const std::string& TextureProxy::getId() const
+{
+	return Id;
+}
 TextureReference TextureManager::query(const std::string& key)
 {
 	auto it = texmp.find(key);
@@ -106,6 +110,7 @@ TextureReference TextureManager::commit(const TextureProxy& proxy)
 			proxy->linearSize = proxy->tex->getLinearSize();
 			proxy->mipMapCount = proxy->tex->getMipMapCount();
 			}
+			std::cout << "[TEXTURES] Texture \"" << proxy->Id << "\" initialized." << std::endl;
 			proxy.endSet();
 		}
 	);

@@ -22,6 +22,7 @@ public:
 	void addModule(ShaderModuleReference mod);
 	void removeModule(ShaderModuleReference mod);
 	const Abstract::sShaderProgram getProgram() const;
+	const std::string& getId() const;
 };
 
 class ShaderProgramManager : public ResourceManager

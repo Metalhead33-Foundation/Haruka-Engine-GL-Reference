@@ -35,6 +35,10 @@ const Abstract::sShaderProgram ShaderProgramProxy::getProgram() const
 {
 	return prog;
 }
+const std::string& ShaderProgramProxy::getId() const
+{
+	return Id;
+}
 ShaderProgramReference ShaderProgramManager::query(const std::string& key)
 {
 	auto it = progmp.find(key);
@@ -79,9 +83,12 @@ ShaderProgramReference ShaderProgramManager::commit(const ShaderProgramProxy& pr
 			for(auto it = modref.begin(); it != modref.end(); ++it)
 			{
 				ReadReference<ShaderModuleProxy> read(*it);
+				std::cout << "[SHADERS] Attaching module " << read->getId() << " to " << proxy->Id << "." << std::endl;
 				proxy->prog->pushModule(read->getModule());
 			}
+			std::cout << "[SHADERS] Linking shader program \"" << proxy->Id << "\"." << std::endl;
 			proxy->prog->linkShaders();
+			std::cout << "[SHADERS] Shader program \"" << proxy->Id << "\" initialized." << std::endl;
 			}
 			proxy.endSet();
 		}

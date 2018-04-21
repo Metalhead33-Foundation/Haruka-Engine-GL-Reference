@@ -24,11 +24,14 @@ void ModelProxy::RenderMesh::draw(const glm::mat4 &projection, const glm::mat4 &
 {
 	if(shader && mesh)
 	{
+		std::cout << "[SYSTEM] Drawing mesh [" << mesh.get() << "] with the shader [" << shader.get()
+				  << "]." << std::endl;
 		mesh->draw(shader,textures,projection,view,model);
 	}
 }
 void ModelProxy::draw(const glm::mat4 &projection, const glm::mat4 &view) const
 {
+	std::cout << "[SYSTEM] Drawing model \"" << Id << "\"." << std::endl;
 	for(auto it = meshes.begin(); it != meshes.end(); ++it)
 	{
 		it->second.draw(projection, view, modelPosition);
@@ -38,6 +41,8 @@ void ModelProxy::RenderMesh::attachTexture(TextureReference tex)
 {
 	ReadReference<TextureProxy> texture(tex);
 	textures.push_back(texture->getTexture());
+	std::cout << "[MODELS/TEXTURES] Attached texture \"" << texture->getId() << "\" ("
+			  << texture->getTexture().get() << ") to mesh." << std::endl;
 }
 void ModelProxy::RenderMesh::detachTexture(TextureReference tex)
 {
@@ -55,6 +60,8 @@ void ModelProxy::RenderMesh::attachShader(ShaderProgramReference progref)
 {
 	ReadReference<ShaderProgramProxy> shdr(progref);
 	shader = shdr->getProgram();
+	std::cout << "[MODELS/SHADERS] Attached shader \"" << shdr->getId() << "\" ("
+			  << shader.get() << ") to mesh." << std::endl;
 }
 void ModelProxy::RenderMesh::detachShader()
 {
@@ -68,7 +75,10 @@ void ModelProxy::RenderMesh::build(MeshCreator creator)
 {
 	mesh = creator(createInfo);
 }
-
+const std::string& ModelProxy::getId() const
+{
+	return Id;
+}
 
 const std::string& ModelProxy::getLoadPath()
 {
@@ -110,6 +120,7 @@ void ModelProxy::setModelPosition(glm::mat4& npos)
 }
 void ModelProxy::attachTexture(const std::string& meshKey, TextureReference tex)
 {
+	std::cout << "[MODELS/TEXTURES] Attaching texture to " << Id << "." << meshKey << "." << std::endl;
 	auto it = meshes.find(meshKey);
 	if(it != meshes.end())
 	{
@@ -120,6 +131,7 @@ void ModelProxy::attachTexture(const std::string& meshKey, TextureReference tex)
 		auto bah = meshes.emplace(meshKey, nullptr);
 		if(bah.second) bah.first->second.attachTexture(tex);
 	}
+	std::cout << "[MODELS/TEXTURES] Attached texture to " << Id << "." << meshKey << "." << std::endl;
 }
 void ModelProxy::detachTexture(const std::string& meshKey, TextureReference tex)
 {
@@ -131,6 +143,7 @@ void ModelProxy::detachTexture(const std::string& meshKey, TextureReference tex)
 }
 void ModelProxy::attachShader(const std::string& meshKey, ShaderProgramReference progref)
 {
+	std::cout << "[MODELS/SHADERS] Attaching shader to " << Id << "." << meshKey << "." << std::endl;
 	auto it = meshes.find(meshKey);
 	if(it != meshes.end())
 	{
@@ -141,6 +154,7 @@ void ModelProxy::attachShader(const std::string& meshKey, ShaderProgramReference
 		auto bah = meshes.emplace(meshKey, nullptr);
 		if(bah.second) bah.first->second.attachShader(progref);
 	}
+	std::cout << "[MODELS/SHADERS] Attached shader to " << Id << "." << meshKey << "." << std::endl;
 }
 void ModelProxy::detachShader(const std::string& meshKey)
 {
@@ -163,6 +177,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 											aiProcess_FindInvalidData |
 											aiProcess_ValidateDataStructure | 0);
 	if(scen) {
+		std::cout << "[MODELS] Model: \"" << loadPath << "\" contains " << scen->mNumMeshes << " meshes." << std::endl;
 		for(int i = 0; i < scen->mNumMeshes; ++i)
 		{
 			// Take the mesh from Assimp
@@ -172,6 +187,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 				meshname = std::string(cmesh->mName.C_Str(),cmesh->mName.length);
 			else
 				meshname = std::to_string(i);
+			std::cout << "[MODELS] Mesh name: " << meshname << std::endl;
 			// Find the associated properties from the proxy, hopefully
 			auto crt = meshes.find(meshname);
 			// Associate the textures that are pre-set inside the proxy
@@ -181,6 +197,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 				else crt = meshes.end();
 			}
 			if(crt != meshes.end()) crt->second.construct(cmesh);
+			else std::cout << "[MODELS] Failed to load mesh!" << std::endl;
 		}
 	}
 	isConstructed = true;
@@ -276,8 +293,10 @@ ModelReference ModelManager::commit(ModelProxy& proxy)
 				Storage<ModelProxy> &prxy = *ref2;
 				prxy.beginSet();
 				prxy->meshes = proxy.meshes;
-				for(auto it = prxy->meshes.begin(); it != prxy->meshes.end();++it)
+				for(auto it = prxy->meshes.begin(); it != prxy->meshes.end();++it) {
 					it->second.build(sys->getEngine()->getMeshCreator());
+				}
+				std::cout << "[MODELS] Model \"" << prxy->Id << "\" initialized." << std::endl;
 				prxy.endSet();
 			});
 			return ref2;

@@ -33,6 +33,7 @@ public:
 	std::string& getLoadPath();
 	void setLoadPath(const std::string& newPath);
 	const Abstract::sTexture getTexture() const;
+	const std::string& getId() const;
 };
 
 class TextureManager : public ResourceManager
