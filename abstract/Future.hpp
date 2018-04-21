@@ -253,7 +253,7 @@ template < class IdType > inline bool isValidId( IdType id ) {
 
 inline bool isValidId( const std::string& id ) { return !id.empty(); }
 
-inline bool isValidId( size_t id ) { return id >= 0; }
+inline bool isValidId( int id ) { return id >= 0; }
 
 
 #endif // FUTURE_HPP

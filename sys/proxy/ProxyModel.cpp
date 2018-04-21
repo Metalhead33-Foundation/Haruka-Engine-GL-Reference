@@ -183,7 +183,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 	std::cout << "[MODELS] Loaded scene: [" << scen << "]." << std::endl;
 	if(scen) {
 		std::cout << "[MODELS] Model: \"" << loadPath << "\" contains " << scen->mNumMeshes << " meshes." << std::endl;
-		for(int i = 0; i < scen->mNumMeshes; ++i)
+		for(unsigned int i = 0; i < scen->mNumMeshes; ++i)
 		{
 			// Take the mesh from Assimp
 			aiMesh* cmesh = scen->mMeshes[i];

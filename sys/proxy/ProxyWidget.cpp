@@ -129,8 +129,8 @@ WidgetReference WidgetManager::commit(const WidgetProxy& proxy)
 		layers[proxy.layer % layers.size()].push_back(ref);
 	}
 
-	prxy->setPos(proxy.getPos());
-	prxy->setSize(proxy.getSize());
+	prxy->properties = proxy.properties;
+	prxy->shader = proxy.shader;
 	if(prxy->layer != proxy.layer) {
 	   // Remove ref from prxy->layer
 		for(auto widgIt = layers[prxy->layer % layers.size()].begin();
