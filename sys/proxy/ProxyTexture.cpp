@@ -7,6 +7,14 @@ TextureProxy::TextureProxy()
 {
 	;
 }
+TextureProxy::TextureProxy(const TextureProxy& cpy)
+	: Id(cpy.Id), type(cpy.type), height(cpy.height),
+	  width(cpy.width), linearSize(cpy.linearSize),
+	  mipMapCount(cpy.mipMapCount), tex(cpy.tex),
+	  loadPath(cpy.loadPath)
+{
+	;
+}
 TextureProxy::TextureProxy(const std::string& id, Abstract::Texture::textureType taipu)
 	: Id(id), type(taipu), tex(nullptr)
 {
@@ -40,15 +48,6 @@ const Abstract::sTexture TextureProxy::getTexture() const
 {
 	return tex;
 }
-
-TextureManager::TextureManager()
-{
-
-}
-TextureManager::~TextureManager()
-{
-	;
-}
 TextureReference TextureManager::query(const TextureProxy& proxy)
 {
 	auto it = texmp.find(proxy.Id);
@@ -76,7 +75,7 @@ TextureReference TextureManager::commit(const TextureProxy& proxy)
 	Abstract::sFIO reedah = PhysFS::FileHandle::openRead(proxy.loadPath);
 	pushCommand(
 				[ref,reedah,type,isDDS](pGameSystem sys) {
-			Storage<TextureProxy> proxy = *ref;
+			Storage<TextureProxy> &proxy = *ref;
 			proxy.beginSet();
 			if(isDDS) proxy->tex = sys->getEngine()->createTextureFromDDS(type,reedah);
 			else  proxy->tex = sys->getEngine()->createTextureFromImage(type,reedah);

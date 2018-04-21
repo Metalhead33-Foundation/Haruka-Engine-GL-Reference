@@ -21,8 +21,8 @@ class RenderingEngine
 {
 protected:
 	Abstract::sSettingContainer settings;
-	typedef Mesh::MeshCreatorFunction MeshCreator;
 public:
+	typedef Mesh::MeshCreatorFunction MeshCreator;
 	virtual ~RenderingEngine() = default;
 	virtual void switchBuffers() = 0;
 	virtual sShaderModule createShaderModule(ShaderModule::ShaderType ntype, sFIO reada) = 0;

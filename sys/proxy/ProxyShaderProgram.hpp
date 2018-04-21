@@ -17,6 +17,7 @@ private:
 	std::vector<ShaderModuleReference> modref;
 public:
 	ShaderProgramProxy();
+	ShaderProgramProxy(const ShaderProgramProxy& cpy);
 	ShaderProgramProxy(const std::string& id);
 	void addModule(ShaderModuleReference mod);
 	void removeModule(ShaderModuleReference mod);
@@ -28,12 +29,12 @@ class ShaderProgramManager : public ResourceManager
 public:
 	friend class ShaderProgramProxy;
 	typedef MapTrait<ShaderProgramProxy,std::string> ShaderProxyMap;
-	typedef ShaderProxyMap::iterator ShaderIterator;
+	typedef ShaderProxyMap::HashIterator ShaderIterator;
 private:
 	ShaderProxyMap progmp;
 public:
-	ShaderProgramManager();
-	~ShaderProgramManager();
+	ShaderProgramManager() = default;
+	~ShaderProgramManager() = default;
 	ShaderProgramReference query(const ShaderProgramProxy& proxy);
 	ShaderProgramReference commit(const ShaderProgramProxy& proxy);
 };

@@ -18,6 +18,7 @@ private:
 	std::string loadPath;
 public:
 	ShaderModpuleProxy();
+	ShaderModpuleProxy(const ShaderModpuleProxy& cpy);
 	ShaderModpuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu);
 	std::string& getLoadPath();
 	void setLoadPath(const std::string& newPath);
@@ -29,12 +30,12 @@ class ShaderModuleManager : public ResourceManager
 public:
 	friend class ShaderModpuleProxy;
 	typedef MapTrait<ShaderModpuleProxy,std::string> ShaderModuleMap;
-	typedef ShaderModuleMap::iterator ShaderModuleIterator;
+	typedef ShaderModuleMap::HashIterator ShaderModuleIterator;
 private:
 	ShaderModuleMap modmp;
 public:
-	ShaderModuleManager();
-	~ShaderModuleManager();
+	ShaderModuleManager() = default;
+	~ShaderModuleManager() = default;
 	ShaderModuleReference query(const ShaderModpuleProxy& proxy);
 	ShaderModuleReference commit(const ShaderModpuleProxy& proxy);
 };

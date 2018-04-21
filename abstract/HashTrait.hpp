@@ -8,9 +8,9 @@ template < class Type, class IdType > class MapTrait {
 public:
 	typedef Storage< Type > SType;
 	typedef std::shared_ptr< SType > RType;
-	typedef typename std::unordered_map< IdType, RType > HashTrait;
+	typedef std::unordered_map< IdType, RType > HashTrait;
 	typedef typename HashTrait::iterator HashIterator;
-	typedef typename HashTrait::_Args _Args;
+	// typedef typename HashTrait::_Args _Args;
 private:
 	HashTrait m_cache;
 	std::shared_timed_mutex m_lock;
@@ -21,7 +21,7 @@ private:
 	// returns a
 	// valid pointer.
 		template <typename... Args>
-	RType getEntry( IdType& id, Args&&... args ) {
+	RType getEntry( const IdType& id, Args&&... args ) {
 		// Check the ID for validity
 		assert( isValidId( id ) );
 
@@ -46,7 +46,7 @@ private:
 			return ptr;
 		}
 	}
-	HashIterator find(IdType& id)
+	HashIterator find(const IdType& id)
 	{
 		m_lock.lock();
 		return m_cache.find(id);
@@ -66,7 +66,7 @@ private:
 		return m_cache.erase(it);
 	}
 
-	void removeEntry( IdType id ) {
+	void removeEntry( const IdType& id ) {
 		if(!isValidId(id))
 			return;
 

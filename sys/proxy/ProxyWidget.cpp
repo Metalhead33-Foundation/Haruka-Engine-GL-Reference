@@ -6,6 +6,11 @@ WidgetProxy::WidgetProxy()
 {
 	;
 }
+WidgetProxy::WidgetProxy(const WidgetProxy& cpy)
+	: Id(cpy.Id), properties(cpy.properties), shader(cpy.shader), layer(cpy.layer)
+{
+	;
+}
 WidgetProxy::WidgetProxy(const std::string& id, int nlayer)
 	: Id(id), layer(nlayer), shader(nullptr)
 {
@@ -45,6 +50,17 @@ void WidgetProxy::setPos(const glm::vec2& setto)
 {
 	properties.pos = setto;
 }
+
+WidgetManager::WidgetManager(int canvasNum)
+	: layers(canvasNum)
+{
+	;
+}
+WidgetManager::~WidgetManager()
+{
+	;
+}
+
 void WidgetManager::draw(glm::mat4& projection)
 {
 	for(auto canvasIt = layers.begin(); canvasIt != layers.end(); ++canvasIt)
@@ -74,28 +90,32 @@ WidgetReference WidgetManager::query(const WidgetProxy& proxy)
 WidgetReference WidgetManager::commit(const WidgetProxy& proxy)
 {
 	auto ref = widgmp.getEntry(proxy.Id, proxy.layer);
+	Storage<WidgetProxy> &prxy = *ref;
 	if(ref->isInitialized())
 	{
-		for(auto canvasIt = layers.begin(); canvasIt != layers.end(); ++canvasIt)
-		{
-			for(auto widgIt = canvasIt->begin(); widgIt != canvasIt->end(); ++widgIt)
-			{
-				ReadReference<WidgetProxy> widget(*widgIt);
-				if(widget == ref)
-				{
-					canvasIt->erase(widgIt);
-					break;
-				}
-			}
-		}
+		prxy.invalidate();
+		prxy.beginSet();
+	} else {
+		prxy.beginSet();
+		prxy->layer = proxy.layer;
 		layers[proxy.layer % layers.size()].push_back(ref);
-		return ref;
 	}
-	Storage<WidgetProxy> prxy = *ref;
-	prxy.beginSet();
+
 	prxy->setPos(proxy.getPos());
 	prxy->setSize(proxy.getSize());
+	if(prxy->layer != proxy.layer) {
+	   // Remove ref from prxy->layer
+		for(auto widgIt = layers[prxy->layer % layers.size()].begin();
+			widgIt != layers[prxy->layer % layers.size()].end();++widgIt)
+			{
+				if(*widgIt == ref) layers[prxy->layer % layers.size()].erase(widgIt);
+				break;
+			}
+		// Add ref to proxy->layer
+		prxy->layer = proxy.layer;
+	   layers[proxy.layer % layers.size()].push_back(ref);
+	}
 	prxy.endSet();
-	layers[proxy.layer % layers.size()].push_back(ref);
+
 	return ref;
 }

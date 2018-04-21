@@ -8,11 +8,12 @@
 #include <assimp/postprocess.h>
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h,
-					   int samplerate, size_t audioBufferSize, const char *title, int intendedFramerate)
+					   int samplerate, size_t audioBufferSize, const char *title,
+					   int intendedFramerate, int canvasLayers)
 	: MainSystem(w, h, title,intendedFramerate),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
 	  engine(engineCreator(window)),
-	  modelImporter(new AssimpPhysFS())
+	  modelImporter(new AssimpPhysFS()), widgetManager(canvasLayers)
 {
 	ResourceManager::SYS = this;
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
@@ -45,14 +46,8 @@ GameSystem::error_t GameSystem::render()
 {
 	engine->clearBackground();
 	// engine->renderFrame();
-	for(MeshIterator it = meshes.begin(); it != meshes.end();++it)
-	{
-		it->second.draw(projectionMatrix, viewMatrix, modelMatrix);
-	}
-	for(WidgetIterator it = widgets.begin(); it != widgets.end();++it)
-	{
-		it->second.draw(screenProjection);
-	}
+	modelManager.draw(projectionMatrix, viewMatrix);
+	widgetManager.draw(screenProjection);
 	engine->switchBuffers();
 	return SYSTEM_OKAY;
 }
@@ -68,67 +63,6 @@ GameSystem::error_t GameSystem::cleanup()
 	engine->cleanup();
 	return SYSTEM_OKAY;
 }
-Audio::sBuffer GameSystem::__createBuffer(const std::string& key, Abstract::sFIO reedah)
-{
-	Audio::sBuffer tmp = soundsys->createSoundBuffer(reedah);
-	return tmp;
-}
-Audio::sSource GameSystem::__createStream(const std::string& key, Abstract::sFIO reedah, size_t buffNum)
-{
-	Audio::sSource tmp = soundsys->createStreamingAudio(reedah, buffNum);
-	return tmp;
-}
-Audio::sSource GameSystem::__createSource(const std::string& key, Audio::sBuffer buff)
-{
-	Audio::sSource tmp;
-	if(buff)
-	{
-		tmp = soundsys->createSoundSource(buff);
-	}
-	else
-	{
-		tmp = soundsys->createSoundSource();
-	}
-	return tmp;
-}
-Abstract::sMesh GameSystem::__createMeshFromAI(const std::string& key, aiMesh* mesh)
-{
-	if(!mesh) return nullptr;
-	AiModelFactory::MeshCreateInfo info;
-	AiModelFactory::ProcessAiMesh(info,mesh);
-	Abstract::sMesh tmp = engine->createMesh(info);
-	meshes.emplace(key, RenderableMesh{tmp, 0} );
-	return tmp;
-}
-void GameSystem::__createMeshesFromModel(const std::string& key, const aiScene* model)
-{
-	if(!model) return;
-	for(unsigned int i = 0; i < model->mNumMeshes;++i)
-	{
-		std::stringstream name;
-		name << key << "." << model->mMeshes[i]->mName.C_Str();
-		__createMeshFromAI(name.str(),model->mMeshes[i]);
-		std::cout << key << "." << model->mMeshes[i]->mName.C_Str() << " - " << model->mMeshes[i]->mNumVertices << std::endl;
-	}
-}
-void GameSystem::__createModel(const std::string& key, const std::string& path)
-{
-	Assimp::Importer importer;
-	importer.SetIOHandler(modelImporter.get());
-	const aiScene* scen = importer.ReadFile(path,aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_PreTransformVertices |
-											aiProcess_CalcTangentSpace |
-											aiProcess_GenSmoothNormals |
-											aiProcess_Triangulate |
-											aiProcess_FixInfacingNormals |
-											aiProcess_FindInvalidData |
-											aiProcess_ValidateDataStructure | 0
-
-										 );
-	if(!scen) std::cout << "Error loading model!" << importer.GetErrorString() << std::endl;
-	std::cout << scen->mNumMeshes << std::endl;
-	__createMeshesFromModel(key,scen);
-}
-
 
 GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &deltaTime)
 {
@@ -174,6 +108,10 @@ GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &d
 	}
 	return SYSTEM_OKAY;
 }
+void GameSystem::pushCommand(Lambda lambda)
+{
+	commandQueue.push(lambda);
+}
 const Abstract::sRenderingEngine GameSystem::getEngine() const
 {
 	return engine;
@@ -185,4 +123,45 @@ const Audio::sSystem GameSystem::getSoundsys() const
 const sAssimpPhysFS GameSystem::getModelImporter() const
 {
 	return modelImporter;
+}
+
+ModelReference GameSystem::queryModel(const ModelProxy& proxy)
+{
+	return modelManager.query(proxy);
+}
+ModelReference GameSystem::commitModel(ModelProxy& proxy)
+{
+	return modelManager.commit(proxy);
+}
+ShaderModuleReference GameSystem::queryShaderModule(const ShaderModpuleProxy& proxy)
+{
+	return moduleManager.query(proxy);
+}
+ShaderModuleReference GameSystem::commitShaderModule(const ShaderModpuleProxy& proxy)
+{
+	return moduleManager.commit(proxy);
+}
+ShaderProgramReference GameSystem::queryShaderProgram(const ShaderProgramProxy& proxy)
+{
+	return programManager.query(proxy);
+}
+ShaderProgramReference GameSystem::commitShaderProgram(const ShaderProgramProxy& proxy)
+{
+	return programManager.commit(proxy);
+}
+TextureReference GameSystem::queryTexture(const TextureProxy& proxy)
+{
+	return textureManager.query(proxy);
+}
+TextureReference GameSystem::commitTexture(const TextureProxy& proxy)
+{
+	return textureManager.commit(proxy);
+}
+WidgetReference GameSystem::queryWidget(const WidgetProxy& proxy)
+{
+	return widgetManager.query(proxy);
+}
+WidgetReference GameSystem::commitWidget(const WidgetProxy& proxy)
+{
+	return widgetManager.commit(proxy);
 }

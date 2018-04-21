@@ -6,6 +6,11 @@ ShaderProgramProxy::ShaderProgramProxy()
 {
 	;
 }
+ShaderProgramProxy::ShaderProgramProxy(const ShaderProgramProxy& cpy)
+	: Id(cpy.Id), modref(cpy.modref), prog(cpy.prog)
+{
+	;
+}
 ShaderProgramProxy::ShaderProgramProxy(const std::string& id)
 	: Id(id), prog(nullptr)
 {
@@ -52,7 +57,7 @@ ShaderProgramReference ShaderProgramManager::commit(const ShaderProgramProxy& pr
 	if(ref->isInitialized()) return ref;
 	pushCommand(
 				[ref,modref](pGameSystem sys) {
-			Storage<ShaderProgramProxy> proxy = *ref;
+			Storage<ShaderProgramProxy> &proxy = *ref;
 			proxy.beginSet();
 			proxy->prog = sys->getEngine()->createShaderProgram();
 			if(proxy->prog) {

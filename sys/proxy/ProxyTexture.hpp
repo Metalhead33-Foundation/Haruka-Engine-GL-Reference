@@ -23,6 +23,7 @@ private:
 	std::string loadPath;
 public:
 	TextureProxy();
+	TextureProxy(const TextureProxy& cpy);
 	TextureProxy(const std::string& id, Abstract::Texture::textureType taipu);
 	uint32_t getHeight() const;
 	uint32_t getWidth() const;
@@ -38,12 +39,12 @@ class TextureManager : public ResourceManager
 public:
 	friend class TextureProxy;
 	typedef MapTrait<TextureProxy,std::string> TextureMap;
-	typedef TextureMap::iterator TextureIterator;
+	typedef TextureMap::HashIterator TextureIterator;
 private:
 	TextureMap texmp;
 public:
-	TextureManager();
-	~TextureManager();
+	TextureManager() = default;
+	~TextureManager() = default;
 	TextureReference query(const TextureProxy& proxy);
 	TextureReference commit(const TextureProxy& proxy);
 

@@ -3,6 +3,8 @@
 #include "ProxyTexture.hpp"
 #include "../../abstract/Mesh.hpp"
 #include "../../io/AiModelFactory.hpp"
+#include "../../abstract/RenderingEngine.hpp"
+#include <assimp/Importer.hpp>
 
 DEFINE_CLASS(ModelProxy)
 DEFINE_CLASS(ModelManager)
@@ -12,15 +14,22 @@ class ModelProxy
 {
 public:
 	friend class ModelManager;
+	typedef Abstract::RenderingEngine::MeshCreator MeshCreator;
 	struct RenderMesh {
 		Abstract::sMesh mesh;
 		Abstract::sShaderProgram shader;
 		std::vector<Abstract::sTexture> textures;
+		AiModelFactory::MeshCreateInfo createInfo;
 		void draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) const;
 		void attachTexture(TextureReference tex);
 		void detachTexture(TextureReference tex);
 		void attachShader(ShaderProgramReference progref);
 		void detachShader();
+		void construct(aiMesh* rawmesh);
+		void build(MeshCreator creator);
+		RenderMesh();
+		RenderMesh(const RenderMesh& cpy);
+		RenderMesh(Abstract::sMesh nmesh);
 	};
 	typedef std::unordered_map<std::string,RenderMesh> MeshHash;
 	typedef MeshHash::iterator MeshIterator;
@@ -29,8 +38,11 @@ private:
 	glm::mat4 modelPosition;
 	MeshHash meshes;
 	std::string loadPath;
+	bool constuct(Assimp::IOSystem* importer);
+	bool isConstructed;
 public:
 	ModelProxy();
+	ModelProxy(const ModelProxy& cpy);
 	ModelProxy(const std::string& id);
 
 	void draw(const glm::mat4& projection, const glm::mat4& view) const;
@@ -49,13 +61,14 @@ class ModelManager : public ResourceManager
 public:
 	friend class ModelProxy;
 	typedef MapTrait<ModelProxy,std::string> ModelMap;
-	typedef ModelMap::iterator ModelIterator;
+	typedef ModelMap::HashIterator ModelIterator;
 private:
 	ModelMap modmp;
 public:
-	ModelManager();
-	~ModelManager();
+	ModelManager() = default;
+	~ModelManager() = default;
 	ModelReference query(const ModelProxy& proxy);
-	ModelReference commit(const ModelProxy& proxy);
+	ModelReference commit(ModelProxy& proxy);
 	void draw(const glm::mat4 &projection, const glm::mat4 &view);
+	bool loadModel(ModelProxy& model);
 };

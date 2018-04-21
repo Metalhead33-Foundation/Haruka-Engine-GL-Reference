@@ -13,9 +13,13 @@
 #include <functional>
 #include "../abstract/Future.hpp"
 #include <mutex>
+#include "proxy/ProxyShaderModule.hpp"
+#include "proxy/ProxyShaderProgram.hpp"
+#include "proxy/ProxyTexture.hpp"
+#include "proxy/ProxyModel.hpp"
+#include "proxy/ProxyWidget.hpp"
 
 DEFINE_CLASS(GameSystem)
-DEFINE_CLASS(ResourceManager)
 
 class GameSystem : public MainSystem
 {
@@ -23,34 +27,27 @@ public:
 	friend class ResourceManager;
 	typedef std::function<void(pGameSystem)> Lambda;
 	typedef std::queue<Lambda> CommandQueue;
-	/*struct RenderableMesh
-	{
-		Abstract::sMesh mesh;
-		Abstract::sShaderProgram shader;
-		void draw(glm::mat4& projectionMatrix, glm::mat4& view, glm::mat4& model);
-	};
-	struct RenderableWidget
-	{
-		Abstract::sWidget widget;
-		Abstract::sShaderProgram shader;
-		void draw(glm::mat4& projectionMatrix);
-	};*/
 private:
-	/*const Abstract::sRenderingEngine engine;
+	const Abstract::sRenderingEngine engine;
 	const Audio::sSystem soundsys;
 	const sAssimpPhysFS modelImporter;
 	Camera camera;
 	int mouseX, mouseY;
 	glm::mat4 projectionMatrix, viewMatrix, modelMatrix;
 
-	Abstract::sMesh __createMeshFromAI(const std::string& key, aiMesh* mesh);
-	void __createMeshesFromModel(const std::string& key, const aiScene* model);*/
-
 	CommandQueue commandQueue;
 	std::mutex commandMutex;
 	void pushCommand(Lambda lambda);
+
+	ShaderModuleManager moduleManager;
+	ShaderProgramManager programManager;
+	TextureManager textureManager;
+	ModelManager modelManager;
+	WidgetManager widgetManager;
 public:
-	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate, size_t audioBufferSize, const char* title, int intendedFramerate=60);
+	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate,
+			   size_t audioBufferSize, const char* title, int intendedFramerate=60,
+			   int canvasLayers=8);
 	~GameSystem();
 	error_t update(STime& deltaTime);
 	error_t render();
@@ -61,6 +58,17 @@ public:
 	const Abstract::sRenderingEngine getEngine() const;
 	const Audio::sSystem getSoundsys() const;
 	const sAssimpPhysFS getModelImporter() const;
+
+	ModelReference queryModel(const ModelProxy& proxy);
+	ModelReference commitModel(ModelProxy &proxy);
+	ShaderModuleReference queryShaderModule(const ShaderModpuleProxy& proxy);
+	ShaderModuleReference commitShaderModule(const ShaderModpuleProxy& proxy);
+	ShaderProgramReference queryShaderProgram(const ShaderProgramProxy& proxy);
+	ShaderProgramReference commitShaderProgram(const ShaderProgramProxy& proxy);
+	TextureReference queryTexture(const TextureProxy& proxy);
+	TextureReference commitTexture(const TextureProxy& proxy);
+	WidgetReference queryWidget(const WidgetProxy& proxy);
+	WidgetReference commitWidget(const WidgetProxy& proxy);
 };
 
 

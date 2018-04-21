@@ -106,6 +106,11 @@ template < class Type > class Storage : public StorageBase {
 		return *m_data;
 	}
 
+	void invalidate() {
+		std::unique_lock<std::shared_timed_mutex> lock(m_access);
+		m_initialized = false;
+	}
+
 	Type *operator->( ) {
 		if ( !m_data )
 			m_data = new Type( );

@@ -6,6 +6,11 @@ ShaderModpuleProxy::ShaderModpuleProxy()
 {
 	;
 }
+ShaderModpuleProxy::ShaderModpuleProxy(const ShaderModpuleProxy& cpy)
+	: Id(cpy.Id), type(cpy.type), mod(cpy.mod), loadPath(cpy.loadPath)
+{
+	;
+}
 ShaderModpuleProxy::ShaderModpuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu)
 	: Id(id), type(taipu), mod(nullptr)
 {
@@ -46,7 +51,7 @@ ShaderModuleReference ShaderModuleManager::commit(const ShaderModpuleProxy& prox
 	Abstract::sFIO reedah = PhysFS::FileHandle::openRead(proxy.loadPath);
 	pushCommand(
 				[ref,reedah,type](pGameSystem sys) {
-			Storage<ShaderModpuleProxy> proxy = *ref;
+			Storage<ShaderModpuleProxy> &proxy = *ref;
 			proxy.beginSet();
 			proxy->mod = sys->getEngine()->createShaderModule(type,reedah);
 			proxy.endSet();

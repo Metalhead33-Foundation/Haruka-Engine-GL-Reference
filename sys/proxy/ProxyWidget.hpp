@@ -18,6 +18,7 @@ private:
 public:
 	friend class WidgetManager;
 	WidgetProxy();
+	WidgetProxy(const WidgetProxy& cpy);
 	WidgetProxy(const std::string& id, int nlayer);
 	const Abstract::sShaderProgram getShader() const;
 	void setShader(ShaderProgramReference shadr);
@@ -34,7 +35,7 @@ class WidgetManager : public ResourceManager
 public:
 	friend class WidgetProxy;
 	typedef MapTrait<WidgetProxy,std::string> WidgetMap;
-	typedef WidgetMap::iterator WidgetIterator;
+	typedef WidgetMap::HashIterator WidgetIterator;
 	typedef std::vector<WidgetReference> Canvas;
 	typedef Canvas::iterator CanvasIterator;
 	typedef std::vector<Canvas> LayerVector;
