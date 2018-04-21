@@ -17,6 +17,7 @@ void loadTextures(pGameSystem sys);
 void loadShaders(pGameSystem sys);
 void initialize(pGameSystem sys)
 {
+	std::cout << "[SYSTEM] System Address: [" << sys << "]" << std::endl;
 	std::cout << "[SYSTEM] Beginning initialization!" << std::endl;
 	std::thread textures(loadTextures, sys);
 	std::thread shaders(loadShaders, sys);

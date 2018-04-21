@@ -110,7 +110,9 @@ GameSystem::error_t GameSystem::processWindowEvent(const SDL_Event& ev, STime &d
 }
 void GameSystem::pushCommand(Lambda lambda)
 {
+	std::unique_lock<std::mutex> queue(commandMutex);
 	commandQueue.push(lambda);
+	queue.unlock();
 }
 const Abstract::sRenderingEngine GameSystem::getEngine() const
 {

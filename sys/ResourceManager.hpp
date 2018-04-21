@@ -13,7 +13,7 @@ public:
 	typedef std::function<void(pGameSystem)> Lambda;
 protected:
 	static pGameSystem SYS;
-	static void pushCommand(Lambda lambda);
+	void pushCommand(Lambda lambda);
 public:
 	ResourceManager();
 	virtual ~ResourceManager();

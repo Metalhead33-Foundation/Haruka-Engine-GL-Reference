@@ -74,6 +74,10 @@ void ModelProxy::RenderMesh::construct(aiMesh* rawmesh)
 void ModelProxy::RenderMesh::build(MeshCreator creator)
 {
 	mesh = creator(createInfo);
+	std::cout << "Shader Address: " << shader.get() << std::endl;
+	std::cout << "Texture Addresses:";
+	for(auto it = textures.begin(); it != textures.end(); ++it)
+		std::cout << " " << (*it).get();
 }
 const std::string& ModelProxy::getId() const
 {
@@ -176,6 +180,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 											aiProcess_FixInfacingNormals |
 											aiProcess_FindInvalidData |
 											aiProcess_ValidateDataStructure | 0);
+	std::cout << "[MODELS] Loaded scene: [" << scen << "]." << std::endl;
 	if(scen) {
 		std::cout << "[MODELS] Model: \"" << loadPath << "\" contains " << scen->mNumMeshes << " meshes." << std::endl;
 		for(int i = 0; i < scen->mNumMeshes; ++i)
@@ -208,7 +213,7 @@ bool ModelProxy::constuct(Assimp::IOSystem* importer)
 
 bool ModelManager::loadModel(ModelProxy &model)
 {
-	model.constuct(SYS->getModelImporter().get());
+	return model.constuct(SYS->getModelImporter().get());
 }
 void ModelManager::draw(const glm::mat4& projection, const glm::mat4& view)
 {
