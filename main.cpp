@@ -66,11 +66,12 @@ void loadWidgets(pGameSystem sys)
 {
 	std::cout << "[WIDGETS] Loading widgets!" << std::endl;
 	WidgetProxy amerimutt("amerimutt",0);
-	amerimutt.setSize(glm::vec2(300,300));
-	amerimutt.setPos(glm::vec2(300,300));
+	amerimutt.setPos(glm::vec2(50,50));
 	amerimutt.setShader(sys->queryShaderProgram("widget"));
 	if(amerimutt.getShader() == nullptr) std::cout << "Invalid shader!" << std::endl;
 	amerimutt.setTexture(sys->queryTexture("amerimutt"));
+	amerimutt.defaultSize();
+	amerimutt.snapToWidth(300.0f);
 	sys->commitWidget(amerimutt);
 	std::cout << "[WIDGETS] Widgets loaded!" << std::endl;
 }

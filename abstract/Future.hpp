@@ -153,8 +153,16 @@ template < class Type > class Reference {
 	//            const Type *operator->( ) const { return
 	//            m_ptr->m_data; }
 
+	bool isInitialized() const
+	{
+		return !m_ptr || m_ptr->isInitialized();
+	}
+	bool isValid() const
+	{
+		return m_ptr != nullptr;
+	}
 	operator bool( ) const {
-		return ( m_ptr && m_ptr->isInitialized( ) );
+		return isValid() && isInitialized();
 	}
 
 	bool operator==( const Reference< Type > &other ) const {

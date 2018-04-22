@@ -16,3 +16,12 @@ void ResourceManager::pushCommand(Lambda lambda)
 	if(SYS) SYS->pushCommand(lambda);
 	std::cout << "[SYSTEM] [" << this << "] has succesfully pushed a command to [" << SYS << "]!" << std::endl;
 }
+Proxy::Proxy(const std::string& id)
+	: Id(id)
+{
+	;
+}
+const std::string& Proxy::getId() const
+{
+	return Id;
+}

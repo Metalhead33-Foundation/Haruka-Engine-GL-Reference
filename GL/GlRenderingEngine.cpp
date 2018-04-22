@@ -94,6 +94,7 @@ void RenderingEngine::renderWidget(const Abstract::WidgetProperties &widget, glm
 	glm::mat4 model;
 	model = glm::translate(model, glm::vec3(widget.pos, 0.0f));
 	model = glm::translate(model, glm::vec3(0.5f * widget.size.x, 0.5f * widget.size.y, 0.0f));
+	model = glm::rotate(model, widget.rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::translate(model, glm::vec3(-0.5f * widget.size.x, -0.5f * widget.size.y, 0.0f));
 	model = glm::scale(model, glm::vec3(widget.size, 1.0f));
 

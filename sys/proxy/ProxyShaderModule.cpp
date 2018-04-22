@@ -2,23 +2,23 @@
 #include "../GameSystem.hpp"
 
 ShaderModuleProxy::ShaderModuleProxy()
-	: Id(""), type(Abstract::ShaderModule::COMPUTE_SHADER), mod(nullptr)
+	: Proxy(""), type(Abstract::ShaderModule::COMPUTE_SHADER), mod(nullptr)
 {
 	;
 }
 ShaderModuleProxy::ShaderModuleProxy(const ShaderModuleProxy& cpy)
-	: Id(cpy.Id), type(cpy.type), mod(cpy.mod), loadPath(cpy.loadPath)
+	: Proxy(cpy.Id), type(cpy.type), mod(cpy.mod), loadPath(cpy.loadPath)
 {
 	;
 }
 ShaderModuleProxy::ShaderModuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu)
-	: Id(id), type(taipu), mod(nullptr)
+	: Proxy(id), type(taipu), mod(nullptr)
 {
 	;
 }
 ShaderModuleProxy::ShaderModuleProxy(const std::string& id, Abstract::ShaderModule::ShaderType taipu,
 									 const std::string& loadpath)
-	: Id(id), type(taipu), mod(nullptr), loadPath(loadpath)
+	: Proxy(id), type(taipu), mod(nullptr), loadPath(loadpath)
 {
 	;
 }
@@ -33,10 +33,6 @@ void ShaderModuleProxy::setLoadPath(const std::string& newPath)
 const Abstract::sShaderModule ShaderModuleProxy::getModule() const
 {
 	return mod;
-}
-const std::string& ShaderModuleProxy::getId() const
-{
-	return Id;
 }
 ShaderModuleReference ShaderModuleManager::query(const std::string& key)
 {

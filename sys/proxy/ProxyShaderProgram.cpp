@@ -2,17 +2,17 @@
 #include "../GameSystem.hpp"
 
 ShaderProgramProxy::ShaderProgramProxy()
-	: Id(""), prog(nullptr)
+	: Proxy(""), prog(nullptr)
 {
 	;
 }
 ShaderProgramProxy::ShaderProgramProxy(const ShaderProgramProxy& cpy)
-	: Id(cpy.Id), modref(cpy.modref), prog(cpy.prog)
+	: Proxy(cpy.Id),prog(cpy.prog), modref(cpy.modref)
 {
 	;
 }
 ShaderProgramProxy::ShaderProgramProxy(const std::string& id)
-	: Id(id), prog(nullptr)
+	: Proxy(id), prog(nullptr)
 {
 	;
 }
@@ -34,10 +34,6 @@ void ShaderProgramProxy::removeModule(ShaderModuleReference mod)
 const Abstract::sShaderProgram ShaderProgramProxy::getProgram() const
 {
 	return prog;
-}
-const std::string& ShaderProgramProxy::getId() const
-{
-	return Id;
 }
 ShaderProgramReference ShaderProgramManager::query(const std::string& key)
 {

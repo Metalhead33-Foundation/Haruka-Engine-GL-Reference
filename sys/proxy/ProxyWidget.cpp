@@ -2,23 +2,53 @@
 #include "../GameSystem.hpp"
 
 WidgetProxy::WidgetProxy()
-	: Id(""), layer(0), shader(nullptr)
+	: Proxy(""), shader(nullptr), layer(0)
 {
 	;
 }
 WidgetProxy::WidgetProxy(const WidgetProxy& cpy)
-	: Id(cpy.Id), properties(cpy.properties), shader(cpy.shader), layer(cpy.layer)
+	: Proxy(cpy.Id), properties(cpy.properties), shader(cpy.shader), layer(cpy.layer)
 {
 	;
 }
-WidgetProxy::WidgetProxy(const std::string& id, int nlayer)
-	: Id(id), layer(nlayer), shader(nullptr)
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer)
+	: Proxy(id), shader(nullptr), layer(nlayer)
 {
 	;
 }
 const Abstract::sShaderProgram WidgetProxy::getShader() const
 {
 	return shader;
+}
+void WidgetProxy::setRotation(float rotation)
+{
+	properties.rotation = rotation;
+}
+float WidgetProxy::getRotation()
+{
+	return properties.rotation;
+}
+void WidgetProxy::defaultSize()
+{
+	if(properties.texture)
+	{
+		properties.size.x = properties.texture->getWidth();
+		properties.size.y = properties.texture->getHeight();
+	}
+}
+void WidgetProxy::scale(const glm::vec2& scaler)
+{
+	properties.size *= scaler;
+}
+void WidgetProxy::snapToWidth(float x)
+{
+	properties.size.y = (properties.size.y / properties.size.x) * x;
+	properties.size.x = x;
+}
+void WidgetProxy::snapToHeight(float y)
+{
+	properties.size.x = (properties.size.x / properties.size.y) * y;
+	properties.size.y = y;
 }
 void WidgetProxy::setShader(ShaderProgramReference shadr)
 {
@@ -59,7 +89,7 @@ void WidgetProxy::setPos(const glm::vec2& setto)
 	properties.pos = setto;
 }
 
-WidgetManager::WidgetManager(int canvasNum)
+WidgetManager::WidgetManager(unsigned int canvasNum)
 	: layers(canvasNum)
 {
 	;
@@ -77,9 +107,6 @@ void WidgetManager::draw(glm::mat4& projection)
 		{
 			ReadReference<WidgetProxy> widget(*widgIt);
 			if(widget->getShader()) {
-			std::cout << "[SYSTEM] Drawing widget \"" << widget->Id
-					  << "\" with the shader [" << widget->getShader().get()
-					  << "]." << std::endl;
 			SYS->getEngine()->renderWidget(widget->properties,projection,widget->shader);
 			}
 		}

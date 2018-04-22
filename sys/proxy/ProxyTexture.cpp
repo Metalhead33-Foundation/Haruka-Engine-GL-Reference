@@ -3,12 +3,12 @@
 
 
 TextureProxy::TextureProxy()
-	: Id(""), type(Abstract::Texture::texture_diffuse), tex(nullptr)
+	: Proxy(""), type(Abstract::Texture::texture_diffuse), tex(nullptr)
 {
 	;
 }
 TextureProxy::TextureProxy(const TextureProxy& cpy)
-	: Id(cpy.Id), type(cpy.type), height(cpy.height),
+	: Proxy(cpy.Id), type(cpy.type), height(cpy.height),
 	  width(cpy.width), linearSize(cpy.linearSize),
 	  mipMapCount(cpy.mipMapCount), tex(cpy.tex),
 	  loadPath(cpy.loadPath)
@@ -16,13 +16,13 @@ TextureProxy::TextureProxy(const TextureProxy& cpy)
 	;
 }
 TextureProxy::TextureProxy(const std::string& id, Abstract::Texture::textureType taipu)
-	: Id(id), type(taipu), tex(nullptr)
+	: Proxy(id), type(taipu), tex(nullptr)
 {
 	;
 }
 TextureProxy::TextureProxy(const std::string& id, Abstract::Texture::textureType taipu,
 						   const std::string& loadpath)
-	: Id(id), type(taipu), tex(nullptr), loadPath(loadpath)
+	: Proxy(id), type(taipu), tex(nullptr), loadPath(loadpath)
 {
 	;
 }
@@ -53,10 +53,6 @@ void TextureProxy::setLoadPath(const std::string& newPath)
 const Abstract::sTexture TextureProxy::getTexture() const
 {
 	return tex;
-}
-const std::string& TextureProxy::getId() const
-{
-	return Id;
 }
 TextureReference TextureManager::query(const std::string& key)
 {

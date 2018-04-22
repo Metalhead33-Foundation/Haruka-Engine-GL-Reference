@@ -7,12 +7,11 @@
 DEFINE_CLASS(ShaderModuleProxy)
 DEFINE_CLASS(ShaderModuleManager)
 typedef Reference<ShaderModuleProxy> ShaderModuleReference;
-class ShaderModuleProxy
+class ShaderModuleProxy : public Proxy
 {
 public:
 	friend class ShaderModuleManager;
 private:
-	const std::string Id;
 	const Abstract::ShaderModule::ShaderType type;
 	Abstract::sShaderModule mod;
 	std::string loadPath;
@@ -24,7 +23,6 @@ public:
 	std::string& getLoadPath();
 	void setLoadPath(const std::string& newPath);
 	const Abstract::sShaderModule getModule() const;
-	const std::string& getId() const;
 };
 
 class ShaderModuleManager : public ResourceManager

@@ -1,6 +1,7 @@
 TEMPLATE = app
 CONFIG += console c++14
 CONFIG -= app_bundle
+QMAKE_CXXFLAGS_DEBUG += -Werror
 
 CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
 CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
@@ -56,7 +57,19 @@ SOURCES += main.cpp \
     sys/proxy/ProxyShaderModule.cpp \
     sys/proxy/ProxyWidget.cpp \
     sys/proxy/ProxyShaderProgram.cpp \
-    sys/proxy/ProxyModel.cpp
+    sys/proxy/ProxyModel.cpp \
+    sys/proxy/ProxyAudioBuffer.cpp \
+    sys/fxproxy/ReverbProxy.cpp \
+    sys/fxproxy/ChorflangProxy.cpp \
+    sys/fxproxy/EqualizerProxy.cpp \
+    sys/fxproxy/WahWahProxy.cpp \
+    sys/fxproxy/VocalMorpherProxy.cpp \
+    sys/fxproxy/RingModulatorProxy.cpp \
+    sys/fxproxy/PitchShifterProxy.cpp \
+    sys/fxproxy/FrequencyShifterProxy.cpp \
+    sys/fxproxy/EchoProxy.cpp \
+    sys/fxproxy/DistortionProxy.cpp \
+    sys/fxproxy/CompressorProxy.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -129,4 +142,16 @@ HEADERS += \
     sys/proxy/ProxyShaderModule.hpp \
     sys/proxy/ProxyWidget.hpp \
     sys/proxy/ProxyShaderProgram.hpp \
-    sys/proxy/ProxyModel.hpp
+    sys/proxy/ProxyModel.hpp \
+    sys/proxy/ProxyAudioBuffer.hpp \
+    sys/fxproxy/ReverbProxy.hpp \
+    sys/fxproxy/ChorflangProxy.hpp \
+    sys/fxproxy/EqualizerProxy.hpp \
+    sys/fxproxy/WahWahProxy.hpp \
+    sys/fxproxy/VocalMorpherProxy.hpp \
+    sys/fxproxy/RingModulatorProxy.hpp \
+    sys/fxproxy/PitchShifterProxy.hpp \
+    sys/fxproxy/FrequencyShifterProxy.hpp \
+    sys/fxproxy/EchoProxy.hpp \
+    sys/fxproxy/DistortionProxy.hpp \
+    sys/fxproxy/CompressorProxy.hpp

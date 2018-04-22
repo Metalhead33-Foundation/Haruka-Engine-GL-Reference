@@ -24,14 +24,11 @@ void ModelProxy::RenderMesh::draw(const glm::mat4 &projection, const glm::mat4 &
 {
 	if(shader && mesh)
 	{
-		std::cout << "[SYSTEM] Drawing mesh [" << mesh.get() << "] with the shader [" << shader.get()
-				  << "]." << std::endl;
 		mesh->draw(shader,textures,projection,view,model);
 	}
 }
 void ModelProxy::draw(const glm::mat4 &projection, const glm::mat4 &view) const
 {
-	std::cout << "[SYSTEM] Drawing model \"" << Id << "\"." << std::endl;
 	for(auto it = meshes.begin(); it != meshes.end(); ++it)
 	{
 		it->second.draw(projection, view, modelPosition);
@@ -78,10 +75,6 @@ void ModelProxy::RenderMesh::build(MeshCreator creator)
 	std::cout << "Texture Addresses:";
 	for(auto it = textures.begin(); it != textures.end(); ++it)
 		std::cout << " " << (*it).get();
-}
-const std::string& ModelProxy::getId() const
-{
-	return Id;
 }
 
 const std::string& ModelProxy::getLoadPath()

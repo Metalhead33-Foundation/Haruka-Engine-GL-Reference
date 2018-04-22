@@ -14,6 +14,7 @@ struct WidgetProperties {
 	sTexture texture;
 	glm::vec2 size;
 	glm::vec2 pos;
+	float rotation;
 };
 
 DEFINE_CLASS(RenderingEngine)

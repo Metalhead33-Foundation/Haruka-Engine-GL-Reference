@@ -7,12 +7,11 @@
 DEFINE_CLASS(ShaderProgramProxy)
 DEFINE_CLASS(ShaderProgramManager)
 typedef Reference<ShaderProgramProxy> ShaderProgramReference;
-class ShaderProgramProxy
+class ShaderProgramProxy : public Proxy
 {
 public:
 	friend class ShaderProgramManager;
 private:
-	const std::string Id;
 	Abstract::sShaderProgram prog;
 	std::vector<ShaderModuleReference> modref;
 public:
@@ -22,7 +21,6 @@ public:
 	void addModule(ShaderModuleReference mod);
 	void removeModule(ShaderModuleReference mod);
 	const Abstract::sShaderProgram getProgram() const;
-	const std::string& getId() const;
 };
 
 class ShaderProgramManager : public ResourceManager

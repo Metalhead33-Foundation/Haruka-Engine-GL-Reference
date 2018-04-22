@@ -8,12 +8,11 @@ DEFINE_CLASS(TextureProxy)
 DEFINE_CLASS(TextureManager)
 typedef Reference<TextureProxy> TextureReference;
 
-class TextureProxy
+class TextureProxy : public Proxy
 {
 public:
 	friend class TextureManager;
 private:
-	const std::string Id;
 	const Abstract::Texture::textureType type;
 	uint32_t height;
 	uint32_t width;
@@ -33,7 +32,6 @@ public:
 	std::string& getLoadPath();
 	void setLoadPath(const std::string& newPath);
 	const Abstract::sTexture getTexture() const;
-	const std::string& getId() const;
 };
 
 class TextureManager : public ResourceManager

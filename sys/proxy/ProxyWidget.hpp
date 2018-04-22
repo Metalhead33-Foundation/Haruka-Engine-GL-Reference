@@ -8,18 +8,17 @@ DEFINE_CLASS(WidgetProxy)
 DEFINE_CLASS(WidgetManager)
 typedef Reference<WidgetProxy> WidgetReference;
 
-class WidgetProxy
+class WidgetProxy : public Proxy
 {
 private:
-	const std::string Id;
 	Abstract::WidgetProperties properties;
 	Abstract::sShaderProgram shader;
-	int layer;
+	unsigned int layer;
 public:
 	friend class WidgetManager;
 	WidgetProxy();
 	WidgetProxy(const WidgetProxy& cpy);
-	WidgetProxy(const std::string& id, int nlayer);
+	WidgetProxy(const std::string& id, unsigned int nlayer);
 	const Abstract::sShaderProgram getShader() const;
 	void setShader(ShaderProgramReference shadr);
 	const Abstract::sTexture getTexture() const;
@@ -29,6 +28,12 @@ public:
 	const glm::vec2& getPos() const;
 	void setPos(const glm::vec2& setto);
 	const std::string& getId() const;
+	void setRotation(float rotation);
+	float getRotation();
+	void defaultSize();
+	void scale(const glm::vec2& scaler);
+	void snapToWidth(float x);
+	void snapToHeight(float y);
 };
 
 class WidgetManager : public ResourceManager
@@ -45,7 +50,7 @@ private:
 	WidgetMap widgmp;
 	LayerVector layers;
 public:
-	WidgetManager(int canvasNum);
+	WidgetManager(unsigned int canvasNum);
 	~WidgetManager();
 	void draw(glm::mat4 &projection);
 	WidgetReference query(const WidgetProxy& proxy);

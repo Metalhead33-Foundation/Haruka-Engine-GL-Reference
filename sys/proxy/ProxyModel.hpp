@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PROXYMODEL_HPP
+#define PROXYMODEL_HPP
 #include "ProxyShaderProgram.hpp"
 #include "ProxyTexture.hpp"
 #include "../../abstract/Mesh.hpp"
@@ -10,7 +11,7 @@ DEFINE_CLASS(ModelProxy)
 DEFINE_CLASS(ModelManager)
 typedef Reference<ModelProxy> ModelReference;
 
-class ModelProxy
+class ModelProxy : public Proxy
 {
 public:
 	friend class ModelManager;
@@ -34,7 +35,6 @@ public:
 	typedef std::unordered_map<std::string,RenderMesh> MeshHash;
 	typedef MeshHash::iterator MeshIterator;
 private:
-	const std::string Id;
 	glm::mat4 modelPosition;
 	MeshHash meshes;
 	std::string loadPath;
@@ -56,7 +56,6 @@ public:
 
 	const std::string& getLoadPath();
 	void setLoadPath(const std::string& path);
-	const std::string& getId() const;
 };
 class ModelManager : public ResourceManager
 {
@@ -75,3 +74,4 @@ public:
 	void draw(const glm::mat4 &projection, const glm::mat4 &view);
 	bool loadModel(ModelProxy& model);
 };
+#endif // PROXYMODEL_HPP
