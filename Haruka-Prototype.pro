@@ -72,7 +72,9 @@ SOURCES += main.cpp \
     sys/fxproxy/CompressorProxy.cpp \
     sys/fxproxy/BandpassFilterProxy.cpp \
     sys/fxproxy/HighpassFilterProxy.cpp \
-    sys/fxproxy/LowpassFilterProxy.cpp
+    sys/fxproxy/LowpassFilterProxy.cpp \
+    sys/proxy/AuxiliaryEffectProxy.cpp \
+    sys/proxy/ProxyAudioSource.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -160,4 +162,8 @@ HEADERS += \
     sys/fxproxy/CompressorProxy.hpp \
     sys/fxproxy/BandpassFilterProxy.hpp \
     sys/fxproxy/HighpassFilterProxy.hpp \
-    sys/fxproxy/LowpassFilterProxy.hpp
+    sys/fxproxy/LowpassFilterProxy.hpp \
+    sys/fxproxy/AllEffects.hpp \
+    sys/fxproxy/AllFilters.hpp \
+    sys/proxy/AuxiliaryEffectProxy.hpp \
+    sys/proxy/ProxyAudioSource.hpp

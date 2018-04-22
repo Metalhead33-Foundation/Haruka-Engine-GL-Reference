@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AUXILIARYEFFECTSLOT_HPP
+#define AUXILIARYEFFECTSLOT_HPP
 #include "Effect.hpp"
 #include "Filter.hpp"
 namespace Audio {
@@ -30,3 +31,4 @@ public:
 };
 
 }
+#endif // AUXILIARYEFFECTSLOT_HPP
