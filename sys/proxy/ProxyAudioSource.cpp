@@ -6,7 +6,10 @@ void SourceProxy::commitData();
 SourceProxy::SourceProxy();
 SourceProxy::SourceProxy(const SourceProxy& cpy);
 SourceProxy::SourceProxy(const std::string& id);
-const Audio::sAudioSource SourceProxy::getSource() const;
+const Audio::sAudioSource SourceProxy::getSource() const
+{
+	return source;
+}
 
 /* Setters */
 void SourceProxy::setPitch(float pitch);
@@ -43,9 +46,18 @@ void SourceProxy::setFilter(HighpassFilterReference flt);
 void SourceProxy::setFilter(BandpassFilterReference flt);
 void SourceProxy::setBuffer(BufferReference buff);
 
-void SourceProxy::play();
-void SourceProxy::pause();
-void SourceProxy::stop();
+void SourceProxy::play()
+{
+	if(source) source->play();
+}
+void SourceProxy::pause()
+{
+	if(source) source->pause();
+}
+void SourceProxy::stop()
+{
+	if(source) source->stop();
+}
 
 SourceReference SourceManager::query(const SourceProxy& proxy)
 {
