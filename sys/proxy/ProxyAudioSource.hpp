@@ -35,6 +35,7 @@ private:
 		Audio::sAuxiliaryEffectSlot aux;
 	} properties;
 	Audio::sAuxiliaryEffectSlot effectSlot;
+	Audio::sSource source; // Only relevent if it's not streamed
 	std::string loadPath; // Only relevant if audio is streamed
 	const bool isStreamed;
 	Audio::sBuffer buffer; // Only relevent if it's not streamed
