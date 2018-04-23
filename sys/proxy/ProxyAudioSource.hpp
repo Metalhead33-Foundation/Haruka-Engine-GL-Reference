@@ -81,6 +81,10 @@ public:
 	void setFilter(HighpassFilterReference flt);
 	void setFilter(BandpassFilterReference flt);
 	void setBuffer(BufferReference buff);
+    
+	void play();
+	void pause();
+	void stop();
 
 };
 
