@@ -22,10 +22,11 @@ private:
 		bool looping : 1;
 		bool filter : 1;
 		bool aux : 1;
+		bool buffer : 1;
 	} changedProperties;
 	struct {
 		float pitch;
-		bool gain;
+		float gain;
 		glm::vec3 pos;
 		bool relativity;
 		float minDist;
@@ -33,20 +34,24 @@ private:
 		bool looping;
 		Audio::sFilter filter;
 		Audio::sAuxiliaryEffectSlot aux;
+		Audio::sBuffer buffer; // Only relevent if it's not streamed
 	} properties;
 	Audio::sAuxiliaryEffectSlot effectSlot;
-	Audio::sSource source; // Only relevent if it's not streamed
 	std::string loadPath; // Only relevant if audio is streamed
 	const bool isStreamed;
-	Audio::sBuffer buffer; // Only relevent if it's not streamed
+	Audio::sSource source;
 
 	void queryData();
 	void commitData();
 public:
 	SourceProxy();
 	SourceProxy(const SourceProxy& cpy);
-	SourceProxy(const std::string& id);
-	const Audio::sAudioSource getSource() const;
+	SourceProxy(const std::string& id, const std::string& loadpath);
+	SourceProxy(const std::string& id, const char* loadpath);
+	SourceProxy(const std::string& id, Audio::sBuffer buffer);
+	SourceProxy(const std::string& id, BufferReference buffer);
+	SourceProxy(const std::string& id, bool isStreamed=false);
+	const Audio::sSource getSource() const;
 
 	/* Setters */
 	void setPitch(float pitch);
@@ -71,8 +76,8 @@ public:
 	float getAttenuation(void) const;
 	ALint getStatus(void) const;
 	bool getLooping(void) const;
-	const sFilter getFilter() const;
-	const sAuxiliaryEffectSlot getAuxiliaryEffectSlot() const;
+	const Audio::sFilter getFilter() const;
+	const Audio::sAuxiliaryEffectSlot getAuxiliaryEffectSlot() const;
 	const std::string& getLoadPath() const;
 	const Audio::sBuffer getBuffer() const;
 
@@ -83,9 +88,9 @@ public:
 	void setFilter(BandpassFilterReference flt);
 	void setBuffer(BufferReference buff);
     
-	void play();
-	void pause();
-	void stop();
+	void play() const;
+	void pause() const;
+	void stop() const;
 
 };
 

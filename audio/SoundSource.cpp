@@ -61,5 +61,9 @@ void SoundSource::setBuffer(sBuffer buffer)
 		alSourcei( source, AL_BUFFER, buffer->getBuffer() );
 	}
 }
+const sBuffer SoundSource::getBuffer(void) const
+{
+	return buffer;
+}
 
 }

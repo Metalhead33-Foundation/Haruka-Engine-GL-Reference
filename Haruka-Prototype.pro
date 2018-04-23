@@ -1,7 +1,7 @@
 TEMPLATE = app
 CONFIG += console c++14
 CONFIG -= app_bundle
-QMAKE_CXXFLAGS_DEBUG += -Werror
+# QMAKE_CXXFLAGS_DEBUG += -Werror
 
 CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
 CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread

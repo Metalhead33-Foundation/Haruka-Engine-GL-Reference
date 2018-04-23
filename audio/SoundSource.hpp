@@ -23,6 +23,7 @@ public:
 	void pause();
 	void stop();
 	void setBuffer(sBuffer buffer);
+	const sBuffer getBuffer(void) const;
 };
 
 }

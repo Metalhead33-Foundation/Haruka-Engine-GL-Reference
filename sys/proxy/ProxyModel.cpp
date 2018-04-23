@@ -86,24 +86,24 @@ void ModelProxy::setLoadPath(const std::string& path)
 	loadPath = path;
 }
 ModelProxy::ModelProxy()
-	: Id("")
+	: Proxy("")
 {
 	;
 }
 ModelProxy::ModelProxy(const ModelProxy& cpy)
-	: Id(cpy.Id), loadPath(cpy.loadPath),
+	: Proxy(cpy.Id), loadPath(cpy.loadPath),
 	  modelPosition(cpy.modelPosition),
 	  meshes(cpy.meshes), isConstructed(cpy.isConstructed)
 {
 	;
 }
 ModelProxy::ModelProxy(const std::string& id)
-	: Id(id), isConstructed(false)
+	: Proxy(id), isConstructed(false)
 {
 	;
 }
 ModelProxy::ModelProxy(const std::string& id, const std::string& loadpath)
-	: Id(id), isConstructed(false), loadPath(loadpath)
+	: Proxy(id), isConstructed(false), loadPath(loadpath)
 {
 	;
 }

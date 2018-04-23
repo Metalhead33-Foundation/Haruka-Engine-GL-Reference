@@ -15,14 +15,17 @@ void loadModels(pGameSystem sys);
 void loadWidgets(pGameSystem sys);
 void loadTextures(pGameSystem sys);
 void loadShaders(pGameSystem sys);
+void loadMusic(pGameSystem sys);
 void initialize(pGameSystem sys)
 {
 	std::cout << "[SYSTEM] System Address: [" << sys << "]" << std::endl;
 	std::cout << "[SYSTEM] Beginning initialization!" << std::endl;
 	std::thread textures(loadTextures, sys);
 	std::thread shaders(loadShaders, sys);
+	std::thread music(loadMusic, sys);
 	textures.join();
 	shaders.join();
+	music.join();
 	std::thread models(loadModels, sys);
 	std::thread widgets(loadWidgets, sys);
 	models.join();
@@ -32,6 +35,7 @@ void initialize(pGameSystem sys)
 }
 int main(int argc, char *argv[])
 {
+	(void)(argc);
 	PHYSFS_init(argv[0]);
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/Jmusic/","/",true);
@@ -115,4 +119,40 @@ void loadShaders(pGameSystem sys)
 	STime waiter = STime::asSeconds(0.2);
 	waiter.sleep();
 	std::cout << "[SHADERS] Shaders loaded!" << std::endl;
+}
+void loadMusic(pGameSystem sys)
+{
+	// Initialize filters and effects
+	LowpassFilterProxy silence("silence");
+	LowpassFilterProxy filter("filter");
+	ReverbProxy wahwah("wahwah");
+	filter.setGain(0.99f);
+	filter.setHighFrequencyGain(0.11f);
+	silence.setGain(0.00f);
+	silence.setHighFrequencyGain(0.00f);
+	sys->commitLowpassFilter(silence);
+	sys->commitLowpassFilter(filter);
+	sys->commitReverbEffect(wahwah);
+	// Prep the auxiliary effect slot
+	AuxiliaryEffectProxy aux("aux");
+	aux.setFilter(sys->queryLowpassFilter("filter"));
+	aux.setEffect(sys->queryReverbEffect("wahwah"));
+	sys->commitAuxiliarySlot(aux);
+	SourceProxy music("flymesohigh","flymesohigh.ogg");
+	music.setLooping(false);
+	music.setPitch(1.12f);
+	music.setGain(1.0f);
+	music.setFilter(sys->queryLowpassFilter("filter"));
+	music.setAuxiliaryEffectSlot(sys->queryAuxiliarySlot("aux"));
+	sys->commitSource(music);
+	STime waiter = STime::asSeconds(0.2);
+	waiter.sleep();
+	auto mus = sys->querySource("flymesohigh");
+	ReadReference<SourceProxy> buffer(mus);
+	if(buffer->getSource())
+	{
+		std::cout << "Playing sound!" << std::endl;
+		buffer->getSource()->play();
+	}
+	else std::cout << "Invalid audio!" << std::endl;
 }

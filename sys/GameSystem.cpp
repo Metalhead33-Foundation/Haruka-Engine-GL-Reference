@@ -187,6 +187,213 @@ WidgetReference GameSystem::queryWidget(const std::string& key)
 {
 	return widgetManager.query(key);
 }
+BufferReference GameSystem::queryBuffer(const BufferProxy& key)
+{
+	return bufferManager.query(key);
+}
+SourceReference GameSystem::querySource(const SourceProxy& key)
+{
+	return sourceManager.query(key);
+}
+BufferReference GameSystem::queryBuffer(const std::string& key)
+{
+	return bufferManager.query(key);
+}
+SourceReference GameSystem::querySource(const std::string& key)
+{
+	return sourceManager.query(key);
+}
+BufferReference GameSystem::commitBuffer(const BufferProxy& proxy)
+{
+	return bufferManager.commit(proxy);
+}
+SourceReference GameSystem::commitSource(const SourceProxy& key)
+{
+	return sourceManager.commit(key);
+}
+AuxiliaryEffectReference GameSystem::queryAuxiliarySlot(const AuxiliaryEffectProxy& proxy)
+{
+	return auxiliaryEffectManager.query(proxy);
+}
+AuxiliaryEffectReference GameSystem::queryAuxiliarySlot(const std::string& key)
+{
+	return auxiliaryEffectManager.query(key);
+}
+AuxiliaryEffectReference GameSystem::commitAuxiliarySlot(const AuxiliaryEffectProxy& key)
+{
+	return auxiliaryEffectManager.commit(key);
+}
+ChorflangReference GameSystem::queryChorflangEffect(const ChorflangProxy& proxy)
+{
+	return chorflangManager.query(proxy);
+}
+CompressorReference GameSystem::queryCompressorEffect(const CompressorProxy& proxy)
+{
+	return compressorManager.query(proxy);
+}
+DistortionReference GameSystem::queryDistortionEffect(const DistortionProxy& proxy)
+{
+	return distortionManager.query(proxy);
+}
+EchoReference GameSystem::queryEchoEffect(const EchoProxy& proxy)
+{
+	return echoManager.query(proxy);
+}
+EqualizerReference GameSystem::queryEqualizerEffect(const EqualizerProxy& proxy)
+{
+	return equalizerManager.query(proxy);
+}
+FrequencyShifterReference GameSystem::queryFrequencyShifter(const FrequencyShifterProxy& proxy)
+{
+	return frequencyShifterManager.query(proxy);
+}
+PitchShifterReference GameSystem::queryPitchShifter(const PitchShifterProxy& proxy)
+{
+	return pitchShifterManager.query(proxy);
+}
+ReverbReference GameSystem::queryReverbEffect(const ReverbProxy& proxy)
+{
+	return reverbManager.query(proxy);
+}
+RingModulatorReference GameSystem::queryRingModulator(const RingModulatorProxy& proxy)
+{
+	return ringModulatorManager.query(proxy);
+}
+VocalMorpherReference GameSystem::queryVocalMorpher(const VocalMorpherProxy& proxy)
+{
+	return vocalMorpherManager.query(proxy);
+}
+WahWahReference GameSystem::queryWahWahEffect(const WahWahProxy& proxy)
+{
+	return wahWahManager.query(proxy);
+}
+BandpassFilterReference GameSystem::queryBandpassFilter(const BandpassFilterProxy& proxy)
+{
+	return bandpassManager.query(proxy);
+}
+HighpassFilterReference GameSystem::queryHighpassFilter(const HighpassFilterProxy& proxy)
+{
+	return highpassManager.query(proxy);
+}
+LowpassFilterReference GameSystem::queryLowpassFilter(const LowpassFilterProxy& proxy)
+{
+	return lowpassManager.query(proxy);
+}
+
+ChorflangReference GameSystem::queryChorflangEffect(const std::string& key)
+{
+	return chorflangManager.query(key);
+}
+CompressorReference GameSystem::queryCompressorEffect(const std::string& key)
+{
+	return compressorManager.query(key);
+}
+DistortionReference GameSystem::queryDistortionEffect(const std::string& key)
+{
+	return distortionManager.query(key);
+}
+EchoReference GameSystem::queryEchoEffect(const std::string& key)
+{
+	return echoManager.query(key);
+}
+EqualizerReference GameSystem::queryEqualizerEffect(const std::string& key)
+{
+	return equalizerManager.query(key);
+}
+FrequencyShifterReference GameSystem::queryFrequencyShifter(const std::string& key)
+{
+	return frequencyShifterManager.query(key);
+}
+PitchShifterReference GameSystem::queryPitchShifter(const std::string& key)
+{
+	return pitchShifterManager.query(key);
+}
+ReverbReference GameSystem::queryReverbEffect(const std::string& key)
+{
+	return reverbManager.query(key);
+}
+RingModulatorReference GameSystem::queryRingModulator(const std::string& key)
+{
+	return ringModulatorManager.query(key);
+}
+VocalMorpherReference GameSystem::queryVocalMorpher(const std::string& key)
+{
+	return vocalMorpherManager.query(key);
+}
+WahWahReference GameSystem::queryWahWahEffect(const std::string& key)
+{
+	return wahWahManager.query(key);
+}
+BandpassFilterReference GameSystem::queryBandpassFilter(const std::string& key)
+{
+	return bandpassManager.query(key);
+}
+HighpassFilterReference GameSystem::queryHighpassFilter(const std::string& key)
+{
+	return highpassManager.query(key);
+}
+LowpassFilterReference GameSystem::queryLowpassFilter(const std::string& key)
+{
+	return lowpassManager.query(key);
+}
+
+ChorflangReference GameSystem::commitChorflangEffect(const ChorflangProxy& proxy)
+{
+	return chorflangManager.commit(proxy);
+}
+CompressorReference GameSystem::commitCompressorEffect(const CompressorProxy& proxy)
+{
+	return compressorManager.commit(proxy);
+}
+DistortionReference GameSystem::commitDistortionEffect(const DistortionProxy& proxy)
+{
+	return distortionManager.commit(proxy);
+}
+EchoReference GameSystem::commitEchoEffect(const EchoProxy& proxy)
+{
+	return echoManager.commit(proxy);
+}
+EqualizerReference GameSystem::commitEqualizerEffect(const EqualizerProxy& proxy)
+{
+	return equalizerManager.commit(proxy);
+}
+FrequencyShifterReference GameSystem::commitFrequencyShifter(const FrequencyShifterProxy& proxy)
+{
+	return frequencyShifterManager.commit(proxy);
+}
+PitchShifterReference GameSystem::commitPitchShifter(const PitchShifterProxy& proxy)
+{
+	return pitchShifterManager.commit(proxy);
+}
+ReverbReference GameSystem::commitReverbEffect(const ReverbProxy& proxy)
+{
+	return reverbManager.commit(proxy);
+}
+RingModulatorReference GameSystem::commitRingModulator(const RingModulatorProxy& proxy)
+{
+	return ringModulatorManager.commit(proxy);
+}
+VocalMorpherReference GameSystem::commitVocalMorpher(const VocalMorpherProxy& proxy)
+{
+	return vocalMorpherManager.commit(proxy);
+}
+WahWahReference GameSystem::commitWahWahEffect(const WahWahProxy& proxy)
+{
+	return wahWahManager.commit(proxy);
+}
+BandpassFilterReference GameSystem::commitBandpassFilter(const BandpassFilterProxy& proxy)
+{
+	return bandpassManager.commit(proxy);
+}
+HighpassFilterReference GameSystem::commitHighpassFilter(const HighpassFilterProxy& proxy)
+{
+	return highpassManager.commit(proxy);
+}
+LowpassFilterReference GameSystem::commitLowpassFilter(const LowpassFilterProxy& proxy)
+{
+	return lowpassManager.commit(proxy);
+}
+
 void GameSystem::wait()
 {
 	bool waiting = true;
