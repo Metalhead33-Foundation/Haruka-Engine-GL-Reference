@@ -1,47 +1,51 @@
 #include "ProxyAudioSource.hpp"
 #include <cstring>
 
-void SourceManager::queryData();
-void SourceManager::commitData();
-SourceManager::SourceProxy();
-SourceManager::SourceProxy(const SourceProxy& cpy);
-SourceManager::SourceProxy(const std::string& id);
-const Audio::sAudioSource SourceManager::getSource() const;
+void SourceProxy::queryData();
+void SourceProxy::commitData();
+SourceProxy::SourceProxy();
+SourceProxy::SourceProxy(const SourceProxy& cpy);
+SourceProxy::SourceProxy(const std::string& id);
+const Audio::sAudioSource SourceProxy::getSource() const;
 
 /* Setters */
-void SourceManager::setPitch(float pitch);
-void SourceManager::setGain(float gain);
-void SourceManager::setPosition(float x, float y, float z);
-void SourceManager::setPosition(const glm::vec3& pos);
-void SourceManager::setRelativity(bool shouldBeRelative);
-void SourceManager::setMinimumDistance(float minDist);
-void SourceManager::setAttenuation(float attenuation);
-void SourceManager::setLooping(bool looping);
-void SourceManager::setFilter(Audio::sFilter nfilter);
-void SourceManager::setAuxiliaryEffectSlot(Audio::sAuxiliaryEffectSlot aux);
-void SourceManager::setLoadPath(const std::string& loadpath);
-void SourceManager::setBuffer(Audio::sBuffer buff);
+void SourceProxy::setPitch(float pitch);
+void SourceProxy::setGain(float gain);
+void SourceProxy::setPosition(float x, float y, float z);
+void SourceProxy::setPosition(const glm::vec3& pos);
+void SourceProxy::setRelativity(bool shouldBeRelative);
+void SourceProxy::setMinimumDistance(float minDist);
+void SourceProxy::setAttenuation(float attenuation);
+void SourceProxy::setLooping(bool looping);
+void SourceProxy::setFilter(Audio::sFilter nfilter);
+void SourceProxy::setAuxiliaryEffectSlot(Audio::sAuxiliaryEffectSlot aux);
+void SourceProxy::setLoadPath(const std::string& loadpath);
+void SourceProxy::setBuffer(Audio::sBuffer buff);
 
 /* Getters */
-float SourceManager::getPitch(void) const;
-float SourceManager::getGain(void) const;
-const glm::vec3& SourceManager::getPosition(void) const;
-bool SourceManager::getRelativity(void) const;
-float SourceManager::getMinimumDistance(void) const;
-float SourceManager::getAttenuation(void) const;
-ALint SourceManager::getStatus(void) const;
-boolSourceManager:: getLooping(void) const;
-const sFilter SourceManager::getFilter() const;
-const sAuxiliaryEffectSlot SourceManager::getAuxiliaryEffectSlot() const;
-const std::string& SourceManager::getLoadPath() const;
-const Audio::sBuffer SourceManager::getBuffer() const;
+float SourceProxy::getPitch(void) const;
+float SourceProxy::getGain(void) const;
+const glm::vec3& SourceProxy::getPosition(void) const;
+bool SourceProxy::getRelativity(void) const;
+float SourceProxy::getMinimumDistance(void) const;
+float SourceProxy::getAttenuation(void) const;
+ALint SourceProxy::getStatus(void) const;
+bool SourceProxygetLooping(void) const;
+const sFilter SourceProxy::getFilter() const;
+const sAuxiliaryEffectSlot SourceProxy::getAuxiliaryEffectSlot() const;
+const std::string& SourceProxy::getLoadPath() const;
+const Audio::sBuffer SourceProxy::getBuffer() const;
 
 /* Actually used functions */
-void SourceManager::setAuxiliaryEffectSlot(AuxiliaryEffectReference aux);
-void SourceManager::setFilter(LowpassFilterReference flt);
-void SourceManager::setFilter(HighpassFilterReference flt);
-void SourceManager::setFilter(BandpassFilterReference flt);
-void SourceManager::setBuffer(BufferReference buff);
+void SourceProxy::setAuxiliaryEffectSlot(AuxiliaryEffectReference aux);
+void SourceProxy::setFilter(LowpassFilterReference flt);
+void SourceProxy::setFilter(HighpassFilterReference flt);
+void SourceProxy::setFilter(BandpassFilterReference flt);
+void SourceProxy::setBuffer(BufferReference buff);
+
+void SourceProxy::play();
+void SourceProxy::pause();
+void SourceProxy::stop();
 
 SourceReference SourceManager::query(const SourceProxy& proxy)
 {
