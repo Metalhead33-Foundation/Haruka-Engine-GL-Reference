@@ -9,7 +9,7 @@
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h,
 					   int samplerate, size_t audioBufferSize, const char *title,
-					   int intendedFramerate, int canvasLayers)
+					   int intendedFramerate, int canvasLayers, uint32_t sampleCount)
 	: MainSystem(w, h, title,intendedFramerate),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
 	  engine(engineCreator(window)),
@@ -17,6 +17,7 @@ GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int
 {
 	ResourceManager::SYS = this;
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+	framebuffer = engine->createFramebuffer(uint32_t(w),uint32_t(h),sampleCount);
 }
 GameSystem::~GameSystem()
 {
@@ -46,8 +47,16 @@ GameSystem::error_t GameSystem::render()
 {
 	engine->clearBackground();
 	// engine->renderFrame();
+	if(framebuffer) framebuffer->bind();
+	engine->clearBackground();
 	modelManager.draw(projectionMatrix, viewMatrix);
+	engine->clearDepthBuffer();
 	widgetManager.draw(screenProjection);
+	if(framebuffer)
+	{
+		framebuffer->unbind();
+		framebuffer->blit();
+	}
 	engine->switchBuffers();
 	return SYSTEM_OKAY;
 }

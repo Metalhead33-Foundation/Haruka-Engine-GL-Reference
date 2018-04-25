@@ -3,12 +3,14 @@
 #include "FIO.hpp"
 namespace Abstract {
 
+DEFINE_CLASS(Framebuffer)
 DEFINE_CLASS(ShaderProgram)
 DEFINE_CLASS(Texture)
 class Texture
 {
 public:
 	friend class ShaderProgram;
+	friend class Framebuffer;
 public:
 	virtual ~Texture() = default;
 	virtual uint32_t getWidth() = 0;

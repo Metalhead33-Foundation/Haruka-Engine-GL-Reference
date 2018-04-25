@@ -7,11 +7,13 @@
 namespace Gl {
 
 DEFINE_CLASS(ShaderProgram)
+DEFINE_CLASS(Framebuffer)
 DEFINE_CLASS(Texture)
 class Texture : public Abstract::Texture
 {
 public:
 	friend class ShaderProgram;
+	friend class Framebuffer;
 private:
 	GLuint textureID;
 	uint32_t width,height,linearSize,mipMapCount;

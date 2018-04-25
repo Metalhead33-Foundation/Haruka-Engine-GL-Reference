@@ -33,6 +33,7 @@ private:
 	const Abstract::sRenderingEngine engine;
 	const Audio::sSystem soundsys;
 	const sAssimpPhysFS modelImporter;
+	Abstract::sFramebuffer framebuffer;
 	Camera camera;
 	int mouseX, mouseY;
 	glm::mat4 projectionMatrix, viewMatrix, modelMatrix;
@@ -68,7 +69,7 @@ private:
 public:
 	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate,
 			   size_t audioBufferSize, const char* title, int intendedFramerate=60,
-			   int canvasLayers=8);
+			   int canvasLayers=8, uint32_t sampleCount=0);
 	~GameSystem();
 	error_t update(STime& deltaTime);
 	error_t render();

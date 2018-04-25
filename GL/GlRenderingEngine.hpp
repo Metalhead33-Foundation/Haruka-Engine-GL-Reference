@@ -30,6 +30,7 @@ public:
 	RenderingEngine(Abstract::sSettingContainer nsettings);
 	~RenderingEngine();
 	void switchBuffers();
+	void clearDepthBuffer();
 	void clearBackground();
 	static GLint att[];
 	Abstract::sShaderModule createShaderModule(Abstract::ShaderModule::ShaderType ntype, Abstract::sFIO reada);
@@ -40,6 +41,7 @@ public:
 	void renderWidget(const Abstract::WidgetProperties& widget, glm::mat4& projection, Abstract::sShaderProgram shader);
 	MeshCreator getMeshCreator() const;
 	void renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
+	Abstract::sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
 
 	void renderFrame();
 	void startup();

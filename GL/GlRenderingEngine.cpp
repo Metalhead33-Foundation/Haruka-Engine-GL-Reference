@@ -4,6 +4,7 @@
 #include "GlShaderModule.hpp"
 #include "GlShaderProgram.hpp"
 #include "GlTexture.hpp"
+#include "GlFramebuffer.hpp"
 #include "GlMesh.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -83,6 +84,7 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	if(!cnt) throw std::runtime_error("Couldn't create GLX context!");
 	glXMakeCurrent(settings->sysWMinfo->info.x11.display, settings->sysWMinfo->info.x11.window, cnt);
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
+	glEnable(GL_MULTISAMPLE);
 	QUAD = sQuad(new Quad());
 }
 void RenderingEngine::renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
@@ -142,6 +144,10 @@ RenderingEngine::~RenderingEngine()
 	glXMakeCurrent(settings->sysWMinfo->info.x11.display, None, NULL);
 	glXDestroyContext(settings->sysWMinfo->info.x11.display, cnt);
 }
+void RenderingEngine::clearDepthBuffer()
+{
+	glClear( GL_DEPTH_BUFFER_BIT );
+}
 void RenderingEngine::switchBuffers()
 {
 	glXSwapBuffers(settings->sysWMinfo->info.x11.display, settings->sysWMinfo->info.x11.window);
@@ -151,7 +157,10 @@ void RenderingEngine::clearBackground()
 	glClearColor(0, 0.5, 1, 1 );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-
+Abstract::sFramebuffer RenderingEngine::createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples)
+{
+	return Framebuffer::create(nwidth, nheight, nsamples);
+}
 void RenderingEngine::renderFrame()
 {
 	switchBuffers();

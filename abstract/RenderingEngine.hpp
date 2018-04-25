@@ -5,6 +5,7 @@
 #include "ShaderModule.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
+#include "Framebuffer.hpp"
 #include "Mesh.hpp"
 #include "FIO.hpp"
 
@@ -26,6 +27,7 @@ public:
 	typedef Mesh::MeshCreatorFunction MeshCreator;
 	virtual ~RenderingEngine() = default;
 	virtual void switchBuffers() = 0;
+	virtual void clearDepthBuffer() = 0;
 	virtual sShaderModule createShaderModule(ShaderModule::ShaderType ntype, sFIO reada) = 0;
 	virtual sShaderProgram createShaderProgram() = 0;
 	virtual sTexture createTextureFromDDS(Texture::textureType ntype, sFIO reada) = 0;
@@ -34,6 +36,7 @@ public:
 	virtual void clearBackground() = 0;
 	virtual void renderWidget(const WidgetProperties& widget, glm::mat4& projection, sShaderProgram shader) = 0;
 	virtual void renderMesh(const sMesh mesh, const sShaderProgram shader, const Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) = 0;
+	virtual sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0) = 0;
 
 	virtual MeshCreator getMeshCreator() const = 0;
 
