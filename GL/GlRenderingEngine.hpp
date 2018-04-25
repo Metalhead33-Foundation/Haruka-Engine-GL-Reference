@@ -6,6 +6,7 @@
 #include "../abstract/RenderingEngine.hpp"
 namespace Gl {
 
+DEFINE_CLASS(RenderingEngine)
 class RenderingEngine : public Abstract::RenderingEngine
 {
 public:
@@ -38,6 +39,7 @@ public:
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
 	void renderWidget(const Abstract::WidgetProperties& widget, glm::mat4& projection, Abstract::sShaderProgram shader);
 	MeshCreator getMeshCreator() const;
+	void renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 
 	void renderFrame();
 	void startup();

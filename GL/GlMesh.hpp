@@ -7,10 +7,12 @@
 
 namespace Gl {
 
+DEFINE_CLASS(Mesh)
 class Mesh : public Abstract::Mesh
 {
 private:
 	GLuint VAO, VBO, EBO;
+	GLsizei indexSize;
 	void setupMesh();
 	Mesh(ConstructorReference constr);
 public:
@@ -19,7 +21,7 @@ public:
 	const GLuint& getVAO() const;
 	const GLuint& getVBO() const;
 	const GLuint& getEBO() const;
-	void draw(Abstract::sShaderProgram shader, const TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
+	void bind();
 };
 
 }

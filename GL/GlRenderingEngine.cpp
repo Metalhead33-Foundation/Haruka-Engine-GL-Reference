@@ -85,11 +85,26 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
 	QUAD = sQuad(new Quad());
 }
+void RenderingEngine::renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
+{
+	if(shader && mesh)
+	{
+		shader->useShader();
+		shader->setMat4("projection", projection);
+		shader->setMat4("view", view);
+		shader->setMat4("model", model);
+		for(auto it = textures.begin(); it != textures.end(); ++it)
+		{
+			shader->bindTexture(*it);
+		}
+		mesh->bind();
+		glActiveTexture(GL_TEXTURE0);
+	}
+}
 void RenderingEngine::renderWidget(const Abstract::WidgetProperties &widget, glm::mat4& projection, Abstract::sShaderProgram shader)
 {
-	ShaderProgram* gshdr = dynamic_cast<ShaderProgram*>(shader.get());
-	if(!gshdr) return;
-	gshdr->useShader();
+	if(shader) {
+	shader->useShader();
 	// Do the matrix stuff
 	glm::mat4 model;
 	model = glm::translate(model, glm::vec3(widget.pos, 0.0f));
@@ -98,20 +113,19 @@ void RenderingEngine::renderWidget(const Abstract::WidgetProperties &widget, glm
 	model = glm::translate(model, glm::vec3(-0.5f * widget.size.x, -0.5f * widget.size.y, 0.0f));
 	model = glm::scale(model, glm::vec3(widget.size, 1.0f));
 
-	gshdr->setMat4("projection", projection);
-	gshdr->setMat4("model", model);
+	shader->setMat4("projection", projection);
+	shader->setMat4("model", model);
 	Texture* tex;
-	tex = dynamic_cast<Texture*>(widget.texture.get());
+	// tex = dynamic_cast<Texture*>(widget.texture.get());
 	if(tex) {
-		glActiveTexture(tex->getTextureId()); // active proper texture unit before binding
-		glBindTexture(GL_TEXTURE_2D, tex->getTextureId());
-		glUniform1i(glGetUniformLocation(gshdr->getShaderID(), tex->stringizeType()), 0);
+		shader->bindTexture(widget.texture);
 	}
 	// draw mesh
 	QUAD->draw();
 
 	// always good practice to set everything back to defaults once configured.
 	glActiveTexture(GL_TEXTURE0);
+	}
 }
 Abstract::sMesh RenderingEngine::createMesh(Abstract::Mesh::ConstructorReference ref)
 {

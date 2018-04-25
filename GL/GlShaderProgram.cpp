@@ -1,4 +1,5 @@
 #include "GlShaderProgram.hpp"
+#include "GlTexture.hpp"
 #include <stdexcept>
 namespace Gl {
 
@@ -25,6 +26,16 @@ void ShaderProgram::useShader()
 	{
 		glUseProgram(shaderID);
 		lastUsedId = shaderID;
+	}
+	boundTextures = 0;
+}
+void ShaderProgram::bindTexture(Abstract::sTexture tex)
+{
+	if(tex)
+	{
+		tex->bindTextureSide();
+		glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+		++boundTextures;
 	}
 }
 void ShaderProgram::pushModule(Abstract::sShaderModule mod)

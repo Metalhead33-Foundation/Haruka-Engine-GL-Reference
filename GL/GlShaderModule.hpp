@@ -6,6 +6,7 @@
 #include "glad_glx.h"
 
 namespace Gl {
+DEFINE_CLASS(ShaderModule)
 class ShaderModule : public Abstract::ShaderModule
 {
 private:

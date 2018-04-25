@@ -126,6 +126,8 @@ void loadMusic(pGameSystem sys)
 	LowpassFilterProxy silence("silence");
 	LowpassFilterProxy filter("filter");
 	ReverbProxy wahwah("wahwah");
+	wahwah.setGain(1.00f);
+	wahwah.setHighFrequencyGain(1.00f);
 	filter.setGain(0.99f);
 	filter.setHighFrequencyGain(0.11f);
 	silence.setGain(0.00f);
@@ -137,12 +139,13 @@ void loadMusic(pGameSystem sys)
 	AuxiliaryEffectProxy aux("aux");
 	aux.setFilter(sys->queryLowpassFilter("filter"));
 	aux.setEffect(sys->queryReverbEffect("wahwah"));
+	aux.setGain(1.00f);
 	sys->commitAuxiliarySlot(aux);
 	SourceProxy music("flymesohigh","flymesohigh.ogg");
 	music.setLooping(false);
 	music.setPitch(1.12f);
 	music.setGain(1.0f);
-	music.setFilter(sys->queryLowpassFilter("filter"));
+	music.setFilter(sys->queryLowpassFilter("silence"));
 	music.setAuxiliaryEffectSlot(sys->queryAuxiliarySlot("aux"));
 	sys->commitSource(music);
 	STime waiter = STime::asSeconds(0.2);

@@ -40,8 +40,7 @@ protected:
 	IndexVector indices;
 public:
 	virtual ~Mesh() = default;
-	virtual void draw(sShaderProgram shader, const TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) = 0;
-
+	virtual void bind() = 0;
 };
 
 }

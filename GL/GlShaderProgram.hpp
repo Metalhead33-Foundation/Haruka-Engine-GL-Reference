@@ -5,13 +5,17 @@
 #include <deque>
 namespace Gl {
 
+DEFINE_CLASS(Texture)
+DEFINE_CLASS(ShaderProgram)
 class ShaderProgram : public Abstract::ShaderProgram
 {
 public:
+	friend class Texture;
 	typedef std::deque<Abstract::sShaderModule> ModuleVector;
 	typedef ModuleVector::iterator ModuleIterator;
 private:
 	GLuint shaderID;
+	GLint boundTextures;
 	static GLuint lastUsedId;
 	ModuleVector modules;
 	ShaderProgram();
@@ -35,6 +39,7 @@ public:
 	virtual void setMat2(const char* name, const glm::mat2 &mat) const;
 	virtual void setMat3(const char* name, const glm::mat3 &mat) const;
 	virtual void setMat4(const char* name, const glm::mat4 &mat) const;
+	virtual void bindTexture(Abstract::sTexture tex);
 };
 
 }

@@ -33,6 +33,7 @@ public:
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
 	virtual void clearBackground() = 0;
 	virtual void renderWidget(const WidgetProperties& widget, glm::mat4& projection, sShaderProgram shader) = 0;
+	virtual void renderMesh(const sMesh mesh, const sShaderProgram shader, const Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) = 0;
 
 	virtual MeshCreator getMeshCreator() const = 0;
 

@@ -30,31 +30,22 @@ Texture::~Texture()
 {
 	glDeleteTextures(1,&textureID);
 }
+const std::array<const char*,Texture::texture_MAX> Texture::TEX_TYPES = {
+	{"texture_diffuse",
+	"texture_specular",
+	"texture_normal",
+	"texture_height"}
+};
 
-
-const char* Texture::__stringizeType(textureType typus)
-{
-	switch(typus)
-	{
-		case texture_diffuse:
-	return "texture_diffuse";
-	break;
-		case texture_specular:
-	return "texture_specular";
-	break;
-		case texture_normal:
-	return "texture_normal";
-	break;
-		case texture_height:
-	return "texture_height";
-	break;
-		default:
-	return "invalid_texture";
-	}
-}
 const char* Texture::stringizeType()
 {
-	return __stringizeType(type);
+	return TEX_TYPES[type % texture_MAX];
+}
+
+void Texture::bindTextureSide()
+{
+	glActiveTexture(textureID); // active proper texture unit before binding
+	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO reada)

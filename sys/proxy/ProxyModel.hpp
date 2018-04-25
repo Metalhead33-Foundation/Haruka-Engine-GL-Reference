@@ -3,6 +3,7 @@
 #include "ProxyShaderProgram.hpp"
 #include "ProxyTexture.hpp"
 #include "../../abstract/Mesh.hpp"
+#include "../../abstract/RenderingEngine.hpp"
 #include "../../io/AiModelFactory.hpp"
 #include "../../abstract/RenderingEngine.hpp"
 #include <assimp/Importer.hpp>
@@ -21,7 +22,7 @@ public:
 		Abstract::sShaderProgram shader;
 		std::vector<Abstract::sTexture> textures;
 		AiModelFactory::MeshCreateInfo createInfo;
-		void draw(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) const;
+		void draw(Abstract::sRenderingEngine engine, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) const;
 		void attachTexture(TextureReference tex);
 		void detachTexture(TextureReference tex);
 		void attachShader(ShaderProgramReference progref);
@@ -46,7 +47,7 @@ public:
 	ModelProxy(const std::string& id);
 	ModelProxy(const std::string& id, const std::string& loadpath);
 
-	void draw(const glm::mat4& projection, const glm::mat4& view) const;
+	void draw(Abstract::sRenderingEngine engine, const glm::mat4& projection, const glm::mat4& view) const;
 	glm::mat4& getModelPosition();
 	void setModelPosition(glm::mat4& npos);
 	void attachTexture(const std::string& meshKey, TextureReference tex);

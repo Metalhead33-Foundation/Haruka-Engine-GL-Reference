@@ -3,10 +3,15 @@
 #include "../abstract/Texture.hpp"
 #include "glad_glx.h"
 #include "../abstract/FIO.hpp"
+#include <array>
 namespace Gl {
 
+DEFINE_CLASS(ShaderProgram)
+DEFINE_CLASS(Texture)
 class Texture : public Abstract::Texture
 {
+public:
+	friend class ShaderProgram;
 private:
 	GLuint textureID;
 	uint32_t width,height,linearSize,mipMapCount;
@@ -23,9 +28,11 @@ public:
 	uint32_t getMipMapCount() { return mipMapCount; }
 	const GLuint& getTextureId() const { return textureID; }
 	const textureType& getTextureType() const { return type; }
-
 	static const char* __stringizeType(textureType typus);
 	const char* stringizeType();
+	void bindTextureSide();
+
+	static const std::array<const char*,texture_MAX> TEX_TYPES;
 };
 
 }

@@ -20,18 +20,18 @@ ModelProxy::RenderMesh::RenderMesh(Abstract::sMesh nmesh)
 {
 	;
 }
-void ModelProxy::RenderMesh::draw(const glm::mat4 &projection, const glm::mat4 &view, const glm::mat4 &model) const
+void ModelProxy::RenderMesh::draw(Abstract::sRenderingEngine engine, const glm::mat4 &projection, const glm::mat4 &view, const glm::mat4 &model) const
 {
-	if(shader && mesh)
+	if(engine && (shader && mesh) )
 	{
-		mesh->draw(shader,textures,projection,view,model);
+		engine->renderMesh(mesh, shader, textures, projection, view, model);
 	}
 }
-void ModelProxy::draw(const glm::mat4 &projection, const glm::mat4 &view) const
+void ModelProxy::draw(Abstract::sRenderingEngine engine, const glm::mat4 &projection, const glm::mat4 &view) const
 {
 	for(auto it = meshes.begin(); it != meshes.end(); ++it)
 	{
-		it->second.draw(projection, view, modelPosition);
+		it->second.draw(engine, projection, view, modelPosition);
 	}
 }
 void ModelProxy::RenderMesh::attachTexture(TextureReference tex)
@@ -213,7 +213,7 @@ void ModelManager::draw(const glm::mat4& projection, const glm::mat4& view)
 	for(auto it = modmp.begin(); it != modmp.end(); ++it)
 	{
 		ReadReference<ModelProxy> model(it->second);
-		model->draw(projection, view);
+		model->draw(SYS->getEngine(), projection, view);
 	}
 	modmp.finish();
 }
