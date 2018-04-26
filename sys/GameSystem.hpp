@@ -71,7 +71,7 @@ private:
 public:
 	GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h, int samplerate,
 			   size_t audioBufferSize, const char* title, int intendedFramerate=60,
-			   int canvasLayers=8, uint32_t sampleCount=0, Abstract::sFIO frameVertShader=nullptr
+			   int canvasLayers=8, uint32_t sampleCount=0, uint32_t superSample=1, Abstract::sFIO frameVertShader=nullptr
 			, Abstract::sFIO frameFragShader=nullptr);
 	~GameSystem();
 	error_t update(STime& deltaTime);

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		Abstract::sFIO frag=nullptr, vert=nullptr;
 		frag = PhysFS::FileHandle::openRead("screen.fs");
 		vert = PhysFS::FileHandle::openRead("screen.vs");
-		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!",60,8,8,vert,frag);
+		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!",60,8,8,2,vert,frag);
 		std::thread trd(initialize, &sys);
 		sys.run();
 		trd.join();

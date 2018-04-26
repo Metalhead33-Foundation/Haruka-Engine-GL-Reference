@@ -8,9 +8,9 @@
 #include "GlMesh.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings, uint32_t sampleCount)
+Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings, uint32_t sampleCount, uint32_t supersampleCount)
 {
-	return Abstract::sRenderingEngine(new Gl::RenderingEngine(settings,sampleCount));
+	return Abstract::sRenderingEngine(new Gl::RenderingEngine(settings,sampleCount,supersampleCount));
 }
 
 
@@ -95,7 +95,7 @@ GLint RenderingEngine::CONTEXT_ATTRIBUTES[] = {
 	None
 };
 
-RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount)
+RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings, uint32_t sampleCount, uint32_t supersampleCount)
 	: settings(nsettings), twoDProjection(false)
 {
 	if (!gladLoadGLX(settings->sysWMinfo->info.x11.display,DefaultScreen(settings->sysWMinfo->info.x11.display))) throw std::runtime_error("Couldn't load GLX!!");
@@ -124,7 +124,7 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t 
 	glViewport(0,0,settings->w, settings->h);
 	QUAD_WID = sQuad(new Quad(false));
 	QUAD_SCR = sQuad(new Quad(true));
-	framebuffer = Framebuffer::create(uint32_t(settings->w), uint32_t(settings->h),sampleCount);
+	framebuffer = Framebuffer::create(uint32_t(settings->w)*supersampleCount, uint32_t(settings->h)*supersampleCount,sampleCount);
 }
 void RenderingEngine::setViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
 {

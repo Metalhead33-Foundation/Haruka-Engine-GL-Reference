@@ -28,7 +28,7 @@ private:
 	bool twoDProjection;
 	static sQuad QUAD_WID, QUAD_SCR;
 public:
-	RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount);
+	RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount, uint32_t supersampleCount);
 	~RenderingEngine();
 	void switchBuffers();
 	void clearDepthBuffer();
@@ -57,6 +57,6 @@ public:
 }
 
 extern "C" {
-Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings,uint32_t sampleCount);
+Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings,uint32_t sampleCount, uint32_t supersampleCount);
 }
 #endif // RENDERWINDOW_HPP

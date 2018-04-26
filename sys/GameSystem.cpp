@@ -9,10 +9,10 @@
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h,
 					   int samplerate, size_t audioBufferSize, const char *title,
-					   int intendedFramerate, int canvasLayers, uint32_t sampleCount, Abstract::sFIO frameVertShader, Abstract::sFIO frameFragShader)
+					   int intendedFramerate, int canvasLayers, uint32_t sampleCount, uint32_t superSample, Abstract::sFIO frameVertShader, Abstract::sFIO frameFragShader)
 	: MainSystem(w, h, title,intendedFramerate),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
-	  engine(engineCreator(window,sampleCount)),
+	  engine(engineCreator(window,sampleCount,superSample)),
 	  modelImporter(new AssimpPhysFS()), widgetManager(canvasLayers), frameRenderer(nullptr)
 {
 	ResourceManager::SYS = this;
@@ -56,7 +56,8 @@ GameSystem::error_t GameSystem::render()
 	if(frameRenderer)
 	{
 		engine->getFramebuffer()->bind();
-		engine->setViewport(0,0,window->w,window->h);
+		engine->setViewport(0,0,engine->getFramebuffer()->getWidth(),
+							engine->getFramebuffer()->getHeight());
 	}
 	engine->clearBackground(255,0,0);
 	modelManager.draw(projectionMatrix, viewMatrix);
@@ -65,6 +66,7 @@ GameSystem::error_t GameSystem::render()
 	if(frameRenderer)
 	{
 		engine->getFramebuffer()->resolveMultisample();
+		engine->setViewport(0,0,window->w,window->h);
 		engine->clearBackground(0,255,255);
 		engine->renderFramebuffer(frameRenderer);
 	}
