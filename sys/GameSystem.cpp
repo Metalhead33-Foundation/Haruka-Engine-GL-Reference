@@ -53,15 +53,19 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 GameSystem::error_t GameSystem::render()
 {
 	// engine->renderFrame();
-	if(frameRenderer) engine->getFramebuffer()->bind();
-	engine->clearBackground();
+	if(frameRenderer)
+	{
+		engine->getFramebuffer()->bind();
+		engine->setViewport(0,0,window->w,window->h);
+	}
+	engine->clearBackground(255,0,0);
 	modelManager.draw(projectionMatrix, viewMatrix);
 	engine->clearDepthBuffer();
 	widgetManager.draw(screenProjection);
 	if(frameRenderer)
 	{
 		engine->getFramebuffer()->unbind();
-		engine->clearBackground();
+		engine->clearBackground(0,255,255);
 		engine->renderFramebuffer(frameRenderer);
 	}
 	engine->switchBuffers();

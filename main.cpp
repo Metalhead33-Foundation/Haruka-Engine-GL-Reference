@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 	PhysFS::FileHandle::addToSearchPath("/home/metalhead33/printr/other","/",true);
 	if(loadAL())
 	{
-		Abstract::sFIO frag, vert;
+		Abstract::sFIO frag=nullptr, vert=nullptr;
 		frag = PhysFS::FileHandle::openRead("screen.fs");
 		vert = PhysFS::FileHandle::openRead("screen.vs");
 		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!",60,8,0,vert,frag);

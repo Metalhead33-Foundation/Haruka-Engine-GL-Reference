@@ -13,6 +13,7 @@ private:
 	GLuint tex;
 	const uint32_t width, height, samples;
 	Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
+	sFramebuffer blitter;
 public:
 	static Abstract::sFramebuffer create(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
 	~Framebuffer();

@@ -14,7 +14,7 @@ public:
 	{
 		GLuint quadArrayId;
 		GLuint quadBufferId;
-		Quad();
+		Quad(bool framebuff=false);
 		~Quad();
 		void draw();
 	};
@@ -26,14 +26,16 @@ private:
 	Abstract::sFramebuffer framebuffer;
 
 	bool twoDProjection;
-	static sQuad QUAD;
+	static sQuad QUAD_WID, QUAD_SCR;
 public:
 	RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount);
 	~RenderingEngine();
 	void switchBuffers();
 	void clearDepthBuffer();
 	void clearBackground();
-	static GLint att[];
+	void clearBackground(unsigned char r, unsigned char g, unsigned char b);
+	static GLint VISUAL_ATTRIBUTES[];
+	static GLint CONTEXT_ATTRIBUTES[];
 	Abstract::sShaderModule createShaderModule(Abstract::ShaderModule::ShaderType ntype, Abstract::sFIO reada);
 	Abstract::sShaderProgram createShaderProgram();
 	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
@@ -45,6 +47,7 @@ public:
 	Abstract::sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
 	void renderFramebuffer(const Abstract::sShaderProgram shader);
 	Abstract::sFramebuffer getFramebuffer();
+	void setViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 
 	void renderFrame();
 	void startup();

@@ -11,7 +11,7 @@ Abstract::sFramebuffer Framebuffer::create(uint32_t nwidth, uint32_t nheight, ui
 
 Framebuffer::Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples)
 	: width(nwidth), height(nheight),
-	  samples(nsamples)
+	  samples(nsamples), blitter(nullptr)
 {
 	glGenFramebuffers(1, &buffID);
 	glGenRenderbuffers(1, &renderBuffer);
@@ -20,11 +20,13 @@ Framebuffer::Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples)
 	if(samples) {
 		glBindTexture( GL_TEXTURE_2D_MULTISAMPLE, tex);
 		glTexImage2DMultisample( GL_TEXTURE_2D_MULTISAMPLE, GLsizei(samples), GL_RGB, GLsizei(width),
-								 GLsizei(height), false );
+								 GLsizei(height), GL_TRUE );
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 		// glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		// glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, tex, 0);
-		// glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, GLsizei(samples), GL_DEPTH24_STENCIL8, GLsizei(width), GLsizei(height));
 	} else
 	{
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -32,15 +34,19 @@ Framebuffer::Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples)
 					 GL_UNSIGNED_BYTE, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
-		// glBindTexture(GL_TEXTURE_2D, 0);
+		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, GLsizei(width), GLsizei(height));
 	}
-	glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, GLsizei(width), GLsizei(height));
-	// glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) throw std::runtime_error("Error creating the framebuffer!");
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	if(samples)
+	{
+		blitter = sFramebuffer(new Framebuffer(nwidth, nheight, 0));
+	}
 }
 Framebuffer::~Framebuffer()
 {
@@ -103,9 +109,23 @@ const char* Framebuffer::stringizeType()
 }
 void Framebuffer::bindTextureSide()
 {
-	glActiveTexture(tex); // active proper texture unit before binding
-	if(samples) glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex);
-	else glBindTexture(GL_TEXTURE_2D, tex);
+	if(blitter)
+	{
+		blit(blitter);
+		glActiveTexture(blitter->tex);
+		glBindTexture(GL_TEXTURE_2D, blitter->tex);
+	}
+	else
+	{
+		glActiveTexture(tex); // active proper texture unit before binding
+		if(samples)
+		{
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex);
+		}
+		else {
+			glBindTexture(GL_TEXTURE_2D, tex);
+		}
+	}
 }
 
 }
