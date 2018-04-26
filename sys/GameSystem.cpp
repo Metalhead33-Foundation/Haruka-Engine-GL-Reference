@@ -9,15 +9,22 @@
 
 GameSystem::GameSystem(RenderingBackendFactoryFunction engineCreator, int w, int h,
 					   int samplerate, size_t audioBufferSize, const char *title,
-					   int intendedFramerate, int canvasLayers, uint32_t sampleCount)
+					   int intendedFramerate, int canvasLayers, uint32_t sampleCount, Abstract::sFIO frameVertShader, Abstract::sFIO frameFragShader)
 	: MainSystem(w, h, title,intendedFramerate),
 	  soundsys(Audio::sSystem(new Audio::System(samplerate, audioBufferSize))),
-	  engine(engineCreator(window)),
-	  modelImporter(new AssimpPhysFS()), widgetManager(canvasLayers)
+	  engine(engineCreator(window,sampleCount)),
+	  modelImporter(new AssimpPhysFS()), widgetManager(canvasLayers), frameRenderer(nullptr)
 {
 	ResourceManager::SYS = this;
 	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
-	framebuffer = engine->createFramebuffer(uint32_t(w),uint32_t(h),sampleCount);
+	if(frameVertShader && frameFragShader) {
+	Abstract::sShaderModule vert = engine->createShaderModule(Abstract::ShaderModule::VERTEX_SHADER,frameVertShader);
+	Abstract::sShaderModule frag = engine->createShaderModule(Abstract::ShaderModule::FRAGMENT_SHADER,frameFragShader);
+	frameRenderer = engine->createShaderProgram();
+	frameRenderer->pushModule(frag);
+	frameRenderer->pushModule(vert);
+	frameRenderer->linkShaders();
+	}
 }
 GameSystem::~GameSystem()
 {
@@ -45,17 +52,17 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 }
 GameSystem::error_t GameSystem::render()
 {
-	engine->clearBackground();
 	// engine->renderFrame();
-	if(framebuffer) framebuffer->bind();
+	if(frameRenderer) engine->getFramebuffer()->bind();
 	engine->clearBackground();
 	modelManager.draw(projectionMatrix, viewMatrix);
 	engine->clearDepthBuffer();
 	widgetManager.draw(screenProjection);
-	if(framebuffer)
+	if(frameRenderer)
 	{
-		framebuffer->unbind();
-		framebuffer->blit();
+		engine->getFramebuffer()->unbind();
+		engine->clearBackground();
+		engine->renderFramebuffer(frameRenderer);
 	}
 	engine->switchBuffers();
 	return SYSTEM_OKAY;

@@ -36,7 +36,9 @@ public:
 	virtual void clearBackground() = 0;
 	virtual void renderWidget(const WidgetProperties& widget, glm::mat4& projection, sShaderProgram shader) = 0;
 	virtual void renderMesh(const sMesh mesh, const sShaderProgram shader, const Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) = 0;
+	virtual void renderFramebuffer(const sShaderProgram shader) = 0;
 	virtual sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0) = 0;
+	virtual sFramebuffer getFramebuffer() = 0;
 
 	virtual MeshCreator getMeshCreator() const = 0;
 
@@ -47,7 +49,7 @@ public:
 
 }
 extern "C" {
-typedef Abstract::sRenderingEngine (*RenderingBackendFactoryFunction)(Abstract::sSettingContainer);
+typedef Abstract::sRenderingEngine (*RenderingBackendFactoryFunction)(Abstract::sSettingContainer,uint32_t);
 }
 
 #endif // RENDERINGENGINE_HPP

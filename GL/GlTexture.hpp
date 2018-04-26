@@ -29,7 +29,7 @@ public:
 	uint32_t getLinearSize() { return linearSize; }
 	uint32_t getMipMapCount() { return mipMapCount; }
 	const GLuint& getTextureId() const { return textureID; }
-	const textureType& getTextureType() const { return type; }
+	textureType getTextureType() const { return type; }
 	static const char* __stringizeType(textureType typus);
 	const char* stringizeType();
 	void bindTextureSide();

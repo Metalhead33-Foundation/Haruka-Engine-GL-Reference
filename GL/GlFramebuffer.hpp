@@ -10,9 +10,8 @@ class Framebuffer : public Abstract::Framebuffer
 private:
 	GLuint buffID;
 	GLuint renderBuffer;
-	sTexture tex;
-	uint32_t width, height, samples;
-	const bool isMultisampled;
+	GLuint tex;
+	const uint32_t width, height, samples;
 	Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
 public:
 	static Abstract::sFramebuffer create(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
@@ -23,6 +22,11 @@ public:
 	uint32_t getWidth();
 	uint32_t getHeight();
 	uint32_t getSampleCount();
+	uint32_t getLinearSize();
+	uint32_t getMipMapCount();
+	textureType getTextureType() const;
+	const char* stringizeType();
+	void bindTextureSide();
 };
 
 }

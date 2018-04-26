@@ -8,9 +8,9 @@
 #include "GlMesh.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings)
+Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings, uint32_t sampleCount)
 {
-	return Abstract::sRenderingEngine(new Gl::RenderingEngine(settings));
+	return Abstract::sRenderingEngine(new Gl::RenderingEngine(settings,sampleCount));
 }
 
 
@@ -21,13 +21,13 @@ RenderingEngine::Quad::Quad()
 {
 	GLfloat vertices[] = {
 		// Pos      // Tex
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 0.0f,
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
 
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
 	};
 
 	glGenVertexArrays(1, &quadArrayId);
@@ -67,7 +67,7 @@ GLint RenderingEngine::att[] = { GLX_RGBA,
 								 GLX_DOUBLEBUFFER,
 								 None };
 
-RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
+RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount)
 	: settings(nsettings), twoDProjection(false)
 {
 	if (!gladLoadGLX(settings->sysWMinfo->info.x11.display,DefaultScreen(settings->sysWMinfo->info.x11.display))) throw std::runtime_error("Couldn't load GLX!!");
@@ -86,6 +86,7 @@ RenderingEngine::RenderingEngine(Abstract::sSettingContainer nsettings)
 	if (!gladLoadGL()) throw std::runtime_error("Couldn't load OpenGL!");
 	glEnable(GL_MULTISAMPLE);
 	QUAD = sQuad(new Quad());
+	framebuffer = Framebuffer::create(uint32_t(settings->w), uint32_t(settings->w),sampleCount);
 }
 void RenderingEngine::renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
 {
@@ -100,6 +101,16 @@ void RenderingEngine::renderMesh(const Abstract::sMesh mesh, const Abstract::sSh
 			shader->bindTexture(*it);
 		}
 		mesh->bind();
+		glActiveTexture(GL_TEXTURE0);
+	}
+}
+void RenderingEngine::renderFramebuffer(const Abstract::sShaderProgram shader)
+{
+	if(shader)
+	{
+		shader->useShader();
+		shader->bindTexture(framebuffer);
+		QUAD->draw();
 		glActiveTexture(GL_TEXTURE0);
 	}
 }
@@ -193,6 +204,10 @@ Abstract::sTexture RenderingEngine::createTextureFromDDS(Abstract::Texture::text
 Abstract::sTexture RenderingEngine::createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
 {
 	return Texture::createFromImage(ntype, reada);
+}
+Abstract::sFramebuffer RenderingEngine::getFramebuffer()
+{
+	return framebuffer;
 }
 
 }

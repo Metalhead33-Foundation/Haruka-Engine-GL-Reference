@@ -23,11 +23,12 @@ private:
 	const Abstract::sSettingContainer settings;
 	XVisualInfo* vi;
 	GLXContext cnt;
+	Abstract::sFramebuffer framebuffer;
 
 	bool twoDProjection;
 	static sQuad QUAD;
 public:
-	RenderingEngine(Abstract::sSettingContainer nsettings);
+	RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount);
 	~RenderingEngine();
 	void switchBuffers();
 	void clearDepthBuffer();
@@ -42,6 +43,8 @@ public:
 	MeshCreator getMeshCreator() const;
 	void renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 	Abstract::sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
+	void renderFramebuffer(const Abstract::sShaderProgram shader);
+	Abstract::sFramebuffer getFramebuffer();
 
 	void renderFrame();
 	void startup();
@@ -51,6 +54,6 @@ public:
 }
 
 extern "C" {
-Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings);
+Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings,uint32_t sampleCount);
 }
 #endif // RENDERWINDOW_HPP

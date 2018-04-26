@@ -3,7 +3,7 @@
 #include "Texture.hpp"
 namespace Abstract {
 
-class Framebuffer
+class Framebuffer : public Texture
 {
 public:
 	virtual ~Framebuffer() = default;

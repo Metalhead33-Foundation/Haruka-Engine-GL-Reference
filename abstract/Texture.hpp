@@ -25,7 +25,7 @@ public:
 		texture_height,
 		texture_MAX
 	};
-	virtual const textureType& getTextureType() const = 0;
+	virtual textureType getTextureType() const = 0;
 	virtual const char* stringizeType() = 0;
 	virtual void bindTextureSide() = 0;
 
