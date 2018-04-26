@@ -64,7 +64,7 @@ GameSystem::error_t GameSystem::render()
 	widgetManager.draw(screenProjection);
 	if(frameRenderer)
 	{
-		engine->getFramebuffer()->unbind();
+		engine->getFramebuffer()->resolveMultisample();
 		engine->clearBackground(0,255,255);
 		engine->renderFramebuffer(frameRenderer);
 	}

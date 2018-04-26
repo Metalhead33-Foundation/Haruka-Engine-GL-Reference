@@ -28,6 +28,7 @@ public:
 	textureType getTextureType() const;
 	const char* stringizeType();
 	void bindTextureSide();
+	void resolveMultisample();
 };
 
 }

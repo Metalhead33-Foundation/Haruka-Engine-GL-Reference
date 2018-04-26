@@ -80,16 +80,26 @@ uint32_t Framebuffer::getSampleCount()
 }
 void Framebuffer::blit(Abstract::sFramebuffer buff)
 {
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, buffID);
 	pFramebuffer nbuff = dynamic_cast<pFramebuffer>(buff.get());
 	if(nbuff)
 	{
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, nbuff->buffID);
 	}
-	else glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, buffID);
-	glDrawBuffer(GL_BACK);
+	else {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glDrawBuffer(GL_FRONT_AND_BACK);
+	}
 	glBlitFramebuffer(0, 0, GLint(width), GLint(height), 0, 0,
 					  GLint(width), GLint(height), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	// if(glGetError() != GL_NO_ERROR)
+	//	throw std::runtime_error("Error during blitting!");
+}
+void Framebuffer::resolveMultisample()
+{
+	if(blitter) blit(blitter);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glDisable(GL_DEPTH_TEST);
 }
 uint32_t Framebuffer::getLinearSize()
 {
@@ -111,7 +121,6 @@ void Framebuffer::bindTextureSide()
 {
 	if(blitter)
 	{
-		blit(blitter);
 		glActiveTexture(blitter->tex);
 		glBindTexture(GL_TEXTURE_2D, blitter->tex);
 	}
