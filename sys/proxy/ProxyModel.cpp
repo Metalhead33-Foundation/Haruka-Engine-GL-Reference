@@ -41,6 +41,11 @@ void ModelProxy::RenderMesh::attachTexture(TextureReference tex)
 	std::cout << "[MODELS/TEXTURES] Attached texture \"" << texture->getId() << "\" ("
 			  << texture->getTexture().get() << ") to mesh." << std::endl;
 }
+void ModelProxy::RenderMesh::attachTexture(AnimatedTextureReference tex)
+{
+	ReadReference<AnimatedTextureProxy> texture(tex);
+	textures.push_back(texture->getTexture());
+}
 void ModelProxy::RenderMesh::detachTexture(TextureReference tex)
 {
 	ReadReference<TextureProxy> texture(tex);
@@ -114,6 +119,19 @@ glm::mat4& ModelProxy::getModelPosition()
 void ModelProxy::setModelPosition(glm::mat4& npos)
 {
 	modelPosition = npos;
+}
+void ModelProxy::attachTexture(const std::string& meshKey, AnimatedTextureReference tex)
+{
+	auto it = meshes.find(meshKey);
+	if(it != meshes.end())
+	{
+		it->second.attachTexture(tex);
+	}
+	else
+	{
+		auto bah = meshes.emplace(meshKey, nullptr);
+		if(bah.second) bah.first->second.attachTexture(tex);
+	}
 }
 void ModelProxy::attachTexture(const std::string& meshKey, TextureReference tex)
 {

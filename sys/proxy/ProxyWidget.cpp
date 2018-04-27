@@ -68,6 +68,13 @@ void WidgetProxy::setTexture(TextureReference text)
 			  << texture->getTexture().get() << ") to the widget \"" << Id << "\"." << std::endl;
 	properties.texture = texture->getTexture();
 }
+void WidgetProxy::setTexture(AnimatedTextureReference text)
+{
+	ReadReference<AnimatedTextureProxy> texture(text);
+	std::cout << "[WIDGETS/TEXTURES] Attaching the animated textuer \"" << texture->getId() << "\" ("
+			  << texture->getTexture().get() << ") to the widget \"" << Id << "\"." << std::endl;
+	properties.texture = texture->getTexture();
+}
 const glm::vec2 &WidgetProxy::getSize() const
 {
 	return properties.size;

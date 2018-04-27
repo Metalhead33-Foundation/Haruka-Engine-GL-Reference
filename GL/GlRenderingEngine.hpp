@@ -40,6 +40,7 @@ public:
 	Abstract::sShaderProgram createShaderProgram();
 	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
+	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
 	void renderWidget(const Abstract::WidgetProperties& widget, glm::mat4& projection, Abstract::sShaderProgram shader);
 	MeshCreator getMeshCreator() const;

@@ -3,8 +3,8 @@ CONFIG += console c++14
 CONFIG -= app_bundle
 # QMAKE_CXXFLAGS_DEBUG += -Werror
 
-CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
-CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -pthread
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lgif -pthread
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lgif -pthread
 
 SOURCES += main.cpp \
     GL/GlShaderModule.cpp \
@@ -75,7 +75,10 @@ SOURCES += main.cpp \
     sys/fxproxy/LowpassFilterProxy.cpp \
     sys/proxy/AuxiliaryEffectProxy.cpp \
     sys/proxy/ProxyAudioSource.cpp \
-    GL/GlFramebuffer.cpp
+    GL/GlFramebuffer.cpp \
+    GL/GlAnimatedTexture.cpp \
+    io/GifIO.cpp \
+    sys/proxy/ProxyAnimatedTexture.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -169,4 +172,8 @@ HEADERS += \
     sys/proxy/AuxiliaryEffectProxy.hpp \
     sys/proxy/ProxyAudioSource.hpp \
     GL/GlFramebuffer.hpp \
-    abstract/Framebuffer.hpp
+    abstract/Framebuffer.hpp \
+    abstract/AnimatedTexture.hpp \
+    GL/GlAnimatedTexture.hpp \
+    io/GifIO.hpp \
+    sys/proxy/ProxyAnimatedTexture.hpp

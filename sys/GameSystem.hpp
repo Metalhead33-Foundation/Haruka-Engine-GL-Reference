@@ -16,6 +16,7 @@
 #include "proxy/ProxyShaderModule.hpp"
 #include "proxy/ProxyShaderProgram.hpp"
 #include "proxy/ProxyTexture.hpp"
+#include "proxy/ProxyAnimatedTexture.hpp"
 #include "proxy/ProxyModel.hpp"
 #include "proxy/ProxyWidget.hpp"
 #include "proxy/ProxyAudioBuffer.hpp"
@@ -47,6 +48,7 @@ private:
 	ShaderModuleManager moduleManager;
 	ShaderProgramManager programManager;
 	TextureManager textureManager;
+	AnimatedTextureManager animatedTextureManager;
 	ModelManager modelManager;
 	WidgetManager widgetManager;
 	BufferManager bufferManager;
@@ -90,6 +92,7 @@ public:
 	ShaderModuleReference queryShaderModule(const ShaderModuleProxy& proxy);
 	ShaderProgramReference queryShaderProgram(const ShaderProgramProxy& proxy);
 	TextureReference queryTexture(const TextureProxy& proxy);
+	AnimatedTextureReference queryAnimatedTexture(const AnimatedTextureProxy& proxy);
 	WidgetReference queryWidget(const WidgetProxy& proxy);
 	BufferReference queryBuffer(const BufferProxy& key);
 	SourceReference querySource(const SourceProxy& key);
@@ -99,6 +102,7 @@ public:
 	ShaderModuleReference queryShaderModule(const std::string& key);
 	ShaderProgramReference queryShaderProgram(const std::string& key);
 	TextureReference queryTexture(const std::string& key);
+	AnimatedTextureReference queryAnimatedTexture(const std::string& key);
 	WidgetReference queryWidget(const std::string& key);
 	BufferReference queryBuffer(const std::string& key);
 	SourceReference querySource(const std::string& key);
@@ -108,6 +112,7 @@ public:
 	ShaderModuleReference commitShaderModule(const ShaderModuleProxy& proxy);
 	ShaderProgramReference commitShaderProgram(const ShaderProgramProxy& proxy);
 	TextureReference commitTexture(const TextureProxy& proxy);
+	AnimatedTextureReference commitAnimatedTexture(const AnimatedTextureProxy& proxy);
 	WidgetReference commitWidget(const WidgetProxy& proxy);
 	BufferReference commitBuffer(const BufferProxy& proxy);
 	SourceReference commitSource(const SourceProxy& key);

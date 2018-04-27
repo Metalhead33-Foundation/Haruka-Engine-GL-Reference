@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		Abstract::sFIO frag=nullptr, vert=nullptr;
 		frag = PhysFS::FileHandle::openRead("screen.fs");
 		vert = PhysFS::FileHandle::openRead("screen.vs");
-		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!",60,8,8,2,vert,frag);
+		GameSystem sys(createGlEngine,1440,900,48000,32000,"Hello Worold!",60,8,0,1,vert,frag);
 		std::thread trd(initialize, &sys);
 		sys.run();
 		trd.join();
@@ -75,16 +75,25 @@ void loadWidgets(pGameSystem sys)
 	WidgetProxy amerimutt("amerimutt",0);
 	amerimutt.setPos(glm::vec2(50,50));
 	amerimutt.setShader(sys->queryShaderProgram("widget"));
-	if(amerimutt.getShader() == nullptr) std::cout << "Invalid shader!" << std::endl;
 	amerimutt.setTexture(sys->queryTexture("amerimutt"));
 	amerimutt.defaultSize();
 	amerimutt.snapToWidth(300.0f);
 	sys->commitWidget(amerimutt);
+	WidgetProxy laluz("La Luz Extinguido",0);
+	laluz.setPos(glm::vec2(50,700));
+	laluz.setShader(sys->queryShaderProgram("widget"));
+	laluz.setTexture(sys->queryTexture("La Luz Extinguido"));
+	laluz.defaultSize();
+	sys->commitWidget(laluz);
 	std::cout << "[WIDGETS] Widgets loaded!" << std::endl;
 }
 void loadTextures(pGameSystem sys)
 {
 	std::cout << "[TEXTURES] Loading textures!" << std::endl;
+	AnimatedTextureProxy laluz("La Luz Extinguido", Abstract::Texture::texture_diffuse,"2tx5.gif");
+	laluz.setFrameSwitchRate(1.0f / 15.0f);
+	sys->commitAnimatedTexture(laluz);
+	std::cout << "[TEXTURES] Loading La Luz Extinguido!!" << std::endl;
 	std::vector<TextureProxy> textures;
 	textures.push_back(TextureProxy("vasa",Abstract::Texture::texture_diffuse, "lizardman_kochog1.jpg"));
 	textures.push_back(TextureProxy("amerimutt",Abstract::Texture::texture_diffuse, "200px-Le_56_Face.png"));
@@ -92,7 +101,7 @@ void loadTextures(pGameSystem sys)
 	{
 		sys->commitTexture(*it);
 	}
-	STime waiter = STime::asSeconds(0.2);
+	STime waiter = STime::asSeconds(1.0);
 	waiter.sleep();
 	std::cout << "[TEXTURES] Textures loaded!" << std::endl;
 }

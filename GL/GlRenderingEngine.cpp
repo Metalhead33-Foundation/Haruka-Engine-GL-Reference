@@ -4,6 +4,7 @@
 #include "GlShaderModule.hpp"
 #include "GlShaderProgram.hpp"
 #include "GlTexture.hpp"
+#include "GlAnimatedTexture.hpp"
 #include "GlFramebuffer.hpp"
 #include "GlMesh.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -252,6 +253,10 @@ Abstract::sTexture RenderingEngine::createTextureFromDDS(Abstract::Texture::text
 Abstract::sTexture RenderingEngine::createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
 {
 	return Texture::createFromImage(ntype, reada);
+}
+Abstract::sAnimatedTexture RenderingEngine::createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
+{
+	return AnimatedTexture::create(ntype, reada);
 }
 Abstract::sFramebuffer RenderingEngine::getFramebuffer()
 {

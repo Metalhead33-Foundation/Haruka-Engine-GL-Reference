@@ -22,8 +22,8 @@ Framebuffer::Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples)
 		glTexImage2DMultisample( GL_TEXTURE_2D_MULTISAMPLE, GLsizei(samples), GL_RGB, GLsizei(width),
 								 GLsizei(height), GL_TRUE );
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-		// glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		// glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		// glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		// glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, tex, 0);
 		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, GLsizei(samples), GL_DEPTH24_STENCIL8, GLsizei(width), GLsizei(height));
@@ -32,8 +32,8 @@ Framebuffer::Framebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples)
 		glBindTexture(GL_TEXTURE_2D, tex);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GLsizei(width), GLsizei(height), 0, GL_RGB,
 					 GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
@@ -91,7 +91,7 @@ void Framebuffer::blit(Abstract::sFramebuffer buff)
 		glDrawBuffer(GL_FRONT_AND_BACK);
 	}
 	glBlitFramebuffer(0, 0, GLint(width), GLint(height), 0, 0,
-					  GLint(width), GLint(height), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+					  GLint(width), GLint(height), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 	// if(glGetError() != GL_NO_ERROR)
 	//	throw std::runtime_error("Error during blitting!");
 }

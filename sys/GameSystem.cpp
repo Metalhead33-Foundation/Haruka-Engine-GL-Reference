@@ -38,6 +38,7 @@ GameSystem::error_t GameSystem::update(STime& deltaTime)
 	camera.ProcessMouseMovement(float(mouseX),float(mouseY * -1),false);
 	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
 	viewMatrix = camera.GetViewMatrix();
+	animatedTextureManager.updateTextures(deltaTime);
 	std::unique_lock<std::mutex> queue(commandMutex);
 	while(!commandQueue.empty())
 	{
@@ -414,6 +415,18 @@ HighpassFilterReference GameSystem::commitHighpassFilter(const HighpassFilterPro
 LowpassFilterReference GameSystem::commitLowpassFilter(const LowpassFilterProxy& proxy)
 {
 	return lowpassManager.commit(proxy);
+}
+AnimatedTextureReference GameSystem::queryAnimatedTexture(const AnimatedTextureProxy& proxy)
+{
+	return animatedTextureManager.query(proxy);
+}
+AnimatedTextureReference GameSystem::queryAnimatedTexture(const std::string& key)
+{
+	return animatedTextureManager.query(key);
+}
+AnimatedTextureReference GameSystem::commitAnimatedTexture(const AnimatedTextureProxy& proxy)
+{
+	return animatedTextureManager.commit(proxy);
 }
 
 void GameSystem::wait()

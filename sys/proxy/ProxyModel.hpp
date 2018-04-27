@@ -2,6 +2,7 @@
 #define PROXYMODEL_HPP
 #include "ProxyShaderProgram.hpp"
 #include "ProxyTexture.hpp"
+#include "ProxyAnimatedTexture.hpp"
 #include "../../abstract/Mesh.hpp"
 #include "../../abstract/RenderingEngine.hpp"
 #include "../../io/AiModelFactory.hpp"
@@ -24,6 +25,7 @@ public:
 		AiModelFactory::MeshCreateInfo createInfo;
 		void draw(Abstract::sRenderingEngine engine, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) const;
 		void attachTexture(TextureReference tex);
+		void attachTexture(AnimatedTextureReference tex);
 		void detachTexture(TextureReference tex);
 		void attachShader(ShaderProgramReference progref);
 		void detachShader();
@@ -51,6 +53,7 @@ public:
 	glm::mat4& getModelPosition();
 	void setModelPosition(glm::mat4& npos);
 	void attachTexture(const std::string& meshKey, TextureReference tex);
+	void attachTexture(const std::string& meshKey, AnimatedTextureReference tex);
 	void detachTexture(const std::string& meshKey, TextureReference tex);
 	void attachShader(const std::string& meshKey, ShaderProgramReference progref);
 	void detachShader(const std::string& meshKey);

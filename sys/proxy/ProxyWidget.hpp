@@ -2,6 +2,7 @@
 #define PROXYWIDGET_HPP
 #include "ProxyShaderProgram.hpp"
 #include "ProxyTexture.hpp"
+#include "ProxyAnimatedTexture.hpp"
 #include "../../abstract/RenderingEngine.hpp"
 
 DEFINE_CLASS(WidgetProxy)
@@ -23,6 +24,7 @@ public:
 	void setShader(ShaderProgramReference shadr);
 	const Abstract::sTexture getTexture() const;
 	void setTexture(TextureReference text);
+	void setTexture(AnimatedTextureReference text);
 	const glm::vec2& getSize() const;
 	void setSize(const glm::vec2& setto);
 	const glm::vec2& getPos() const;
