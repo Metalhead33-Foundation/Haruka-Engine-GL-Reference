@@ -34,8 +34,11 @@ GameSystem::~GameSystem()
 GameSystem::error_t GameSystem::update(STime& deltaTime)
 {
 	soundsys->processStreamedAudio();
-	SDL_GetRelativeMouseState(&mouseX, &mouseY);
-	camera.ProcessMouseMovement(float(mouseX),float(mouseY * -1),false);
+	SDL_GetMouseState(&mouseX, &mouseY);
+	SDL_WarpMouseInWindow(NULL,400,400);
+	// SDL_GetRelativeMouseState(&mouseX, &mouseY);
+	camera.ProcessMouseMovement(float(mouseX - 400),float((mouseY - 400) * -1),false);
+	// SDL_GetRelativeMouseState(&mouseX, &mouseY);
 	projectionMatrix = glm::perspective(glm::radians(camera.getZoom()), float(window->w) / float(window->h), 0.1f, 100.0f);
 	viewMatrix = camera.GetViewMatrix();
 	animatedTextureManager.updateTextures(deltaTime);
