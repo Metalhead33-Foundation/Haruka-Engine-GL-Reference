@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 	PhysFS::FileHandle::addToSearchPath("/home/legacy/zene/Jmusic/","/",true);
 	PhysFS::FileHandle::addToSearchPath("/home/metalhead33/printr/other","/",true);
+	PhysFS::FileHandle::addToSearchPath("/home/legacy/fonts/Anient/1/aoi_ren/1/2","/",true);
 	if(loadAL())
 	{
 		Abstract::sFIO frag=nullptr, vert=nullptr;
@@ -91,9 +92,9 @@ void loadTextures(pGameSystem sys)
 {
 	std::cout << "[TEXTURES] Loading textures!" << std::endl;
 	AnimatedTextureProxy laluz("La Luz Extinguido", Abstract::Texture::texture_diffuse,"2tx5.gif");
+	// AnimatedTextureProxy laluz("La Luz Extinguido", Abstract::Texture::texture_diffuse,"25.gif");
 	laluz.setFrameSwitchRate(1.0f / 15.0f);
 	sys->commitAnimatedTexture(laluz);
-	std::cout << "[TEXTURES] Loading La Luz Extinguido!!" << std::endl;
 	std::vector<TextureProxy> textures;
 	textures.push_back(TextureProxy("vasa",Abstract::Texture::texture_diffuse, "lizardman_kochog1.jpg"));
 	textures.push_back(TextureProxy("amerimutt",Abstract::Texture::texture_diffuse, "200px-Le_56_Face.png"));

@@ -80,9 +80,9 @@ void GifIO::resolveGif(ImageCollection& coll)
 			}
 			else coll.images.at(i).at(x) = 255;
 			coll.images[i][x] = coll.images[i][x] << 8;
-			coll.images[i][x] += gifpalette[img->RasterBits[x]].Blue;
-			coll.images[i][x] = coll.images[i][x] << 8;
 			coll.images[i][x] += gifpalette[img->RasterBits[x]].Green;
+			coll.images[i][x] = coll.images[i][x] << 8;
+			coll.images[i][x] += gifpalette[img->RasterBits[x]].Blue;
 			coll.images[i][x] = coll.images[i][x] << 8;
 			coll.images[i][x] += gifpalette[img->RasterBits[x]].Red;
 			}
