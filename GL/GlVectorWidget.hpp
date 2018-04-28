@@ -8,7 +8,7 @@
 namespace Gl {
 
 DEFINE_CLASS(VectorWidget)
-class VectorWidget : public Abstract::VecorWidget
+class VectorWidget : public Abstract::VectorWidget
 {
 public:
 	struct RenderableVector
