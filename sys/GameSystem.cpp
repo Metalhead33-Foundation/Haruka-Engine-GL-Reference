@@ -60,7 +60,7 @@ GameSystem::error_t GameSystem::render()
 		engine->setViewport(0,0,engine->getFramebuffer()->getWidth(),
 							engine->getFramebuffer()->getHeight());
 	}
-	engine->clearBackground(255,0,0);
+	engine->clearBackground(0,0,0);
 	modelManager.draw(projectionMatrix, viewMatrix);
 	engine->clearDepthBuffer();
 	widgetManager.draw(screenProjection);
@@ -68,7 +68,7 @@ GameSystem::error_t GameSystem::render()
 	{
 		engine->getFramebuffer()->resolveMultisample();
 		engine->setViewport(0,0,window->w,window->h);
-		engine->clearBackground(0,255,255);
+		engine->clearBackground(0,0,0);
 		engine->renderFramebuffer(frameRenderer);
 	}
 	engine->switchBuffers();

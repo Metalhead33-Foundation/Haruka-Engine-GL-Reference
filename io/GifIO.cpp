@@ -54,7 +54,6 @@ void GifIO::resolveGif(ImageCollection& coll)
 	coll.x = handle->SWidth;
 	coll.y = handle->SHeight;
 	coll.images.resize(size_t(handle->ImageCount));
-	uint8_t* byte;
 	int transparency = -1;
 	for(int i = 0; i < handle->ExtensionBlockCount; ++i)
 	{
@@ -80,11 +79,11 @@ void GifIO::resolveGif(ImageCollection& coll)
 				coll.images[i][x] = 0;
 			}
 			else coll.images.at(i).at(x) = 255;
-			coll.images[i][x] = coll.images[i][x] >> 8;
+			coll.images[i][x] = coll.images[i][x] << 8;
 			coll.images[i][x] += gifpalette[img->RasterBits[x]].Blue;
-			coll.images[i][x] = coll.images[i][x] >> 8;
+			coll.images[i][x] = coll.images[i][x] << 8;
 			coll.images[i][x] += gifpalette[img->RasterBits[x]].Green;
-			coll.images[i][x] = coll.images[i][x] >> 8;
+			coll.images[i][x] = coll.images[i][x] << 8;
 			coll.images[i][x] += gifpalette[img->RasterBits[x]].Red;
 			}
 	}

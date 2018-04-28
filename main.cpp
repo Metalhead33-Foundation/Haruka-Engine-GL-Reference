@@ -80,9 +80,9 @@ void loadWidgets(pGameSystem sys)
 	amerimutt.snapToWidth(300.0f);
 	sys->commitWidget(amerimutt);
 	WidgetProxy laluz("La Luz Extinguido",0);
-	laluz.setPos(glm::vec2(50,700));
+	laluz.setPos(glm::vec2(150,400));
 	laluz.setShader(sys->queryShaderProgram("widget"));
-	laluz.setTexture(sys->queryTexture("La Luz Extinguido"));
+	laluz.setTexture(sys->queryAnimatedTexture("La Luz Extinguido"));
 	laluz.defaultSize();
 	sys->commitWidget(laluz);
 	std::cout << "[WIDGETS] Widgets loaded!" << std::endl;

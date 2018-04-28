@@ -144,7 +144,7 @@ AnimatedTextureReference AnimatedTextureManager::commit(const AnimatedTexturePro
 			proxy->mipMapCount = proxy->tex->getMipMapCount();
 			proxy->currentFrame = proxy->tex->getCurrentFrame();
 			}
-			std::cout << "[TEXTURES] Texture \"" << proxy->Id << "\" initialized." << std::endl;
+			std::cout << "[TEXTURES] Animated Texture \"" << proxy->Id << "\" initialized." << std::endl;
 			proxy.endSet();
 		}
 	);
