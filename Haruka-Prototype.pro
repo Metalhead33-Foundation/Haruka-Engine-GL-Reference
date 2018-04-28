@@ -78,7 +78,8 @@ SOURCES += main.cpp \
     GL/GlFramebuffer.cpp \
     GL/GlAnimatedTexture.cpp \
     io/GifIO.cpp \
-    sys/proxy/ProxyAnimatedTexture.cpp
+    sys/proxy/ProxyAnimatedTexture.cpp \
+    GL/GlVectorWidget.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -176,4 +177,7 @@ HEADERS += \
     abstract/AnimatedTexture.hpp \
     GL/GlAnimatedTexture.hpp \
     io/GifIO.hpp \
-    sys/proxy/ProxyAnimatedTexture.hpp
+    sys/proxy/ProxyAnimatedTexture.hpp \
+    io/rbvi.h \
+    GL/GlVectorWidget.hpp \
+    abstract/VectorWidget.hpp
