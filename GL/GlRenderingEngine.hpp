@@ -42,6 +42,7 @@ public:
 	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
+	Abstract::sVectorWidget createVectorWidget(Abstract::sFIO readah);
 	void renderWidget(const Abstract::WidgetProperties& widget, glm::mat4& projection, Abstract::sShaderProgram shader);
 	MeshCreator getMeshCreator() const;
 	void renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);

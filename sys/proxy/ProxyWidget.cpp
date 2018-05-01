@@ -2,19 +2,60 @@
 #include "../GameSystem.hpp"
 
 WidgetProxy::WidgetProxy()
-	: Proxy(""), shader(nullptr), layer(0)
+	: Proxy(""), shader(nullptr), layer(0), isVector(false), vector(nullptr), loadPath("")
 {
 	;
 }
 WidgetProxy::WidgetProxy(const WidgetProxy& cpy)
-	: Proxy(cpy.Id), properties(cpy.properties), shader(cpy.shader), layer(cpy.layer)
+	: Proxy(cpy.Id), properties(cpy.properties), shader(cpy.shader), layer(cpy.layer), isVector(cpy.isVector),
+	  vector(cpy.vector), loadPath(cpy.loadPath)
 {
 	;
 }
-WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer)
-	: Proxy(id), shader(nullptr), layer(nlayer)
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, bool vec)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(vec), vector(nullptr), loadPath("")
 {
 	;
+}
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, Abstract::sTexture tex)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(false), vector(nullptr), loadPath("")
+{
+	properties.texture = tex;
+}
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, Abstract::sAnimatedTexture tex)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(false), vector(nullptr), loadPath("")
+{
+	properties.texture = tex;
+}
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, TextureReference tex)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(false), vector(nullptr), loadPath("")
+{
+	ReadReference<TextureProxy> texture(tex);
+	properties.texture = texture->getTexture();
+}
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, AnimatedTextureReference tex)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(false), vector(nullptr), loadPath("")
+{
+	ReadReference<AnimatedTextureProxy> texture(tex);
+	properties.texture = texture->getTexture();
+}
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, const std::string& path)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(true), vector(nullptr), loadPath(path)
+{
+	;
+}
+WidgetProxy::WidgetProxy(const std::string& id, unsigned int nlayer, const char* path)
+	: Proxy(id), shader(nullptr), layer(nlayer), isVector(true), vector(nullptr), loadPath(path)
+{
+	;
+}
+const std::string& WidgetProxy::getLoadPath(void) const
+{
+	return loadPath;
+}
+void WidgetProxy::setLoadPath(const std::string& path)
+{
+	loadPath = path;
 }
 const Abstract::sShaderProgram WidgetProxy::getShader() const
 {
@@ -113,8 +154,13 @@ void WidgetManager::draw(glm::mat4& projection)
 		for(auto widgIt = canvasIt->begin(); widgIt != canvasIt->end(); ++widgIt)
 		{
 			ReadReference<WidgetProxy> widget(*widgIt);
+
 			if(widget->getShader()) {
-			SYS->getEngine()->renderWidget(widget->properties,projection,widget->shader);
+			if(widget->isVector)
+			{
+				if(widget->vector) widget->vector->draw(widget->shader,projection);
+			}
+			else SYS->getEngine()->renderWidget(widget->properties,projection,widget->shader);
 			}
 		}
 	}
@@ -178,7 +224,26 @@ WidgetReference WidgetManager::commit(const WidgetProxy& proxy)
 	   layers[proxy.layer % layers.size()].push_back(ref);
 	}
 	prxy.endSet();
-	std::cout << "[WIDGETS] Widget \"" << prxy->Id << "\" initialized." << std::endl;
+	if(prxy->isVector)
+	{
+		Abstract::sFIO readah = PhysFS::FileHandle::openRead(proxy.loadPath);
+		pushCommand(
+		 [ref,proxy,readah](pGameSystem sys)
+		{
+			Storage<WidgetProxy> &prxy = *ref;
+			prxy.invalidate();
+			prxy.beginSet();
+			prxy->vector = sys->getEngine()->createVectorWidget(readah);
+			if(prxy->vector) {
+			prxy->vector->setPos(proxy.properties.pos);
+			prxy->vector->setSize(proxy.properties.size);
+			prxy->vector->setRotation(proxy.properties.rotation);
+			std::cout << "Successfully initialized Vector Widget!" << std::endl;
+			}else std::cout << "Failed to initialize Vector Widget!" << std::endl;
+			prxy.endSet();
+		}
+		);
+	}
 
 	return ref;
 }

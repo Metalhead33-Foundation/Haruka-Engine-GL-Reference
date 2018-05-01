@@ -73,6 +73,11 @@ void loadModels(pGameSystem sys)
 void loadWidgets(pGameSystem sys)
 {
 	std::cout << "[WIDGETS] Loading widgets!" << std::endl;
+	/*WidgetProxy gradiens("Gradiens",0,"rbvi.rbvi");
+	gradiens.setPos(glm::vec2(600,600));
+	gradiens.setSize(glm::vec2(320,240));
+	gradiens.setShader(sys->queryShaderProgram("vecWidget"));
+	sys->commitWidget(gradiens);*/
 	WidgetProxy amerimutt("amerimutt",0);
 	amerimutt.setPos(glm::vec2(50,50));
 	amerimutt.setShader(sys->queryShaderProgram("widget"));
@@ -113,6 +118,7 @@ void loadShaders(pGameSystem sys)
 	std::vector<ShaderProgramProxy> programs;
 	ShaderProgramProxy prog1("modeldispray");
 	ShaderProgramProxy prog2("widget");
+	ShaderProgramProxy prog3("vecWidget");
 	modules.push_back(ShaderModuleProxy("modeldispray.vs",Abstract::ShaderModule::VERTEX_SHADER, "modeldispray.vs"));
 	modules.push_back(ShaderModuleProxy("modeldispray.fs",Abstract::ShaderModule::FRAGMENT_SHADER, "modeldispray.fs"));
 	for(auto it = modules.begin(); it != modules.end(); ++it)
@@ -128,6 +134,14 @@ void loadShaders(pGameSystem sys)
 		prog2.addModule(sys->commitShaderModule(*it));
 	}
 	sys->commitShaderProgram(prog2);
+	modules.clear();
+	modules.push_back(ShaderModuleProxy("vecWidget.vs",Abstract::ShaderModule::VERTEX_SHADER, "vecWidget.vs"));
+	modules.push_back(ShaderModuleProxy("vecWidget.fs",Abstract::ShaderModule::FRAGMENT_SHADER, "vecWidget.fs"));
+	for(auto it = modules.begin(); it != modules.end(); ++it)
+	{
+		prog3.addModule(sys->commitShaderModule(*it));
+	}
+	sys->commitShaderProgram(prog3);
 	modules.clear();
 	STime waiter = STime::asSeconds(0.2);
 	waiter.sleep();

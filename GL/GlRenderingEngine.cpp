@@ -7,6 +7,7 @@
 #include "GlAnimatedTexture.hpp"
 #include "GlFramebuffer.hpp"
 #include "GlMesh.hpp"
+#include "GlVectorWidget.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings, uint32_t sampleCount, uint32_t supersampleCount)
@@ -257,6 +258,10 @@ Abstract::sTexture RenderingEngine::createTextureFromImage(Abstract::Texture::te
 Abstract::sAnimatedTexture RenderingEngine::createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
 {
 	return AnimatedTexture::create(ntype, reada);
+}
+Abstract::sVectorWidget RenderingEngine::createVectorWidget(Abstract::sFIO readah)
+{
+	return VectorWidget::create(readah);
 }
 Abstract::sFramebuffer RenderingEngine::getFramebuffer()
 {

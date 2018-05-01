@@ -66,6 +66,8 @@ void VectorWidget::RenderableVector::draw(Abstract::sShaderProgram prog, const g
 	prog->setBool("colourCentering",colourCentering);
 	prog->setVec4("colourA",colourA);
 	prog->setVec4("colourB",colourB);
+	std::cout << colourA.r << "-" << colourA.g << "-" << colourA.b << "-" << colourA.a << std::endl;
+	std::cout << colourB.r << "-" << colourB.g << "-" << colourB.b << "-" << colourB.a << std::endl;
 	glBindVertexArray(imageVAO);
 	glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -117,6 +119,8 @@ void VectorWidget::setRotation(float nrotation)
 }
 void VectorWidget::draw(Abstract::sShaderProgram prog, const glm::mat4& projection)
 {
+	std::cout << "size: " << size.x << "x" << size.y << std::endl;
+	std::cout << "pos: " << pos.x << "x" << pos.y << std::endl;
 	glm::mat4 model;
 	model = glm::translate(model, glm::vec3(pos, 0.0f));
 	model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));

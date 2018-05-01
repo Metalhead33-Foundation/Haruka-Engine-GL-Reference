@@ -11,7 +11,7 @@ DEFINE_CLASS(VectorWidget)
 class VectorWidget
 {
 public:
-	virtual ~VectorWidget() default;
+	virtual ~VectorWidget() = default;
 	virtual const glm::vec2& getSize(void) const = 0;
 	virtual const glm::vec2& getPos(void) const = 0;
 	virtual float getRotation(void) const = 0;

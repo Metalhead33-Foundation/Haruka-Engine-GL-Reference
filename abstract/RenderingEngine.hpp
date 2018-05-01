@@ -9,6 +9,7 @@
 #include "Framebuffer.hpp"
 #include "Mesh.hpp"
 #include "FIO.hpp"
+#include "VectorWidget.hpp"
 
 namespace Abstract {
 DEFINE_STRUCT(WidgetProperties)
@@ -35,6 +36,7 @@ public:
 	virtual sTexture createTextureFromImage(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sAnimatedTexture createTextureFromGIF(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
+	virtual sVectorWidget createVectorWidget(sFIO readah) = 0;
 	virtual void clearBackground() = 0;
 	virtual void clearBackground(unsigned char r, unsigned char g, unsigned char b) = 0;
 	virtual void renderWidget(const WidgetProperties& widget, glm::mat4& projection, sShaderProgram shader) = 0;

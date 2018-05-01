@@ -2,9 +2,10 @@ TEMPLATE = app
 CONFIG += console c++14
 CONFIG -= app_bundle
 # QMAKE_CXXFLAGS_DEBUG += -Werror
+INCLUDEPATH += "/usr/include/freetype2"
 
-CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lgif -pthread
-CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lsndfile -lsamplerate -lgif -pthread
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lfreetype -lsndfile -lsamplerate -lgif -pthread
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lfreetype -lsndfile -lsamplerate -lgif -pthread
 
 SOURCES += main.cpp \
     GL/GlShaderModule.cpp \
@@ -79,7 +80,9 @@ SOURCES += main.cpp \
     GL/GlAnimatedTexture.cpp \
     io/GifIO.cpp \
     sys/proxy/ProxyAnimatedTexture.cpp \
-    GL/GlVectorWidget.cpp
+    GL/GlVectorWidget.cpp \
+    io/FontIO.cpp \
+    GL/GlFont.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -180,4 +183,7 @@ HEADERS += \
     sys/proxy/ProxyAnimatedTexture.hpp \
     io/rbvi.h \
     GL/GlVectorWidget.hpp \
-    abstract/VectorWidget.hpp
+    abstract/VectorWidget.hpp \
+    io/FontIO.hpp \
+    GL/GlFont.hpp \
+    abstract/Font.hpp
