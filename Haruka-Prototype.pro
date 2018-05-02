@@ -186,4 +186,5 @@ HEADERS += \
     abstract/VectorWidget.hpp \
     io/FontIO.hpp \
     GL/GlFont.hpp \
-    abstract/Font.hpp
+    abstract/Font.hpp \
+    abstract/TextBox.hpp

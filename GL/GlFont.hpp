@@ -3,7 +3,7 @@
 #include "../abstract/Font.hpp"
 #include "../io/FontIO.hpp"
 #include "glad_glx.h"
-#include <map>
+#include <unordered_map>
 
 namespace  Gl {
 
@@ -15,26 +15,19 @@ public:
 	GlyphAttributes attributes;
 	GLuint offsetWidth;
 	};
+	typedef const Glyph& GlyphReference;
 	typedef std::vector<Glyph> GlyphVector;
 	typedef GlyphVector::iterator GlyphIterator;
-	struct CharacterRegion
-	{
-		char32_t start;
-		char32_t end() const;
-		std::vector<uint32_t> offsetMap; // Offsets within the GlyphVector
-		bool isPartOfRegion(char32_t character) const;
-		uint32_t getOffsetIndex(char32_t character) const;
-	};
-	typedef std::vector<CharacterRegion> RegionVector;
-	typedef RegionVector::iterator RegionIterator;
+	typedef std::unordered_map<char32_t,uint32_t> OffsetHash;
+	typedef OffsetHash::iterator OffsetIterator;
 private:
 	const sFontIO fontIO;
 	GLuint FontTex, FontFramebuffer;
 	GLuint width,height;
+	GLuint rWidth,rHeight;
 
 	GlyphVector characters;
-	RegionVector characterRegions;
-	size_t lastRegion;
+	OffsetHash characterOffsets;
 
 	Font(Abstract::sFIO readah, int nheight);
 	void expandByWidth(GLuint eWidth);
@@ -50,10 +43,15 @@ public:
 	OffsetString createOffsetString(const std::u32string& str);
 	OffsetString createOffsetString(const std::wstring& str);
 
-	void emplaceLetter(char lettah);
-	void emplaceLetter(char16_t lettah);
-	void emplaceLetter(char32_t lettah);
-	void emplaceLetter(wchar_t lettah);
+	uint32_t emplaceLetter(char lettah);
+	uint32_t emplaceLetter(char16_t lettah);
+	uint32_t emplaceLetter(char32_t lettah);
+	uint32_t emplaceLetter(wchar_t lettah);
+	void bindTextureSide();
+	const char* stringizeType();
+
+	GlyphReference getGlyph(uint32_t offset) const;
+	void renderText(const Abstract::sShaderProgram shader, const OffsetString& text, const glm::vec2& pos,const glm::mat4& projection);
 
 	// void renderText(char32_t lettah, glm::ivec2& bottomLeft, glm::mat4& projection);
 };

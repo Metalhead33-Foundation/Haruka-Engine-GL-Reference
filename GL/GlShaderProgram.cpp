@@ -1,5 +1,7 @@
 #include "GlShaderProgram.hpp"
 #include "GlTexture.hpp"
+#include "GlFont.hpp"
+#include "GlFramebuffer.hpp"
 #include <stdexcept>
 namespace Gl {
 
@@ -29,7 +31,30 @@ void ShaderProgram::useShader()
 	}
 	boundTextures = 0;
 }
+void ShaderProgram::bindTexture()
+{
+	glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+	++boundTextures;
+}
 void ShaderProgram::bindTexture(Abstract::sTexture tex)
+{
+	if(tex)
+	{
+		tex->bindTextureSide();
+		glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+		++boundTextures;
+	}
+}
+void ShaderProgram::bindTexture(Abstract::sFramebuffer tex)
+{
+	if(tex)
+	{
+		tex->bindTextureSide();
+		glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+		++boundTextures;
+	}
+}
+void ShaderProgram::bindTexture(Abstract::sFont tex)
 {
 	if(tex)
 	{

@@ -39,7 +39,10 @@ public:
 	virtual void setMat2(const char* name, const glm::mat2 &mat) const;
 	virtual void setMat3(const char* name, const glm::mat3 &mat) const;
 	virtual void setMat4(const char* name, const glm::mat4 &mat) const;
+	virtual void bindTexture();
 	virtual void bindTexture(Abstract::sTexture tex);
+	virtual void bindTexture(Abstract::sFramebuffer tex) ;
+	virtual void bindTexture(Abstract::sFont tex);
 };
 
 }

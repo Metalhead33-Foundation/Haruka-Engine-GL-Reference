@@ -10,6 +10,7 @@
 #include "Mesh.hpp"
 #include "FIO.hpp"
 #include "VectorWidget.hpp"
+#include "Font.hpp"
 
 namespace Abstract {
 DEFINE_STRUCT(WidgetProperties)

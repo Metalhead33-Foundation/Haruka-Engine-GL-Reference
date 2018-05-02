@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 namespace Abstract {
 
+DEFINE_CLASS(Font)
+DEFINE_CLASS(Framebuffer)
 DEFINE_CLASS(Texture)
 DEFINE_CLASS(ShaderProgram)
 class ShaderProgram
@@ -28,7 +30,10 @@ public:
 	virtual void setMat2(const char* name, const glm::mat2 &mat) const = 0;
 	virtual void setMat3(const char* name, const glm::mat3 &mat) const = 0;
 	virtual void setMat4(const char* name, const glm::mat4 &mat) const = 0;
+	virtual void bindTexture() = 0;
 	virtual void bindTexture(sTexture tex) = 0;
+	virtual void bindTexture(sFramebuffer tex) = 0;
+	virtual void bindTexture(sFont tex) = 0;
 
 	/*void setBool(const std::string &name, bool value) const { setBool(name.c_str(),value); }
 	void setInt(const std::string &name, int value) const { setInt(name.c_str(),value); }
