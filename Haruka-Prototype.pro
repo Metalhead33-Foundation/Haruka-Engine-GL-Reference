@@ -188,4 +188,5 @@ HEADERS += \
     GL/GlFont.hpp \
     abstract/Font.hpp \
     abstract/TextBox.hpp \
-    abstract/Widget.hpp
+    abstract/Drawable.hpp \
+    abstract/RasterDrawable.hpp
