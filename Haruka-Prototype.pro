@@ -187,4 +187,5 @@ HEADERS += \
     io/FontIO.hpp \
     GL/GlFont.hpp \
     abstract/Font.hpp \
-    abstract/TextBox.hpp
+    abstract/TextBox.hpp \
+    abstract/Widget.hpp
