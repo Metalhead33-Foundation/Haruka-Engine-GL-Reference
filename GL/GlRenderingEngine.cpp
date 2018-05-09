@@ -7,7 +7,6 @@
 #include "GlAnimatedTexture.hpp"
 #include "GlFramebuffer.hpp"
 #include "GlMesh.hpp"
-#include "GlVectorWidget.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 Abstract::sRenderingEngine createGlEngine(Abstract::sSettingContainer settings, uint32_t sampleCount, uint32_t supersampleCount)
@@ -20,59 +19,8 @@ namespace Gl {
 
 // QUAD_WID, QUAD_SCR;
 
-RenderingEngine::sQuad RenderingEngine::QUAD_WID = nullptr;
-RenderingEngine::sQuad RenderingEngine::QUAD_SCR = nullptr;
-
-RenderingEngine::Quad::Quad(bool framebuff)
-{
-	glGenVertexArrays(1, &quadArrayId);
-	glGenBuffers(1, &quadBufferId);
-	glBindVertexArray(quadArrayId);
-	glBindBuffer(GL_ARRAY_BUFFER, quadBufferId);
-	if(framebuff) {
-	GLfloat vertices[] = {
-		// Pos      // Tex
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-		 1.0f,  1.0f,  1.0f, 1.0f
-	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	} else
-	{
-		GLfloat vertices[] = {
-			// Pos      // Tex
-			0.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 0.0f,
-
-			0.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 1.0f, 1.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 0.0f
-		};
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	}
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-}
-RenderingEngine::Quad::~Quad()
-{
-	glDeleteVertexArrays(1,&quadArrayId);
-	glDeleteBuffers(1, &quadBufferId);
-}
-void RenderingEngine::Quad::draw()
-{
-	glBindVertexArray(quadArrayId);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-}
+sQuad RenderingEngine::QUAD_WID = nullptr;
+sQuad RenderingEngine::QUAD_SCR = nullptr;
 
 GLint RenderingEngine::VISUAL_ATTRIBUTES[] = { // GLX_RGBA,
 								 // GLX_X_VISUAL_TYPE_EXT,
@@ -132,22 +80,6 @@ void RenderingEngine::setViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h
 {
 	glViewport(x,y,w,h);
 }
-void RenderingEngine::renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model)
-{
-	if(shader && mesh)
-	{
-		shader->useShader();
-		shader->setMat4("projection", projection);
-		shader->setMat4("view", view);
-		shader->setMat4("model", model);
-		for(auto it = textures.begin(); it != textures.end(); ++it)
-		{
-			shader->bindTexture(*it);
-		}
-		mesh->bind();
-		glActiveTexture(GL_TEXTURE0);
-	}
-}
 void RenderingEngine::renderFramebuffer(const Abstract::sShaderProgram shader)
 {
 	if(shader)
@@ -156,32 +88,6 @@ void RenderingEngine::renderFramebuffer(const Abstract::sShaderProgram shader)
 		shader->bindTexture(framebuffer);
 		QUAD_SCR->draw();
 		glActiveTexture(GL_TEXTURE0);
-	}
-}
-void RenderingEngine::renderWidget(const Abstract::WidgetProperties &widget, glm::mat4& projection, Abstract::sShaderProgram shader)
-{
-	if(shader) {
-	shader->useShader();
-	// Do the matrix stuff
-	glm::mat4 model;
-	model = glm::translate(model, glm::vec3(widget.pos, 0.0f));
-	model = glm::translate(model, glm::vec3(0.5f * widget.size.x, 0.5f * widget.size.y, 0.0f));
-	model = glm::rotate(model, widget.rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-	model = glm::translate(model, glm::vec3(-0.5f * widget.size.x, -0.5f * widget.size.y, 0.0f));
-	model = glm::scale(model, glm::vec3(widget.size, 1.0f));
-
-	shader->setMat4("projection", projection);
-	shader->setMat4("model", model);
-	Texture* tex;
-	// tex = dynamic_cast<Texture*>(widget.texture.get());
-	if(tex) {
-		shader->bindTexture(widget.texture);
-	}
-	// draw mesh
-	QUAD_WID->draw();
-
-	// always good practice to set everything back to defaults once configured.
-	glActiveTexture(GL_TEXTURE0);
 	}
 }
 Abstract::sMesh RenderingEngine::createMesh(Abstract::Mesh::ConstructorReference ref)
@@ -258,10 +164,6 @@ Abstract::sTexture RenderingEngine::createTextureFromImage(Abstract::Texture::te
 Abstract::sAnimatedTexture RenderingEngine::createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
 {
 	return AnimatedTexture::create(ntype, reada);
-}
-Abstract::sVectorWidget RenderingEngine::createVectorWidget(Abstract::sFIO readah)
-{
-	return VectorWidget::create(readah);
 }
 Abstract::sFramebuffer RenderingEngine::getFramebuffer()
 {

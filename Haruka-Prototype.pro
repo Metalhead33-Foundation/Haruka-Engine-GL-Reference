@@ -80,9 +80,12 @@ SOURCES += main.cpp \
     GL/GlAnimatedTexture.cpp \
     io/GifIO.cpp \
     sys/proxy/ProxyAnimatedTexture.cpp \
-    GL/GlVectorWidget.cpp \
     io/FontIO.cpp \
-    GL/GlFont.cpp
+    GL/GlFont.cpp \
+    gfx/Widget.cpp \
+    GL/GlRasterDrawable.cpp \
+    GL/GlQuad.cpp \
+    GL/GlModel.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -182,11 +185,14 @@ HEADERS += \
     io/GifIO.hpp \
     sys/proxy/ProxyAnimatedTexture.hpp \
     io/rbvi.h \
-    GL/GlVectorWidget.hpp \
-    abstract/VectorWidget.hpp \
     io/FontIO.hpp \
     GL/GlFont.hpp \
     abstract/Font.hpp \
     abstract/TextBox.hpp \
     abstract/Drawable.hpp \
-    abstract/RasterDrawable.hpp
+    abstract/RasterDrawable.hpp \
+    gfx/Widget.hpp \
+    GL/GlRasterDrawable.hpp \
+    GL/GlQuad.hpp \
+    abstract/Model.hpp \
+    GL/GlModel.hpp

@@ -9,7 +9,6 @@
 #include "Framebuffer.hpp"
 #include "Mesh.hpp"
 #include "FIO.hpp"
-#include "VectorWidget.hpp"
 #include "Font.hpp"
 
 namespace Abstract {
@@ -37,11 +36,8 @@ public:
 	virtual sTexture createTextureFromImage(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sAnimatedTexture createTextureFromGIF(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
-	virtual sVectorWidget createVectorWidget(sFIO readah) = 0;
 	virtual void clearBackground() = 0;
 	virtual void clearBackground(unsigned char r, unsigned char g, unsigned char b) = 0;
-	virtual void renderWidget(const WidgetProperties& widget, glm::mat4& projection, sShaderProgram shader) = 0;
-	virtual void renderMesh(const sMesh mesh, const sShaderProgram shader, const Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model) = 0;
 	virtual void renderFramebuffer(const sShaderProgram shader) = 0;
 	virtual void setViewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) = 0;
 	virtual sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0) = 0;

@@ -5,6 +5,7 @@ Abstract::sMesh Mesh::createMesh(ConstructorReference constr)
 {
 	return Abstract::sMesh(new Mesh(constr));
 }
+
 Mesh::Mesh(ConstructorReference constr)
 {
 	this->vertices = *(constr.vec);

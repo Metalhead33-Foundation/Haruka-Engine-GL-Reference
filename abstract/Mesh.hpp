@@ -3,6 +3,7 @@
 #include "Vertex.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
+#include <unordered_map>
 #include <vector>
 #include <glm/glm.hpp>
 
@@ -29,8 +30,8 @@ public:
 		sIndexVector ind;
 	};
 	typedef MeshConstructor& ConstructorReference;
-	typedef std::vector<MeshConstructor> ConstructorArray;
-	typedef std::vector<MeshConstructor>::iterator ConstructorIterator;
+	typedef std::unordered_map<std::string,MeshConstructor> ConstructorArray;
+	typedef ConstructorArray::iterator ConstructorIterator;
 	typedef ConstructorArray& ConstructorArrayReference;
 	typedef std::shared_ptr<ConstructorArray> ConstructorArrayPointer;
 

@@ -3,15 +3,14 @@
 #include "Global.hpp"
 #include "ShaderProgram.hpp"
 #include <glm/glm.hpp>
-#include <unordered_map>
 
 namespace Abstract {
-DEFINE_CLASS(Widget)
+DEFINE_CLASS(Drawable)
 class Drawable
 {
 public:
 	virtual ~Drawable() = default;
-	virtual void render(const glm::mat4& projection, const glm::mat4& model, float rotation, sShaderProgram shader) = 0;
+	virtual void render(const glm::mat4& model, sShaderProgram shader) = 0;
 };
 
 }

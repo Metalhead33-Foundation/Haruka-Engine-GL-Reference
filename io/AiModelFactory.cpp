@@ -55,3 +55,21 @@ Abstract::sMesh AiModelFactory::buildMesh(aiMesh* mesh,MeshCreator createFunctio
 	ProcessAiMesh(info, mesh);
 	return createFunction(info);
 }
+void AiModelFactory::prepMeshHashmap(MeshBaseMap& meshmap, aiScene* scen)
+{
+	if(scen) {
+		for(unsigned int i = 0; i < scen->mNumMeshes; ++i)
+		{
+			// Take the mesh from Assimp
+			aiMesh* cmesh = scen->mMeshes[i];
+			std::string meshname;
+			if(cmesh->mName.length)
+				meshname = std::string(cmesh->mName.C_Str(),cmesh->mName.length);
+			else
+				meshname = std::to_string(i);
+			MeshCreateInfo info;
+			ProcessAiMesh(info,cmesh);
+			meshmap[meshname] = info;
+		}
+	}
+}
