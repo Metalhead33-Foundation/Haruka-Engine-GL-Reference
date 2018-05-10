@@ -85,7 +85,8 @@ SOURCES += main.cpp \
     gfx/Widget.cpp \
     GL/GlRasterDrawable.cpp \
     GL/GlQuad.cpp \
-    GL/GlModel.cpp
+    GL/GlModel.cpp \
+    io/PhysFSSystem.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -195,4 +196,6 @@ HEADERS += \
     GL/GlRasterDrawable.hpp \
     GL/GlQuad.hpp \
     abstract/Model.hpp \
-    GL/GlModel.hpp
+    GL/GlModel.hpp \
+    abstract/FIOSys.hpp \
+    io/PhysFSSystem.hpp
