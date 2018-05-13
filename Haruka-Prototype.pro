@@ -87,7 +87,10 @@ SOURCES += main.cpp \
     GL/GlQuad.cpp \
     GL/GlModel.cpp \
     io/PhysFSSystem.cpp \
-    GL/GlKeyframeAnimation.cpp
+    GL/GlKeyframeAnimation.cpp \
+    GL/GlCubeMap.cpp \
+    GL/GlAnimated.cpp \
+    GL/GlAnimatedCubemap.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -201,4 +204,10 @@ HEADERS += \
     abstract/FIOSys.hpp \
     io/PhysFSSystem.hpp \
     abstract/KeyframeAnimation.hpp \
-    GL/GlKeyframeAnimation.hpp
+    GL/GlKeyframeAnimation.hpp \
+    GL/GlCubeMap.hpp \
+    abstract/Animated.hpp \
+    abstract/AnimatedCubemap.hpp \
+    abstract/Cubemap.hpp \
+    GL/GlAnimated.hpp \
+    GL/GlAnimatedCubemap.hpp

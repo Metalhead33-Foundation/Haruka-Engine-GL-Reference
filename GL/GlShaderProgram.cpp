@@ -33,7 +33,7 @@ void ShaderProgram::useShader()
 }
 void ShaderProgram::bindTexture()
 {
-	glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+	glUniform1i(glGetUniformLocation(shaderID, Texture::TEX_TYPES[Texture::texture_diffuse]), boundTextures);
 	++boundTextures;
 }
 void ShaderProgram::bindTexture(Abstract::sTexture tex)
