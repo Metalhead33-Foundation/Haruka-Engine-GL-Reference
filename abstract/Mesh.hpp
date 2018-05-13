@@ -9,10 +9,12 @@
 
 namespace Abstract {
 
+DEFINE_CLASS(KeyframeAnimation)
 DEFINE_CLASS(Mesh)
 class Mesh
 {
 public:
+	friend class KeyframeAnimation;
 	typedef std::vector<Vertex> VertexVector;
 	typedef VertexVector::iterator VertexIterator;
 	typedef std::vector<uint32_t> IndexVector;

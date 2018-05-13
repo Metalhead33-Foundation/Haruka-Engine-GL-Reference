@@ -8,8 +8,11 @@
 namespace Gl {
 
 DEFINE_CLASS(Mesh)
+DEFINE_CLASS(KeyframeAnimation)
 class Mesh : public Abstract::Mesh
 {
+public:
+	friend class KeyframeAnimation;
 private:
 	GLuint VAO, VBO, EBO;
 	GLsizei indexSize;

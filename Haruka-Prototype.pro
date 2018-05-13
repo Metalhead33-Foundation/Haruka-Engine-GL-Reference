@@ -86,7 +86,8 @@ SOURCES += main.cpp \
     GL/GlRasterDrawable.cpp \
     GL/GlQuad.cpp \
     GL/GlModel.cpp \
-    io/PhysFSSystem.cpp
+    io/PhysFSSystem.cpp \
+    GL/GlKeyframeAnimation.cpp
 
 HEADERS += \
     GL/glad.h \
@@ -198,4 +199,6 @@ HEADERS += \
     abstract/Model.hpp \
     GL/GlModel.hpp \
     abstract/FIOSys.hpp \
-    io/PhysFSSystem.hpp
+    io/PhysFSSystem.hpp \
+    abstract/KeyframeAnimation.hpp \
+    GL/GlKeyframeAnimation.hpp
