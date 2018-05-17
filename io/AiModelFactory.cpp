@@ -1,11 +1,28 @@
 #include "AiModelFactory.hpp"
 
+void AiModelFactory::prepBone(Abstract::Bone& bone, aiBone* aibone)
+{
+	if(!aibone) return;
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+		{
+			bone.offsetMatrix[i][j] = aibone->mOffsetMatrix[i][j];
+		}
+	}
+	bone.weights.resize(aibone->mNumWeights);
+	for(size_t i = 0; i < bone.weights.size();++i)
+	{
+		bone.weights[i].first = aibone->mWeights[i].mVertexId;
+		bone.weights[i].second = aibone->mWeights[i].mWeight;
+	}
+}
 void AiModelFactory::ProcessAiMesh(MeshCreateInfo &constr, aiMesh* mesh)
 {
 	constr.vec = Abstract::Mesh::sVertexVector(new Abstract::Mesh::VertexVector());
 	for(size_t i = 0; i < mesh->mNumVertices; i++)
 	{
-		Vertex tmp;
+		Abstract::Vertex tmp;
 		tmp.Position.x = mesh->mVertices[i].x;
 		tmp.Position.y = mesh->mVertices[i].y;
 		tmp.Position.z = mesh->mVertices[i].z;
@@ -48,6 +65,21 @@ void AiModelFactory::ProcessAiMesh(MeshCreateInfo &constr, aiMesh* mesh)
 		aiFace* face = &mesh->mFaces[i];
 		for(size_t j = 0; j < face->mNumIndices; j++) constr.ind->push_back(face->mIndices[j]);
 	}
+	if(mesh->HasBones())
+	{
+		constr.skl = Abstract::sSkeleton(new Abstract::Skeleton());
+		for(size_t i = 0; i < mesh->mNumBones;++i)
+		{
+			aiBone* aibone = mesh->mBones[i];
+			std::string bonename;
+			if(aibone->mName.length)
+				bonename = std::string(aibone->mName.C_Str(),aibone->mName.length);
+			else
+				bonename = std::to_string(i);
+			auto it = constr.skl->emplace(bonename).first;
+			prepBone(it->second,aibone);
+		}
+	} else constr.skl = nullptr;
 }
 Abstract::sMesh AiModelFactory::buildMesh(aiMesh* mesh,MeshCreator createFunction)
 {

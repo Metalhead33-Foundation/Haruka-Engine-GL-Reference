@@ -25,6 +25,18 @@ StdStream::~StdStream()
 {
 	close();
 }
+Abstract::byteBuffer StdStream::loadIntoBuffer()
+{
+	Abstract::byteBuffer temp;
+	temp.resize(size());
+	read(temp.data(),size());
+	return temp;
+}
+std::string StdStream::stringize()
+{
+	auto buff = loadIntoBuffer();
+	return std::string(reinterpret_cast<const char*>(buff.data()),buff.size());
+}
 
 int64_t StdStream::read(void* data, int64_t size)
 {

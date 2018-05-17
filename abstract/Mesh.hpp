@@ -3,6 +3,7 @@
 #include "Vertex.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
+#include "Bone.hpp"
 #include <unordered_map>
 #include <vector>
 #include <glm/glm.hpp>
@@ -30,6 +31,7 @@ public:
 	{
 		sVertexVector vec;
 		sIndexVector ind;
+		sSkeleton skl;
 	};
 	typedef MeshConstructor& ConstructorReference;
 	typedef std::unordered_map<std::string,MeshConstructor> ConstructorArray;

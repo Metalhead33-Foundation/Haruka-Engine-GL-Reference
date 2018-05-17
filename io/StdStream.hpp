@@ -28,6 +28,9 @@ public:
 
 	static Abstract::sFIO createReader(std::string newpath);
 	static Abstract::sFIO createWriter(std::string newpath);
+
+	virtual Abstract::byteBuffer loadIntoBuffer();
+	virtual std::string stringize();
 private:
 	std::string path;
 	FILE* chandle;

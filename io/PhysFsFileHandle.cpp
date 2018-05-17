@@ -132,7 +132,7 @@ int64_t FileHandle::size()
 	return PHYSFS_fileLength(fhandle);
 }
 
-stringBuffer FileHandle::enumerateFiles(const std::string &path)
+Abstract::stringBuffer FileHandle::enumerateFiles(const std::string &path)
 {
 	stringBuffer tmp;
 	char **rc = PHYSFS_enumerateFiles(path.c_str());
@@ -142,7 +142,7 @@ stringBuffer FileHandle::enumerateFiles(const std::string &path)
 	PHYSFS_freeList(rc);
 	return tmp;
 }
-stringBuffer FileHandle::enumerateFilesFullpath(const std::string &path)
+Abstract::stringBuffer FileHandle::enumerateFilesFullpath(const std::string &path)
 {
 	stringBuffer tmp;
 	char **rc = PHYSFS_enumerateFiles(path.c_str());
@@ -155,20 +155,28 @@ stringBuffer FileHandle::enumerateFilesFullpath(const std::string &path)
 	PHYSFS_freeList(rc);
 	return tmp;
 }
-byteBuffer FileHandle::loadFileIntoBuffer(const std::string &path)
+Abstract::byteBuffer FileHandle::loadFileIntoBuffer(const std::string &path)
 {
-	byteBuffer temp;
 	Abstract::sFIO tHandle = openRead(path);
-	temp.resize(tHandle->size());
-	tHandle->read(temp.data(),tHandle->size());
+	return tHandle->loadIntoBuffer();
+}
+Abstract::byteBuffer FileHandle::loadIntoBuffer()
+{
+	Abstract::byteBuffer temp;
+	temp.resize(size());
+	read(temp.data(),size());
 	return temp;
+}
+std::string FileHandle::stringize()
+{
+	auto buff = loadIntoBuffer();
+	return std::string(reinterpret_cast<const char*>(buff.data()),buff.size());
 }
 std::string FileHandle::stringizeFile(const std::string &path)
 {
-	byteBuffer temp = loadFileIntoBuffer(path);
-	// temp.push_back(0);
-	// return std::string(reinterpret_cast<const char*>(temp.data()));
-	return std::string(reinterpret_cast<const char*>(temp.data()), temp.size());
+	Abstract::sFIO tHandle = openRead(path);
+	if(tHandle)	return tHandle->stringize();
+	else return std::string();
 }
 PHYSFS_Stat FileHandle::stat(const std::string &path)
 {

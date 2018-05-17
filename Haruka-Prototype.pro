@@ -210,4 +210,6 @@ HEADERS += \
     abstract/AnimatedCubemap.hpp \
     abstract/Cubemap.hpp \
     GL/GlAnimated.hpp \
-    GL/GlAnimatedCubemap.hpp
+    GL/GlAnimatedCubemap.hpp \
+    abstract/Bone.hpp \
+    io/ShaderPreprocessorInput.hpp

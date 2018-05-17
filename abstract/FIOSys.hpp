@@ -11,6 +11,8 @@ public:
 	virtual sFIO openRead(const std::string& path) = 0;
 	virtual sFIO openWrite(const std::string& path) = 0;
 	virtual bool exists(const std::string& path) = 0;
+	virtual byteBuffer loadFileIntoBuffer(const std::string &path) = 0;
+	virtual std::string stringizeFile(const std::string &path) = 0;
 };
 
 }

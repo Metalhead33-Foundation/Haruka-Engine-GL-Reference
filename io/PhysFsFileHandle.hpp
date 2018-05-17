@@ -8,9 +8,6 @@
 
 namespace PhysFS {
 
-typedef std::vector<uint8_t> byteBuffer;
-typedef std::vector<std::string> stringBuffer;
-
 DEFINE_CLASS(FileHandle)
 
 class FileHandle : public Abstract::FIO
@@ -39,9 +36,9 @@ public:
 	static void addToSearchPath(const std::string& newDir, const std::string& mountPoint, bool appendToPath);
 	static void removeFromSearchPath(const std::string& oldDir);
 
-	static stringBuffer enumerateFiles(const std::string& path);
-	static stringBuffer enumerateFilesFullpath(const std::string& path);
-	static byteBuffer loadFileIntoBuffer(const std::string& path);
+	static Abstract::stringBuffer enumerateFiles(const std::string& path);
+	static Abstract::stringBuffer enumerateFilesFullpath(const std::string& path);
+	static Abstract::byteBuffer loadFileIntoBuffer(const std::string& path);
 	static std::string stringizeFile(const std::string& path);
 	static PHYSFS_Stat stat(const std::string& path);
 
@@ -55,6 +52,8 @@ public:
 	int64_t tell();
 	int64_t size();
 	int64_t write(void* data, int64_t size);
+	Abstract::byteBuffer loadIntoBuffer();
+	std::string stringize();
 	char getc();
 };
 

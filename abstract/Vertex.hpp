@@ -2,6 +2,7 @@
 #define VERTEX_HPP
 #include "Global.hpp"
 #include <glm/glm.hpp>
+namespace Abstract {
 DEFINE_STRUCT(Vertex)
 struct Vertex {
 	// position
@@ -22,5 +23,6 @@ struct Vertex {
 	static __enforce_inlining size_t getTangentOffset() { return offsetof(Vertex,Tangent); }
 	static __enforce_inlining size_t getBitangentOffset() { return offsetof(Vertex,Bitangent); }
 };
+}
 
 #endif // VERTEX_HPP
