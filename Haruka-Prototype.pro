@@ -66,7 +66,8 @@ SOURCES += main.cpp \
     sys/ResourceManager.cpp \
     sys/STime.cpp \
     audio/AudioUnit.cpp \
-    audio/AudioPositioner.cpp
+    audio/AudioPositioner.cpp \
+    audio/PositionalMutuals.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
@@ -158,4 +159,5 @@ HEADERS += \
     sys/STime.hpp \
     audio/AudioUnit.hpp \
     audio/AudioReplugger.hpp \
-    audio/AudioPositioner.hpp
+    audio/AudioPositioner.hpp \
+    audio/PositionalMutuals.hpp

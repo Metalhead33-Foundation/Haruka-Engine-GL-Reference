@@ -14,5 +14,9 @@ const sPositionalPanner AudioPositioner::getPanner() const
 {
 	return panner;
 }
+void AudioPositioner::onPositionChange(const glm::vec3& pos)
+{
+	panner->setSource(pos);
+}
 
 }
