@@ -1,11 +1,9 @@
 #ifndef SYSTEM_HPP
 #define SYSTEM_HPP
-#include "Audio.hpp"
-#include "StreamedAudio.hpp"
-#include "SoundSource.hpp"
-#include "SoundBuffer.hpp"
 #include <deque>
+#include <Harudio-Engine/Audio/AudioContext.hpp>
 
+/*
 namespace Audio {
 
 class System
@@ -41,5 +39,5 @@ public:
 };
 
 }
-
+*/
 #endif // SYSTEM_HPP
