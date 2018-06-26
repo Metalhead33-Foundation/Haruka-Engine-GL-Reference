@@ -65,6 +65,8 @@ SOURCES += main.cpp \
     sys/proxy/ProxyWidget.cpp \
     sys/ResourceManager.cpp \
     sys/STime.cpp \
+    audio/AudioUnit.cpp \
+    audio/AudioPositioner.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
@@ -154,3 +156,6 @@ HEADERS += \
     sys/proxy/ProxyWidget.hpp \
     sys/ResourceManager.hpp \
     sys/STime.hpp \
+    audio/AudioUnit.hpp \
+    audio/AudioReplugger.hpp \
+    audio/AudioPositioner.hpp
