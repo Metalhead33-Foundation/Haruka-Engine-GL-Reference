@@ -38,20 +38,6 @@ SOURCES += main.cpp \
     io/StdStream.cpp \
     sys/Camera.cpp \
     sys/Clock.cpp \
-    sys/fxproxy/BandpassFilterProxy.cpp \
-    sys/fxproxy/ChorflangProxy.cpp \
-    sys/fxproxy/CompressorProxy.cpp \
-    sys/fxproxy/DistortionProxy.cpp \
-    sys/fxproxy/EchoProxy.cpp \
-    sys/fxproxy/EqualizerProxy.cpp \
-    sys/fxproxy/FrequencyShifterProxy.cpp \
-    sys/fxproxy/HighpassFilterProxy.cpp \
-    sys/fxproxy/LowpassFilterProxy.cpp \
-    sys/fxproxy/PitchShifterProxy.cpp \
-    sys/fxproxy/ReverbProxy.cpp \
-    sys/fxproxy/RingModulatorProxy.cpp \
-    sys/fxproxy/VocalMorpherProxy.cpp \
-    sys/fxproxy/WahWahProxy.cpp \
     sys/GameSystem.cpp \
     sys/MainSystem.cpp \
     sys/proxy/AuxiliaryEffectProxy.cpp \
@@ -67,7 +53,7 @@ SOURCES += main.cpp \
     sys/STime.cpp \
     audio/AudioUnit.cpp \
     audio/AudioPositioner.cpp \
-    audio/PositionalMutuals.cpp
+    audio/AudioRoom.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
@@ -128,22 +114,6 @@ HEADERS += \
     io/StdStream.hpp \
     sys/Camera.hpp \
     sys/Clock.hpp \
-    sys/fxproxy/AllEffects.hpp \
-    sys/fxproxy/AllFilters.hpp \
-    sys/fxproxy/BandpassFilterProxy.hpp \
-    sys/fxproxy/ChorflangProxy.hpp \
-    sys/fxproxy/CompressorProxy.hpp \
-    sys/fxproxy/DistortionProxy.hpp \
-    sys/fxproxy/EchoProxy.hpp \
-    sys/fxproxy/EqualizerProxy.hpp \
-    sys/fxproxy/FrequencyShifterProxy.hpp \
-    sys/fxproxy/HighpassFilterProxy.hpp \
-    sys/fxproxy/LowpassFilterProxy.hpp \
-    sys/fxproxy/PitchShifterProxy.hpp \
-    sys/fxproxy/ReverbProxy.hpp \
-    sys/fxproxy/RingModulatorProxy.hpp \
-    sys/fxproxy/VocalMorpherProxy.hpp \
-    sys/fxproxy/WahWahProxy.hpp \
     sys/GameSystem.hpp \
     sys/MainSystem.hpp \
     sys/proxy/AuxiliaryEffectProxy.hpp \
@@ -158,6 +128,5 @@ HEADERS += \
     sys/ResourceManager.hpp \
     sys/STime.hpp \
     audio/AudioUnit.hpp \
-    audio/AudioReplugger.hpp \
     audio/AudioPositioner.hpp \
-    audio/PositionalMutuals.hpp
+    audio/AudioRoom.hpp

@@ -1,22 +1,50 @@
 #include "AudioPositioner.hpp"
 
 namespace Audio {
-AudioPositioner::AudioPositioner()
-	: panner(Audio::PositionalPanner::createPositionPanner())
+Positioner::Positioner(const sSource src)
+	: panner(Audio::PositionalPanner::createPositionPanner()),
+	  unit(Unit::create(src))
 {
-	;
+	panner->setInput(unit);
 }
-void AudioPositioner::onAudioReplug(const sPlayable ply)
+Positioner::Positioner(const Positioner& cpy, const sSource src)
+	: panner(Audio::PositionalPanner::createPositionPanner()),
+	  unit(Unit::create(src))
 {
-	panner->setInput(ply);
+	panner->setInput(unit);
 }
-const sPositionalPanner AudioPositioner::getPanner() const
+const sPositionalPanner Positioner::getPanner() const
 {
 	return panner;
 }
-void AudioPositioner::onPositionChange(const glm::vec3& pos)
+const sUnit Positioner::getUnit() const
 {
-	panner->setSource(pos);
+	return unit;
+}
+bool Positioner::isPlaying() const
+{
+	return unit->isPlaying();
+}
+int Positioner::getFramerate() const
+{
+	return unit->getFramerate();
+}
+int Positioner::getChannelCount() const
+{
+	return 4;
+}
+long Positioner::pullAudio(float* output, long maxFrameNum, int channelNum, int frameRate)
+{
+	return panner->pullAudio(output,maxFrameNum,channelNum,frameRate);
+}
+sPositioner Positioner::create(const sSource src)
+{
+	return sPositioner(new Positioner(src));
+}
+sPositioner Positioner::create(const sPositioner cpy, const sSource src)
+{
+	if(cpy) return sPositioner(new Positioner(*cpy,src));
+	else return nullptr;
 }
 
 }

@@ -2,42 +2,32 @@
 #define SYSTEM_HPP
 #include <deque>
 #include <Harudio-Engine/Audio/AudioContext.hpp>
+#include <Harudio-Engine/Sound/SoundStreamer.hpp>
+#include <Harudio-Engine/Sound/SoundSource.hpp>
+#include "AudioRoom.hpp"
+#include "AudioPositioner.hpp"
 
-/*
 namespace Audio {
 
 class System
 {
 public:
-	typedef std::deque<wSource> SourceQueue;
-	typedef SourceQueue::iterator SourceIterator;
-	typedef std::deque<wSoundSource> SoundSourceQueue;
-	typedef SoundSourceQueue::iterator SoundSourceIterator;
-	typedef std::deque<wStreamedAudio> StreamingQueue;
-	typedef StreamingQueue::iterator StreamingIterator;
-	typedef std::deque<wBuffer> BufferQueue;
-	typedef BufferQueue::iterator BufferIterator;
-private:
-	std::vector<SoundItem> audioBuffer;
-	SoundSourceQueue preloadedSounds;
-	StreamingQueue streamedSounds;
-	BufferQueue buffers;
-	const sContext context;
-public:
-	System(int nSamplerate, size_t buffersize);
-	sStreamedAudio createStreamingAudio(Abstract::sFIO reada, size_t buffNum);
-	sBuffer createSoundBuffer(Abstract::sFIO reada);
-	sSoundSource createSoundSource();
-	sSoundSource createSoundSource(sBuffer buffer);
+	typedef std::deque<Sound::wStreamer> StreamerQueue;
+	typedef std::deque<Sound::wSource> SourceQueue;
+	typedef std::deque<wPositioner> UnitQueue;
+	typedef std::deque<wRoom> RoomQueue;
 
-	void makeSystemCurrent();
-	void processStreamedAudio();
-	void processContext();
-	void suspendContext();
-	const char* getDeviceName();
-	const char* getExtensionList();
+	typedef StreamerQueue::iterator StreamIterator;
+	typedef SourceQueue::iterator SourceIterator;
+	typedef UnitQueue::iterator UnitIterator;
+	typedef RoomQueue::iterator RoomIterator;
+private:
+	Context context;
+	const size_t streamBuffSize;
+public:
+	System(int frequency, size_t buffersize, size_t streamBuffSize);
 };
 
 }
-*/
+
 #endif // SYSTEM_HPP
