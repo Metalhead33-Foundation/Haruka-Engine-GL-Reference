@@ -20,15 +20,27 @@ void AiModelFactory::prepBone(Abstract::Bone& bone, aiBone* aibone)
 void AiModelFactory::ProcessAiMesh(MeshCreateInfo &constr, aiMesh* mesh)
 {
 	constr.vec = Abstract::Mesh::sVertexVector(new Abstract::Mesh::VertexVector());
+	constr.vec->reserve(mesh->mNumVertices);
 	for(size_t i = 0; i < mesh->mNumVertices; i++)
 	{
 		Abstract::Vertex tmp;
+		memset(&tmp,0,sizeof(Abstract::Vertex));
 		tmp.Position.x = mesh->mVertices[i].x;
 		tmp.Position.y = mesh->mVertices[i].y;
 		tmp.Position.z = mesh->mVertices[i].z;
-		tmp.Normal.x = mesh->mNormals[i].x;
-		tmp.Normal.y = mesh->mNormals[i].y;
-		tmp.Normal.z = mesh->mNormals[i].z;
+		if(mesh->HasNormals())
+		{
+			tmp.Normal.x = mesh->mNormals[i].x;
+			tmp.Normal.y = mesh->mNormals[i].y;
+			tmp.Normal.z = mesh->mNormals[i].z;
+		}
+		if(mesh->mColors[0])
+		{
+			tmp.Colour.r = mesh->mColors[0][i].r;
+			tmp.Colour.g = mesh->mColors[0][i].g;
+			tmp.Colour.b = mesh->mColors[0][i].b;
+			tmp.Colour.a = mesh->mColors[0][i].a;
+		}
 		if(mesh->HasTangentsAndBitangents())
 		{
 			tmp.Tangent.x = mesh->mTangents[i].x;
@@ -38,24 +50,10 @@ void AiModelFactory::ProcessAiMesh(MeshCreateInfo &constr, aiMesh* mesh)
 			tmp.Bitangent.y = mesh->mBitangents[i].y;
 			tmp.Bitangent.z = mesh->mBitangents[i].z;
 		}
-		else
-		{
-			tmp.Tangent.x = 0;
-			tmp.Tangent.y = 0;
-			tmp.Tangent.z = 0;
-			tmp.Bitangent.x = 0;
-			tmp.Bitangent.y = 0;
-			tmp.Bitangent.z = 0;
-		}
 		if(mesh->mTextureCoords[0])
 		{
 			tmp.TexCoords.x = mesh->mTextureCoords[0][i].x;
 			tmp.TexCoords.y = mesh->mTextureCoords[0][i].y;
-		}
-		else
-		{
-			tmp.TexCoords.x = 0;
-			tmp.TexCoords.y = 0;
 		}
 		constr.vec->push_back(tmp);
 	}

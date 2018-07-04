@@ -1,6 +1,7 @@
 #ifndef GLMESH_HPP
 #define GLMESH_HPP
 #include "../abstract/Mesh.hpp"
+#include "../abstract/Bone.hpp"
 #include "GlTexture.hpp"
 #include "GlShaderProgram.hpp"
 #include <glm/mat4x4.hpp>
@@ -25,6 +26,7 @@ public:
 	const GLuint& getVBO() const;
 	const GLuint& getEBO() const;
 	void bind();
+	void applySkeleton(const Abstract::Skeleton &skeleton) const;
 };
 
 }

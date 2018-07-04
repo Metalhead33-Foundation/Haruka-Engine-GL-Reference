@@ -20,7 +20,6 @@ SOURCES += main.cpp \
     GL/GlFramebuffer.cpp \
     GL/GlKeyframeAnimation.cpp \
     GL/GlMesh.cpp \
-    GL/GlModel.cpp \
     GL/GlQuad.cpp \
     GL/GlRasterDrawable.cpp \
     GL/GlRenderingEngine.cpp \
@@ -34,7 +33,6 @@ SOURCES += main.cpp \
     io/GifIO.cpp \
     io/PhysFsFileHandle.cpp \
     io/PhysFSSystem.cpp \
-    io/SoundFile.cpp \
     io/StdStream.cpp \
     sys/Camera.cpp \
     sys/Clock.cpp \
@@ -53,7 +51,8 @@ SOURCES += main.cpp \
     sys/STime.cpp \
     audio/AudioUnit.cpp \
     audio/AudioPositioner.cpp \
-    audio/AudioRoom.cpp
+    audio/AudioRoom.cpp \
+    gfx/Model.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
@@ -71,7 +70,6 @@ HEADERS += \
     abstract/HashTrait.hpp \
     abstract/KeyframeAnimation.hpp \
     abstract/Mesh.hpp \
-    abstract/Model.hpp \
     abstract/RasterDrawable.hpp \
     abstract/RenderingEngine.hpp \
     abstract/SettingContainer.hpp \
@@ -92,7 +90,6 @@ HEADERS += \
     GL/GlFramebuffer.hpp \
     GL/GlKeyframeAnimation.hpp \
     GL/GlMesh.hpp \
-    GL/GlModel.hpp \
     GL/GlQuad.hpp \
     GL/GlRasterDrawable.hpp \
     GL/GlRenderingEngine.hpp \
@@ -109,8 +106,6 @@ HEADERS += \
     io/PhysFSSystem.hpp \
     io/rbvi.h \
     io/ShaderPreprocessorInput.hpp\
-    io/sndfile.hh \
-    io/SoundFile.hpp \
     io/StdStream.hpp \
     sys/Camera.hpp \
     sys/Clock.hpp \
@@ -129,4 +124,5 @@ HEADERS += \
     sys/STime.hpp \
     audio/AudioUnit.hpp \
     audio/AudioPositioner.hpp \
-    audio/AudioRoom.hpp
+    audio/AudioRoom.hpp \
+    gfx/Model.hpp

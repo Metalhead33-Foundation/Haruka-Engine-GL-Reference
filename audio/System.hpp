@@ -24,8 +24,16 @@ public:
 private:
 	Context context;
 	const size_t streamBuffSize;
+	glm::vec3 listenerPos;
+
+	StreamerQueue streams;
+	SourceQueue sounds;
+	UnitQueue units;
+	RoomQueue rooms;
 public:
 	System(int frequency, size_t buffersize, size_t streamBuffSize);
+	void checkStreams();
+	void setListenerPosition(const glm::vec3& pos);
 };
 
 }
