@@ -65,7 +65,7 @@ void AiModelFactory::ProcessAiMesh(MeshCreateInfo &constr, aiMesh* mesh)
 	}
 	if(mesh->HasBones())
 	{
-		constr.skl = Abstract::sSkeleton(new Abstract::Skeleton());
+		constr.skl = Abstract::sSkeleton(new Abstract::BoneVector());
 		for(size_t i = 0; i < mesh->mNumBones;++i)
 		{
 			aiBone* aibone = mesh->mBones[i];

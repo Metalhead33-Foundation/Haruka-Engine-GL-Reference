@@ -2,6 +2,7 @@
 #define VERTEX_HPP
 #include "Global.hpp"
 #include <glm/glm.hpp>
+#include <vector>
 namespace Abstract {
 DEFINE_STRUCT(Vertex)
 struct Vertex {
@@ -32,6 +33,7 @@ struct Vertex {
 	static __enforce_inlining size_t getBoneIdOffset() { return offsetof(Vertex,BoneIDs); }
 	static __enforce_inlining size_t getBoneWeightOffset() { return offsetof(Vertex,BoneWeights); }
 };
+typedef std::vector<Vertex> VertexVector;
 
 }
 

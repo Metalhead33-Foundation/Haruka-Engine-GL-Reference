@@ -52,7 +52,11 @@ SOURCES += main.cpp \
     audio/AudioUnit.cpp \
     audio/AudioPositioner.cpp \
     audio/AudioRoom.cpp \
-    gfx/Model.cpp
+    gfx/Model.cpp \
+    GL/GlBufferObject.cpp \
+    GL/GlVertexArray.cpp \
+    GL/GlVertexBufferObject.cpp \
+    GL/GlIndexBuffer.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
@@ -125,4 +129,8 @@ HEADERS += \
     audio/AudioUnit.hpp \
     audio/AudioPositioner.hpp \
     audio/AudioRoom.hpp \
-    gfx/Model.hpp
+    gfx/Model.hpp \
+    GL/GlBufferObject.hpp \
+    GL/GlVertexArray.hpp \
+    GL/GlVertexBufferObject.hpp \
+    GL/GlIndexBuffer.hpp

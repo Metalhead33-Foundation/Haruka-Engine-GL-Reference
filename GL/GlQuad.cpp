@@ -3,10 +3,8 @@ namespace Gl {
 
 Quad::Quad(bool framebuff)
 {
-	glGenVertexArrays(1, &quadArrayId);
-	glGenBuffers(1, &quadBufferId);
-	glBindVertexArray(quadArrayId);
-	glBindBuffer(GL_ARRAY_BUFFER, quadBufferId);
+	VAO.bind();
+	VBO.bind();
 	if(framebuff) {
 	GLfloat vertices[] = {
 		// Pos      // Tex
@@ -18,6 +16,7 @@ Quad::Quad(bool framebuff)
 		 1.0f, -1.0f,  1.0f, 0.0f,
 		 1.0f,  1.0f,  1.0f, 1.0f
 	};
+	VBO.uploadVertices(vertices,4,6);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	} else
 	{
@@ -31,21 +30,17 @@ Quad::Quad(bool framebuff)
 			1.0f, 1.0f, 1.0f, 1.0f,
 			1.0f, 0.0f, 1.0f, 0.0f
 		};
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		VBO.uploadVertices(vertices,4,6);
 	}
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	VAO.setAttribPointer(2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	VAO.setAttribPointer(2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	VBO.unbind();
+	VAO.unbind();
 }
 Quad::Quad(float upper, float lower, float left, float right)
 {
-	glGenVertexArrays(1, &quadArrayId);
-	glGenBuffers(1, &quadBufferId);
-	glBindVertexArray(quadArrayId);
-	glBindBuffer(GL_ARRAY_BUFFER, quadBufferId);
+	VAO.bind();
+	VBO.bind();
 	GLfloat vertices[] = {
 		// Pos      // Tex
 		left,  upper,  0.0f, 1.0f,
@@ -56,23 +51,20 @@ Quad::Quad(float upper, float lower, float left, float right)
 		right, lower,  1.0f, 0.0f,
 		right,  lower,  1.0f, 1.0f
 	};
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	VBO.uploadVertices(vertices,4,6);
+	VAO.setAttribPointer(2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	VAO.setAttribPointer(2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	VBO.unbind();
+	VAO.unbind();
 }
 Quad::~Quad()
 {
-	glDeleteVertexArrays(1,&quadArrayId);
-	glDeleteBuffers(1, &quadBufferId);
+	;
 }
 void Quad::draw()
 {
-	glBindVertexArray(quadArrayId);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
+	VAO.bind();
+	VBO.draw();
+	VAO.unbind();
 }
 }
