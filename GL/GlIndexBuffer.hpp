@@ -19,7 +19,7 @@ public:
 	// new functions
 	size_t getIndexCount() const;
 	void uploadIndices(const std::vector<unsigned int> &indices);
-	void draw();
+	void draw() const;
 };
 
 }

@@ -63,7 +63,7 @@ void VertexBufferObject::uploadVertices(const float *rawData, size_t dimensions,
 							GL_STATIC_DRAW);
 }
 
-void VertexBufferObject::draw()
+void VertexBufferObject::draw() const
 {
 	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }

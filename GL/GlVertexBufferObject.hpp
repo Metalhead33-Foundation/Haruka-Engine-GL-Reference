@@ -25,7 +25,7 @@ public:
 	size_t getVertexCount() const;
 	void uploadVertices(const Abstract::VertexVector &vertices);
 	void uploadVertices(const float* rawData, size_t dimensions, size_t vertexCount);
-	void draw();
+	void draw() const;
 };
 
 }

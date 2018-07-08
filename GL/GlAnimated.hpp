@@ -10,9 +10,9 @@ protected:
 	float frameSwitchRate;
 	float timer;
 public:
-	virtual ~Animated() = 0;
-	uint32_t getFrameCount();
-	uint32_t getCurrentFrame();
+	virtual ~Animated() = default;
+	uint32_t getFrameCount() const;
+	uint32_t getCurrentFrame() const;
 	void switchFrame(uint32_t newFrame);
 	float getFrameSwitchRate();
 	void setFrameSwitchRate(float newRate);

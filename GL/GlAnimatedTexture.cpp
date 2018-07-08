@@ -52,23 +52,23 @@ Abstract::sAnimatedTexture AnimatedTexture::create(textureType ntype, Abstract::
 	}
 	return tmp;
 }
-uint32_t AnimatedTexture::getWidth()
+uint32_t AnimatedTexture::getWidth() const
 {
 	return width;
 }
-uint32_t AnimatedTexture::getHeight()
+uint32_t AnimatedTexture::getHeight() const
 {
 	return height;
 }
-uint32_t AnimatedTexture::getLinearSize()
+uint32_t AnimatedTexture::getLinearSize() const
 {
 	return linearSize;
 }
-uint32_t AnimatedTexture::getMipMapCount()
+uint32_t AnimatedTexture::getMipMapCount() const
 {
 	return 0;
 }
-uint32_t AnimatedTexture::getFrameCount()
+uint32_t AnimatedTexture::getFrameCount() const
 {
 	return uint32_t(frames.size());
 }
@@ -76,7 +76,7 @@ AnimatedTexture::textureType AnimatedTexture::getTextureType() const
 {
 	return type;
 }
-const char* AnimatedTexture::stringizeType()
+const char* AnimatedTexture::stringizeType() const
 {
 	return Gl::Texture::TEX_TYPES[type % texture_MAX];
 }

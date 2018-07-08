@@ -54,19 +54,27 @@ void Mesh::setupMesh()
 void Mesh::applySkeleton(const Abstract::BoneWeightVector &skeleton) const
 {
 	Abstract::pVertex vertices = reinterpret_cast<Abstract::pVertex>(VBO.mapBuffer(GL_READ_WRITE));
-	std::vector<uint8_t> boneCounter(VBO.getVertexCount());
-	memset(boneCounter.data(),0,boneCounter.size());
 	for(size_t i = 0; i < skeleton.size(); ++i)
 	{
-			if(skeleton[i].first <= VBO.getVertexCount())
+		const Abstract::pVertex curVertex = &vertices[skeleton[i].first];
+		if(skeleton[i].first <= VBO.getVertexCount())
+		{
+			char smallestId = 0;
+			float smallestWeight = 1.0f;
+			for(char id = 0; id < 4; ++id)
 			{
-				if(boneCounter[skeleton[i].first] < 3)
+				if(curVertex->BoneWeights[id] < smallestWeight)
 				{
-					vertices[skeleton[i].first].BoneIDs[boneCounter[skeleton[i].first]] = i;
-					vertices[skeleton[i].first].BoneWeights[boneCounter[skeleton[i].first]] = skeleton[i].second;
-					boneCounter[skeleton[i].first]++;
+					smallestId = id;
+					smallestWeight = curVertex->BoneWeights[id];
 				}
 			}
+			if(skeleton[i].second > smallestWeight)
+			{
+				curVertex->BoneIDs[smallestId] = i;
+				curVertex->BoneWeights[smallestId] = skeleton[i].second;
+			}
+		}
 	}
 	VBO.unmapBuffer();
 	VBO.unbind();

@@ -8,8 +8,8 @@ class Animated
 {
 public:
 	virtual ~Animated() = default;
-	virtual uint32_t getFrameCount() = 0;
-	virtual uint32_t getCurrentFrame() = 0;
+	virtual uint32_t getFrameCount() const = 0;
+	virtual uint32_t getCurrentFrame() const = 0;
 	virtual void switchFrame(uint32_t newFrame) = 0;
 	virtual float getFrameSwitchRate() = 0;
 	virtual void setFrameSwitchRate(float newRate) = 0;

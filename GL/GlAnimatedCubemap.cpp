@@ -46,19 +46,19 @@ Abstract::sAnimatedCubemap AnimatedCubemap::create(Abstract::sFIO readah)
 	return tmp;
 }
 
-uint32_t AnimatedCubemap::getWidth()
+uint32_t AnimatedCubemap::getWidth() const
 {
 	return width;
 }
-uint32_t AnimatedCubemap::getHeight()
+uint32_t AnimatedCubemap::getHeight() const
 {
 	return height;
 }
-uint32_t AnimatedCubemap::getLinearSize()
+uint32_t AnimatedCubemap::getLinearSize() const
 {
 	return linearSize;
 }
-uint32_t AnimatedCubemap::getFrameCount()
+uint32_t AnimatedCubemap::getFrameCount() const
 {
 	return uint32_t(frames.size());
 }

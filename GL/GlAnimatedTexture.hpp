@@ -20,14 +20,14 @@ private:
 public:
 	static Abstract::sAnimatedTexture create(textureType ntype, Abstract::sFIO readah);
 	~AnimatedTexture();
-	uint32_t getWidth();
-	uint32_t getHeight();
-	uint32_t getLinearSize();
-	uint32_t getMipMapCount();
-	uint32_t getFrameCount();
+	uint32_t getWidth() const;
+	uint32_t getHeight() const;
+	uint32_t getLinearSize() const;
+	uint32_t getMipMapCount() const;
+	uint32_t getFrameCount() const;
 
 	textureType getTextureType() const;
-	const char* stringizeType();
+	const char* stringizeType() const;
 	void bindTextureSide();
 };
 

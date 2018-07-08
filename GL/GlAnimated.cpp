@@ -12,7 +12,7 @@ void Animated::goForward(float forward)
 	}
 	currFrame %= getFrameCount();
 }
-uint32_t Animated::getCurrentFrame()
+uint32_t Animated::getCurrentFrame() const
 {
 	return currFrame;
 }

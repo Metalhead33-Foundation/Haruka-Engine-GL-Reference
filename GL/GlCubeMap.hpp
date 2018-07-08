@@ -16,9 +16,9 @@ private:
 public:
 	static Abstract::sCubemap create(Abstract::sFIO readah);
 	~Cubemap();
-	uint32_t getWidth() { return width; }
-	uint32_t getHeight() { return height; }
-	uint32_t getLinearSize() { return linearSize; }
+	uint32_t getWidth() const { return width; }
+	uint32_t getHeight() const { return height; }
+	uint32_t getLinearSize() const { return linearSize; }
 	void bindCubemapSide();
 };
 

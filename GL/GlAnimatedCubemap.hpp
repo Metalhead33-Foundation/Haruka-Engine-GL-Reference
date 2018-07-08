@@ -8,7 +8,7 @@
 namespace Gl {
 
 DEFINE_CLASS(AnimatedCubemap)
-class AnimatedCubemap : public Abstract::AnimatedCubemap, public Animated
+class AnimatedCubemap : public Abstract::AnimatedCubemap, public Gl::Animated
 {
 private:
 	std::vector<GLuint> frames;
@@ -17,10 +17,10 @@ private:
 public:
 	static Abstract::sAnimatedCubemap create(Abstract::sFIO readah);
 	~AnimatedCubemap();
-	uint32_t getFrameCount();
-	uint32_t getWidth();
-	uint32_t getHeight();
-	uint32_t getLinearSize();
+	uint32_t getFrameCount() const;
+	uint32_t getWidth() const;
+	uint32_t getHeight() const;
+	uint32_t getLinearSize() const;
 	void bindCubemapSide();
 };
 

@@ -37,7 +37,7 @@ const std::array<const char*,Texture::texture_MAX> Texture::TEX_TYPES = {
 	"texture_height"}
 };
 
-const char* Texture::stringizeType()
+const char* Texture::stringizeType() const
 {
 	return TEX_TYPES[type % texture_MAX];
 }

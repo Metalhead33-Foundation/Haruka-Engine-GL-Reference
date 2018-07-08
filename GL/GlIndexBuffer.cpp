@@ -35,7 +35,7 @@ void IndexBuffer::uploadIndices(const std::vector<unsigned int>& indices)
 								   GL_STATIC_DRAW);
 }
 
-void IndexBuffer::draw()
+void IndexBuffer::draw() const
 {
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 }
