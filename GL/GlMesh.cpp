@@ -51,32 +51,16 @@ void Mesh::setupMesh()
 	indices.clear();
 	vertices.clear();
 }
-void Mesh::applySkeleton(const Abstract::BoneWeightVector &skeleton) const
+void Mesh::applySkeleton(const Abstract::Skeleton& skeleton) const
 {
 	Abstract::pVertex vertices = reinterpret_cast<Abstract::pVertex>(VBO.mapBuffer(GL_READ_WRITE));
-	for(size_t i = 0; i < skeleton.size(); ++i)
-	{
-		const Abstract::pVertex curVertex = &vertices[skeleton[i].first];
-		if(skeleton[i].first <= VBO.getVertexCount())
-		{
-			char smallestId = 0;
-			float smallestWeight = 1.0f;
-			for(char id = 0; id < 4; ++id)
-			{
-				if(curVertex->BoneWeights[id] < smallestWeight)
-				{
-					smallestId = id;
-					smallestWeight = curVertex->BoneWeights[id];
-				}
-			}
-			if(skeleton[i].second > smallestWeight)
-			{
-				curVertex->BoneIDs[smallestId] = i;
-				curVertex->BoneWeights[smallestId] = skeleton[i].second;
-			}
-		}
-	}
+	skeleton.applyToVertices(vertices,VBO.getVertexCount());
 	VBO.unmapBuffer();
 	VBO.unbind();
 }
+void Mesh::applySkeleton(const Abstract::sSkeleton skeleton) const
+{
+	if(skeleton) applySkeleton(*skeleton);
+}
+
 }

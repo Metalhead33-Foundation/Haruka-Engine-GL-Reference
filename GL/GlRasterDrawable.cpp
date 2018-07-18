@@ -18,6 +18,7 @@ void RasterDrawable::render(const glm::mat4& model, Abstract::sShaderProgram sha
 {
 	if(shader)
 	{
+		shader->useShader();
 		shader->setMat4("model", model);
 		if(tex) shader->bindTexture(tex);
 		QUAD->draw();

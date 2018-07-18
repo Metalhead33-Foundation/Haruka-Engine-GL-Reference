@@ -56,7 +56,8 @@ SOURCES += main.cpp \
     GL/GlBufferObject.cpp \
     GL/GlVertexArray.cpp \
     GL/GlVertexBufferObject.cpp \
-    GL/GlIndexBuffer.cpp
+    GL/GlIndexBuffer.cpp \
+    gfx/Billboard.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
@@ -133,4 +134,5 @@ HEADERS += \
     GL/GlBufferObject.hpp \
     GL/GlVertexArray.hpp \
     GL/GlVertexBufferObject.hpp \
-    GL/GlIndexBuffer.hpp
+    GL/GlIndexBuffer.hpp \
+    gfx/Billboard.hpp

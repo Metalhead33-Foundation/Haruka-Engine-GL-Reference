@@ -12,7 +12,7 @@ void Model::render(const glm::mat4& model, Abstract::sShaderProgram shader)
 		shader->useShader();
 		shader->setMat4("model",model);
 		for(auto it = textures.begin(); it != textures.end(); ++it) shader->bindTexture(*it);
-		for(auto it = meshes.begin(); it != meshes.end(); ++it) (*it)->bind();
+		for(auto it = meshes.begin(); it != meshes.end(); ++it) (*it).second->bind();
 	}
 }
 Model::MeshVector& Model::getMeshVector()

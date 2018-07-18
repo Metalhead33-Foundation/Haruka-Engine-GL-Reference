@@ -27,7 +27,8 @@ public:
 	~Mesh();
 	static Abstract::sMesh createMesh(ConstructorReference constr);
 	void bind();
-	void applySkeleton(const Abstract::BoneWeightVector &skeleton) const;
+	void applySkeleton(const Abstract::Skeleton& skeleton) const;
+	void applySkeleton(const Abstract::sSkeleton skeleton) const;
 };
 
 }
