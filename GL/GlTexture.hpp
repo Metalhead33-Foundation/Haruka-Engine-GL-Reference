@@ -20,9 +20,8 @@ private:
 	const textureType type;
 	Texture(textureType ntype);
 public:
-	~Texture();
-	static Abstract::sTexture createFromDDS(textureType ntype, Abstract::sFIO reada);
-	static Abstract::sTexture createFromImage(textureType ntype, Abstract::sFIO reada);
+	~Texture(); // sTextureConstructor
+	static Abstract::sTexture create(textureType ntype, sTextureConstructor constructor);
 
 	uint32_t getWidth() const { return width; }
 	uint32_t getHeight() const { return height; }

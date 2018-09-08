@@ -153,13 +153,10 @@ Abstract::sShaderProgram RenderingEngine::createShaderProgram()
 {
 	return ShaderProgram::createShaderProgram();
 }
-Abstract::sTexture RenderingEngine::createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
+
+Abstract::sTexture RenderingEngine::createTexture(Abstract::Texture::textureType ntype, Abstract::sImageContainer constructor)
 {
-	return Texture::createFromDDS(ntype, reada);
-}
-Abstract::sTexture RenderingEngine::createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
-{
-	return Texture::createFromImage(ntype, reada);
+	return Texture::create(ntype, constructor);
 }
 Abstract::sAnimatedTexture RenderingEngine::createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
 {

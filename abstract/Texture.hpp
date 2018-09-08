@@ -1,6 +1,7 @@
 #pragma once
 #include "Global.hpp"
 #include "FIO.hpp"
+#include "AbstractImageContainer.hpp"
 namespace Abstract {
 
 DEFINE_CLASS(Framebuffer)
@@ -11,6 +12,8 @@ class Texture
 public:
 	friend class ShaderProgram;
 	friend class Framebuffer;
+	typedef ImageContainer TextureConstructor;
+	typedef sImageContainer sTextureConstructor;
 public:
 	virtual ~Texture() = default;
 	virtual uint32_t getWidth() const = 0;

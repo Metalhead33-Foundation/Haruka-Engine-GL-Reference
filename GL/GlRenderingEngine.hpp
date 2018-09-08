@@ -30,8 +30,7 @@ public:
 	static GLint CONTEXT_ATTRIBUTES[];
 	Abstract::sShaderModule createShaderModule(Abstract::ShaderModule::ShaderType ntype, Abstract::sFIO reada);
 	Abstract::sShaderProgram createShaderProgram();
-	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
-	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
+	Abstract::sTexture createTexture(Abstract::Texture::textureType ntype, Abstract::sImageContainer constructor);
 	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
 	MeshCreator getMeshCreator() const;

@@ -32,8 +32,7 @@ public:
 	virtual void clearDepthBuffer() = 0;
 	virtual sShaderModule createShaderModule(ShaderModule::ShaderType ntype, sFIO reada) = 0;
 	virtual sShaderProgram createShaderProgram() = 0;
-	virtual sTexture createTextureFromDDS(Texture::textureType ntype, sFIO reada) = 0;
-	virtual sTexture createTextureFromImage(Texture::textureType ntype, sFIO reada) = 0;
+	virtual sTexture createTexture(Texture::textureType ntype, sImageContainer constructor) = 0;
 	virtual sAnimatedTexture createTextureFromGIF(Texture::textureType ntype, sFIO reada) = 0;
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
 	virtual void clearBackground() = 0;
