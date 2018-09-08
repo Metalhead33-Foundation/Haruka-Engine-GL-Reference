@@ -14,7 +14,7 @@ private:
 	uint32_t width,height,linearSize;
 	Cubemap();
 public:
-	static Abstract::sCubemap create(Abstract::sFIO readah);
+	static Abstract::sCubemap create(sTextureConstructor constructor);
 	~Cubemap();
 	uint32_t getWidth() const { return width; }
 	uint32_t getHeight() const { return height; }

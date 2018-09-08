@@ -13,28 +13,26 @@ AnimatedTexture::~AnimatedTexture()
 {
 	glDeleteTextures(GLsizei(frames.size()),frames.data());
 }
-Abstract::sAnimatedTexture AnimatedTexture::create(textureType ntype, Abstract::sFIO readah)
+Abstract::sAnimatedTexture AnimatedTexture::create(textureType ntype, sAnimatedTextureConstructor constructor)
 {
-	GifIO gifio(readah);
-	sAnimatedTexture tmp = sAnimatedTexture(new AnimatedTexture(ntype,gifio.getImageCount()));
+	if(!constructor) return nullptr;
+	sAnimatedTexture tmp = sAnimatedTexture(new AnimatedTexture(ntype,constructor->frames.size()));
 
-	GifIO::ImageCollection imgCol;
-	gifio.resolveGif(imgCol);
 	tmp->currFrame = 0;
 	tmp->mipMapCount = 0;
-	tmp->width = imgCol.x;
-	tmp->height = imgCol.y;
-	tmp->linearSize = imgCol.x * imgCol.y;
+	tmp->width = constructor->width;
+	tmp->height = constructor->height;
+	tmp->linearSize = constructor->width * constructor->height;
 	size_t i = 0;
-	for(auto it = imgCol.images.begin(); it != imgCol.images.end(); ++it,++i)
+	for(auto it = constructor->frames.begin(); it != constructor->frames.end(); ++it,++i)
 	{
 		if(it->data()){
 		glBindTexture(GL_TEXTURE_2D, tmp->frames[i]);
 		glTexImage2D(GL_TEXTURE_2D, // Target
 					 0, // Level
 					 GL_RGBA, // Internal format
-					 imgCol.x, // Width
-					 imgCol.y, // Height
+					 tmp->width, // Width
+					 tmp->height, // Height
 					 0, // Border?
 					 GL_RGBA, // Format?
 					 GL_UNSIGNED_INT_8_8_8_8, // Type

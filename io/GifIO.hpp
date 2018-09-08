@@ -2,6 +2,7 @@
 #define GIFIO_HPP
 #include <gif_lib.h>
 #include "../abstract/FIO.hpp"
+#include "../abstract/AbstractImageContainer.hpp"
 #include <vector>
 
 class GifIO
@@ -10,10 +11,6 @@ private:
 	const Abstract::sFIO fileIO;
 	GifFileType* handle;
 public:
-	struct ImageCollection {
-		std::vector<std::vector<uint32_t>> images;
-		GifWord x,y;
-	};
 	GifIO(Abstract::sFIO nIO);
 	~GifIO();
 
@@ -22,7 +19,7 @@ public:
 	GifWord getWidth(void) const;
 	GifWord getHeight(void) const;
 	int getImageCount(void) const;
-	void resolveGif(ImageCollection& coll);
+	void resolveGif(Abstract::AnimatedImageContainer& coll);
 };
 
 #endif // GIFIO_HPP

@@ -17,33 +17,51 @@ void Cubemap::bindCubemapSide()
 	glActiveTexture(cubemapID); // active proper texture unit before binding
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
 }
-Abstract::sCubemap Cubemap::create(Abstract::sFIO readah)
+Abstract::sCubemap Cubemap::create(sTextureConstructor constructor)
 {
 	sCubemap tmp = sCubemap(new Cubemap());
-	sFlipImgExt img = FlipImgExt::createImageReader(readah);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, tmp->cubemapID);
-	tmp->width = img->getWidth();
-	tmp->height = img->getHeight() / 6;
+	tmp->width = constructor->mipmaps[0].width;
+	tmp->height = constructor->mipmaps[0].height / 6;
 	tmp->linearSize = tmp->width * tmp->height;
-	GLenum rgbFormatA = 0;
-	GLenum rgbFormatB = 0;
-	GLenum storageFormat = 0;
-	if(img->isTransparent())
+
+	for(size_t i = 0; i < constructor->mipmaps.size(); ++i)
 	{
-		img->convertTo32Bits();
-		rgbFormatA = GL_RGBA;
-		rgbFormatB = GL_BGRA;
-		storageFormat = GL_UNSIGNED_BYTE;
+		switch (constructor->type) {
+
+		case Abstract::ImgType::RGB24:
+		{
+			for(int j = 0; j < 6; ++j) {
+			const size_t offset = tmp->height * j * tmp->width * 3;
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, GLsizei(i),GL_RGB,
+						 GLsizei(tmp->width),
+						 GLsizei(tmp->height),
+						 0,
+						 GL_BGR,
+						 GL_UNSIGNED_BYTE,
+						 reinterpret_cast<GLvoid*>(&constructor->mipmaps[i].pixelData[offset]));
+			}
+			break;
+		}
+		case Abstract::ImgType::RGBA32:
+		{
+			for(int j = 0; j < 6; ++j) {
+			const size_t offset = tmp->height * j * tmp->width * 4;
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, GLsizei(i),GL_RGBA,
+						 GLsizei(tmp->width),
+						 GLsizei(tmp->height),
+						 0,
+						 GL_BGRA,
+						 GL_UNSIGNED_BYTE,
+						 reinterpret_cast<GLvoid*>(&constructor->mipmaps[i].pixelData[offset]));
+			}
+			break;
+		}
+		default: return nullptr;
+		};
 	}
-	else
-	{
-		img->convertTo24Bits();
-		rgbFormatA = GL_RGB;
-		rgbFormatB = GL_BGR;
-		storageFormat = GL_UNSIGNED_BYTE;
-	}
-	uint32_t absLine = 0;
-	for(int i = 0; i < 6; ++i)
+
+	/*for(int i = 0; i < 6; ++i)
 	{
 		GLint imgType = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
 		glTexImage2D(imgType, 0, rgbFormatA,tmp->width,tmp->height,0,
@@ -57,7 +75,7 @@ Abstract::sCubemap Cubemap::create(Abstract::sFIO readah)
 		{
 			glTexSubImage2D(imgType, 0, 0, relLine, tmp->width, 1, rgbFormatB, storageFormat, img->getScanLine(absLine));
 		}
-	}
+	}*/
 	glFlush();
 	glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_LINEAR);

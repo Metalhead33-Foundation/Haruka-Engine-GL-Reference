@@ -33,7 +33,7 @@ public:
 	virtual sShaderModule createShaderModule(ShaderModule::ShaderType ntype, sFIO reada) = 0;
 	virtual sShaderProgram createShaderProgram() = 0;
 	virtual sTexture createTexture(Texture::textureType ntype, sImageContainer constructor) = 0;
-	virtual sAnimatedTexture createTextureFromGIF(Texture::textureType ntype, sFIO reada) = 0;
+	virtual sAnimatedTexture createTextureFromGIF(Texture::textureType ntype, sAnimatedImageContainer constructor) = 0;
 	virtual sMesh createMesh(Mesh::ConstructorReference ref) = 0;
 	virtual void clearBackground() = 0;
 	virtual void clearBackground(unsigned char r, unsigned char g, unsigned char b) = 0;

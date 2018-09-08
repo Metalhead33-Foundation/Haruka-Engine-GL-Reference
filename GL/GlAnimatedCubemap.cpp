@@ -12,27 +12,35 @@ AnimatedCubemap::~AnimatedCubemap()
 {
 	glDeleteTextures(frames.size(),frames.data());
 }
-Abstract::sAnimatedCubemap AnimatedCubemap::create(Abstract::sFIO readah)
+Abstract::sAnimatedCubemap AnimatedCubemap::create(sAnimatedTextureConstructor constructor)
 {
-	GifIO gifio(readah);
-	sAnimatedCubemap tmp = sAnimatedCubemap(new AnimatedCubemap(gifio.getImageCount()));
-	GifIO::ImageCollection imgCol;
-	gifio.resolveGif(imgCol);
+	if(!constructor) return nullptr;
+	sAnimatedCubemap tmp = sAnimatedCubemap(new AnimatedCubemap(constructor->frames.size()));
 	tmp->currFrame = 0;
-	tmp->width = imgCol.x;
-	tmp->height = imgCol.y / 6;
+	tmp->width = constructor->width;
+	tmp->height = constructor->height / 6;
 	tmp->linearSize = tmp->width * tmp->height;
 	size_t i = 0;
-	for(auto it = imgCol.images.begin(); it != imgCol.images.end(); ++it,++i)
+	for(auto it = constructor->frames.begin(); it != constructor->frames.end(); ++it,++i)
 	{
 		if(!it->data()) throw std::runtime_error("Something went terribly wrong while trying to resolve the GIF!");
 		size_t dataPtr = reinterpret_cast<size_t>(it->data());
 		glBindTexture(GL_TEXTURE_CUBE_MAP, tmp->frames[i]);
-		for(int i = 0; i < 6; ++i)
+		/*for(int i = 0; i < 6; ++i)
 		{
 			size_t offset = dataPtr + (i * (tmp->linearSize * sizeof(uint32_t)));
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,tmp->width,tmp->height,0,
 			 GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, reinterpret_cast<GLvoid*>(offset));
+		}*/
+		for(int j = 0; j < 6; ++j) {
+		const size_t offset = tmp->height * j * tmp->width;
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, 0,GL_RGBA,
+					 GLsizei(tmp->width),
+					 GLsizei(tmp->height),
+					 0,
+					 GL_RGBA,
+					 GL_UNSIGNED_INT_8_8_8_8,
+					 reinterpret_cast<GLvoid*>(&constructor->frames[i][offset]));
 		}
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

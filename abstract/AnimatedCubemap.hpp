@@ -8,8 +8,8 @@ DEFINE_CLASS(AnimatedCubemap)
 class AnimatedCubemap : public Cubemap, public virtual Animated
 {
 public:
+	typedef sAnimatedImageContainer sAnimatedTextureConstructor;
 	friend class ShaderProgram;
-public:
 	virtual ~AnimatedCubemap() = default;
 };
 

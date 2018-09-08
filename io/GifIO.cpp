@@ -42,7 +42,7 @@ int GifIO::getImageCount(void) const
 	if(handle) return handle->ImageCount;
 	else return 0;
 }
-void GifIO::resolveGif(ImageCollection& coll)
+void GifIO::resolveGif(Abstract::AnimatedImageContainer &coll)
 {
 	if(!handle) return;
 	if(!(handle->ImageCount)) return;
@@ -51,9 +51,9 @@ void GifIO::resolveGif(ImageCollection& coll)
 	if(!gifcolormap) return;
 	GifColorType *gifpalette = gifcolormap->Colors;
 	if(!gifpalette) return;
-	coll.x = handle->SWidth;
-	coll.y = handle->SHeight;
-	coll.images.resize(size_t(handle->ImageCount));
+	coll.width = handle->SWidth;
+	coll.height = handle->SHeight;
+	coll.frames.resize(size_t(handle->ImageCount));
 	int transparency = -1;
 	for(int i = 0; i < handle->ExtensionBlockCount; ++i)
 	{
@@ -69,22 +69,22 @@ void GifIO::resolveGif(ImageCollection& coll)
 	{
 		SavedImage* img = &(handle->SavedImages[i]);
 		int newSize = img->ImageDesc.Height * img->ImageDesc.Width;
-		coll.images[i].resize(newSize);
-		std::cout << coll.images[i].size() << std::endl;
+		coll.frames[i].resize(newSize);
+		std::cout << coll.frames[i].size() << std::endl;
 		std::cout << img->ImageDesc.Width << "x" << img->ImageDesc.Height << std::endl;
 		for(int x = 0; x < newSize;++x)
 		{
 			if(transparency > 0 && img->RasterBits[x] == transparency)
 			{
-				coll.images[i][x] = 0;
+				coll.frames[i][x] = 0;
 			}
-			else coll.images.at(i).at(x) = 255;
-			coll.images[i][x] = coll.images[i][x] << 8;
-			coll.images[i][x] += gifpalette[img->RasterBits[x]].Green;
-			coll.images[i][x] = coll.images[i][x] << 8;
-			coll.images[i][x] += gifpalette[img->RasterBits[x]].Blue;
-			coll.images[i][x] = coll.images[i][x] << 8;
-			coll.images[i][x] += gifpalette[img->RasterBits[x]].Red;
+			else coll.frames.at(i).at(x) = 255;
+			coll.frames[i][x] = coll.frames[i][x] << 8;
+			coll.frames[i][x] += gifpalette[img->RasterBits[x]].Green;
+			coll.frames[i][x] = coll.frames[i][x] << 8;
+			coll.frames[i][x] += gifpalette[img->RasterBits[x]].Blue;
+			coll.frames[i][x] = coll.frames[i][x] << 8;
+			coll.frames[i][x] += gifpalette[img->RasterBits[x]].Red;
 			}
 	}
 	std::cout << "Prepared image!" << std::endl;

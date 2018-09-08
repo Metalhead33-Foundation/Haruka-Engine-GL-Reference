@@ -15,7 +15,7 @@ private:
 	uint32_t width,height,linearSize;
 	AnimatedCubemap(uint32_t frameCount);
 public:
-	static Abstract::sAnimatedCubemap create(Abstract::sFIO readah);
+	static Abstract::sAnimatedCubemap create(sAnimatedTextureConstructor constructor);
 	~AnimatedCubemap();
 	uint32_t getFrameCount() const;
 	uint32_t getWidth() const;

@@ -2,6 +2,7 @@
 #define CUBEMAP_HPP
 #include "Global.hpp"
 #include "FIO.hpp"
+#include "AbstractImageContainer.hpp"
 namespace Abstract {
 
 DEFINE_CLASS(ShaderProgram)
@@ -10,7 +11,8 @@ class Cubemap
 {
 public:
 	friend class ShaderProgram;
-public:
+	typedef ImageContainer TextureConstructor;
+	typedef sImageContainer sTextureConstructor;
 	virtual ~Cubemap() = default;
 	virtual uint32_t getWidth() const = 0;
 	virtual uint32_t getHeight() const = 0;

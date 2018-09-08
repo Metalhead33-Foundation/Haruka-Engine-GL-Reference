@@ -158,9 +158,9 @@ Abstract::sTexture RenderingEngine::createTexture(Abstract::Texture::textureType
 {
 	return Texture::create(ntype, constructor);
 }
-Abstract::sAnimatedTexture RenderingEngine::createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada)
+Abstract::sAnimatedTexture RenderingEngine::createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sAnimatedImageContainer constructor)
 {
-	return AnimatedTexture::create(ntype, reada);
+	return AnimatedTexture::create(ntype, constructor);
 }
 Abstract::sFramebuffer RenderingEngine::getFramebuffer()
 {

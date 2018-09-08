@@ -18,7 +18,7 @@ private:
 	const textureType type;
 	AnimatedTexture(textureType ntype, uint32_t frameCount);
 public:
-	static Abstract::sAnimatedTexture create(textureType ntype, Abstract::sFIO readah);
+	static Abstract::sAnimatedTexture create(textureType ntype, sAnimatedTextureConstructor constructor);
 	~AnimatedTexture();
 	uint32_t getWidth() const;
 	uint32_t getHeight() const;

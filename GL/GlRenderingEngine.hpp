@@ -31,7 +31,7 @@ public:
 	Abstract::sShaderModule createShaderModule(Abstract::ShaderModule::ShaderType ntype, Abstract::sFIO reada);
 	Abstract::sShaderProgram createShaderProgram();
 	Abstract::sTexture createTexture(Abstract::Texture::textureType ntype, Abstract::sImageContainer constructor);
-	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
+	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sAnimatedImageContainer constructor);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
 	MeshCreator getMeshCreator() const;
 	Abstract::sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);

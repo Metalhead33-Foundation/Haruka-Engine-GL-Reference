@@ -8,6 +8,7 @@ DEFINE_CLASS(AnimatedTexture)
 class AnimatedTexture : public Texture, public virtual Animated
 {
 public:
+	typedef sAnimatedImageContainer sAnimatedTextureConstructor;
 	virtual ~AnimatedTexture() = default;
 };
 
