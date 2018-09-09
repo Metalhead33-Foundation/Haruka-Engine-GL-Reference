@@ -50,8 +50,15 @@ public:
 };
 
 }
-extern "C" {
+
 typedef Abstract::sRenderingEngine (*RenderingBackendFactoryFunction)(Abstract::sSettingContainer,uint32_t,uint32_t);
-}
+DEFINE_STRUCT(BackendFactory)
+struct BackendFactory
+{
+	RenderingBackendFactoryFunction create;
+	std::string name;
+	std::string description;
+};
+typedef void (*BackendFactoryInitializer)(pBackendFactory);
 
 #endif // RENDERINGENGINE_HPP

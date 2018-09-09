@@ -18,7 +18,7 @@ private:
 	Abstract::sFramebuffer framebuffer;
 
 	bool twoDProjection;
-	static sQuad QUAD_SCR;
+	static sQuad QUAD_SCR,QUAD_WID;
 public:
 	RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount, uint32_t supersampleCount);
 	~RenderingEngine();
