@@ -4,8 +4,8 @@ CONFIG -= app_bundle
 # QMAKE_CXXFLAGS_DEBUG += -Werror
 INCLUDEPATH += "/usr/include/freetype2"
 
-CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lfreetype -lsndfile -L/usr/local/lib -lHarudioEngine -lgif -pthread
-CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lfreetype -lsndfile -L/usr/local/lib -lHarudioEngine -lgif -pthread
+CONFIG(release, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lfreetype -lsndfile -L/usr/local/lib -lHarudioEngine -lgif -lwebp -pthread
+CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphysfs -lfreeimage -lfreeimageplus -lfreetype -lsndfile -L/usr/local/lib -lHarudioEngine -lgif -lwebp -pthread
 
 SOURCES += main.cpp \
     audio/System.cpp \

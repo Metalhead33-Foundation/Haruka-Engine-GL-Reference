@@ -5,5 +5,7 @@
 
 Abstract::sImageContainer createFromImage(Abstract::sFIO reada);
 Abstract::sImageContainer createFromDDS(Abstract::sFIO reada);
+Abstract::sAnimatedImageContainer createFromGIF(Abstract::sFIO reada);
+Abstract::sAnimatedImageContainer createFromWEBP(Abstract::sFIO reada);
 
 #endif // IMGIO_HPP

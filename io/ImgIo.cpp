@@ -1,5 +1,7 @@
 #include "FreeImageIoExt.hpp"
 #include "../abstract/AbstractImageContainer.hpp"
+#include "GifIO.hpp"
+#include <webp/decode.h>
 #include <cstring>
 #include <stdexcept>
 
@@ -17,6 +19,55 @@
 #define TGA_RUNLENGTH_COLORMAPPED (TGA_COLORMAPPED | TGA_COMPRESSED)
 #define TGA_RUNLENGTH_TRUECOLOR (TGA_TRUECOLOUR | TGA_COMPRESSED)
 #define TGA_RUNLENGTH_GREYSCALE (TGA_GREYSCALE | TGA_COMPRESSED)
+
+Abstract::sAnimatedImageContainer createFromGIF(Abstract::sFIO reada)
+{
+	GifIO gif(reada);
+	Abstract::sAnimatedImageContainer tmp = Abstract::sAnimatedImageContainer(new Abstract::AnimatedImageContainer);
+	gif.resolveGif(*tmp);
+	tmp->type = Abstract::ImgType::RGBA32;
+	return tmp;
+}
+Abstract::sAnimatedImageContainer createFromWEBP(Abstract::sFIO reada)
+{
+	auto buff = reada->loadIntoBuffer();
+	if(WebPGetInfo(buff.data(),buff.size(),nullptr,nullptr))
+	{
+		WebPBitstreamFeatures feats;
+		if(WebPGetFeatures(buff.data(),buff.size(),&feats) == VP8_STATUS_OK)
+		{
+			Abstract::sAnimatedImageContainer tmp = Abstract::sAnimatedImageContainer(new Abstract::AnimatedImageContainer);
+			tmp->width = uint32_t(feats.width);
+			tmp->height = uint32_t(feats.height);
+			uint8_t* bitstream;
+			size_t pixelDataSize;
+			if(feats.has_alpha)
+			{
+				tmp->type = Abstract::ImgType::RGBA32;
+				bitstream = WebPDecodeRGBA(buff.data(),buff.size(),&feats.width,&feats.height);
+				pixelDataSize = size_t(feats.width * feats.height) * 4;
+
+			}
+			else
+			{
+				tmp->type = Abstract::ImgType::RGB24;
+				bitstream = WebPDecodeRGB(buff.data(),buff.size(),&feats.width,&feats.height);
+				pixelDataSize = size_t(feats.width * feats.height) * 3;
+			}
+			// We are supposed to do things with the image, load into the buffer, etc.
+			WebPFree(bitstream);
+			return tmp;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+	else
+	{
+		return nullptr;
+	}
+}
 
 Abstract::sImageContainer createFromImage(Abstract::sFIO reada)
 {
