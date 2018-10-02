@@ -1,7 +1,7 @@
 #include "FreeImageIoExt.hpp"
 #include "../abstract/AbstractImageContainer.hpp"
 #include "GifIO.hpp"
-#include <webp/decode.h>
+#include <webp/demux.h>
 #include <cstring>
 #include <stdexcept>
 
@@ -31,42 +31,44 @@ Abstract::sAnimatedImageContainer createFromGIF(Abstract::sFIO reada)
 Abstract::sAnimatedImageContainer createFromWEBP(Abstract::sFIO reada)
 {
 	auto buff = reada->loadIntoBuffer();
-	if(WebPGetInfo(buff.data(),buff.size(),nullptr,nullptr))
+	char fourc[4];
+	memcpy(fourc,buff.data(),4);
+	WebPData riff;
+	riff.bytes = buff.data();
+	riff.size = buff.size();
+	WebPAnimDecoderOptions dec_options;
+	WebPAnimDecoderOptionsInit(&dec_options);
+	// Tune 'dec_options' as needed.
+	dec_options.color_mode = MODE_RGBA;
+	WebPAnimDecoder* dec = WebPAnimDecoderNew(&riff, &dec_options);
+	if(dec)
 	{
-		WebPBitstreamFeatures feats;
-		if(WebPGetFeatures(buff.data(),buff.size(),&feats) == VP8_STATUS_OK)
-		{
-			Abstract::sAnimatedImageContainer tmp = Abstract::sAnimatedImageContainer(new Abstract::AnimatedImageContainer);
-			tmp->width = uint32_t(feats.width);
-			tmp->height = uint32_t(feats.height);
-			uint8_t* bitstream;
-			size_t pixelDataSize;
-			if(feats.has_alpha)
-			{
-				tmp->type = Abstract::ImgType::RGBA32;
-				bitstream = WebPDecodeRGBA(buff.data(),buff.size(),&feats.width,&feats.height);
-				pixelDataSize = size_t(feats.width * feats.height) * 4;
+		WebPDemuxer* demux = WebPDemux(&riff);
+		WebPAnimInfo anim_info;
+		WebPAnimDecoderGetInfo(dec, &anim_info);
+		Abstract::sAnimatedImageContainer tmp = Abstract::sAnimatedImageContainer(new Abstract::AnimatedImageContainer);
+		tmp->type = Abstract::ImgType::RGBA32;
+		tmp->height = WebPDemuxGetI(demux, WEBP_FF_CANVAS_HEIGHT);
+		tmp->width = WebPDemuxGetI(demux, WEBP_FF_CANVAS_WIDTH);
+		WebPDemuxDelete(demux);
+		const size_t imgSize = tmp->height * tmp->width * 4;
+		for (uint32_t i = 0; i < anim_info.loop_count; ++i) {
+		  while (WebPAnimDecoderHasMoreFrames(dec)) {
+			uint8_t* buf;
+			int timestamp;
+			WebPAnimDecoderGetNext(dec, &buf, &timestamp);
 
-			}
-			else
-			{
-				tmp->type = Abstract::ImgType::RGB24;
-				bitstream = WebPDecodeRGB(buff.data(),buff.size(),&feats.width,&feats.height);
-				pixelDataSize = size_t(feats.width * feats.height) * 3;
-			}
-			// We are supposed to do things with the image, load into the buffer, etc.
-			WebPFree(bitstream);
-			return tmp;
+			// ... (Render 'buf' based on 'timestamp').
+			tmp->frames.push_back(Abstract::WordBuffer(imgSize));
+			memcpy(tmp->frames[tmp->frames.size()-1].data(),buf,imgSize);
+
+		  }
+		  WebPAnimDecoderReset(dec);
 		}
-		else
-		{
-			return nullptr;
-		}
+		WebPAnimDecoderDelete(dec);
+		return tmp;
 	}
-	else
-	{
-		return nullptr;
-	}
+	else return nullptr;
 }
 
 Abstract::sImageContainer createFromImage(Abstract::sFIO reada)
