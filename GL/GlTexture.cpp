@@ -2,7 +2,6 @@
 #include <vector>
 #include <cstring>
 #include <stdexcept>
-#include "../io/FreeImageIoExt.hpp"
 namespace Gl {
 
 #define FOURCC_DXT1 0x31545844
@@ -37,7 +36,7 @@ const std::array<const char*,Texture::texture_MAX> Texture::TEX_TYPES = {
 	"texture_height"}
 };
 
-const char* Texture::stringizeType()
+const char* Texture::stringizeType() const
 {
 	return TEX_TYPES[type % texture_MAX];
 }
@@ -48,99 +47,91 @@ void Texture::bindTextureSide()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
-Abstract::sTexture Texture::createFromImage(textureType ntype, Abstract::sFIO reada)
+
+Abstract::sTexture Texture::create(textureType ntype, sTextureConstructor constructor)
 {
+	if(!constructor) return nullptr;
+	if(constructor->mipmaps.empty()) return nullptr;
 	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 	Abstract::sTexture tmp = Abstract::sTexture(new Texture(ntype));
 	Texture* gltex = dynamic_cast<Texture*>(tmp.get());
-	gltex->mipMapCount = 0;
-	sFlipImgExt img = FlipImgExt::createImageReader(reada);
-	gltex->height = img->getHeight();
-	gltex->width = img->getWidth();
+	gltex->height = constructor->mipmaps[0].height;
+	gltex->width = constructor->mipmaps[0].width;
 	gltex->linearSize = gltex->height * gltex->width;
-	// if(img.getBitsPerPixel() < 24) img.convertTo24Bits();
-	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
-	if(img->isTransparent())
+
+	for(size_t i = 0; i < constructor->mipmaps.size(); ++i)
 	{
-		img->convertTo32Bits();
-		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
-		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),32, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,gltex->width,gltex->height,0, GL_BGRA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(imgBuff.data()) );
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		switch (constructor->type) {
+
+		case Abstract::ImgType::RGB24:
+		{
+			glTexImage2D(GL_TEXTURE_2D, GLsizei(i),GL_RGB,
+						 GLsizei(constructor->mipmaps[i].width),
+						 GLsizei(constructor->mipmaps[i].height),
+						 0,
+						 GL_BGR,
+						 GL_UNSIGNED_BYTE,
+						 reinterpret_cast<GLvoid*>(constructor->mipmaps[i].pixelData.data()));
+			break;
+		}
+		case Abstract::ImgType::RGBA32:
+		{
+			glTexImage2D(GL_TEXTURE_2D, GLsizei(i),GL_RGBA,
+						 GLsizei(constructor->mipmaps[i].width),
+						 GLsizei(constructor->mipmaps[i].height),
+						 0,
+						 GL_BGRA,
+						 GL_UNSIGNED_BYTE,
+						 reinterpret_cast<GLvoid*>(constructor->mipmaps[i].pixelData.data()));
+			break;
+		}
+		case Abstract::ImgType::DDX1:
+		{
+			glCompressedTexImage2D(GL_TEXTURE_2D,
+								   GLsizei(i),
+								   GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
+								   GLsizei(constructor->mipmaps[i].width),
+								   GLsizei(constructor->mipmaps[i].height),
+								   0,
+								   GLsizei(constructor->mipmaps[i].pixelData.size()),
+								   reinterpret_cast<GLvoid*>(constructor->mipmaps[i].pixelData.data()));
+			break;
+		}
+		case Abstract::ImgType::DDX3:
+		{
+			glCompressedTexImage2D(GL_TEXTURE_2D,
+								   GLsizei(i),
+								   GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+								   GLsizei(constructor->mipmaps[i].width),
+								   GLsizei(constructor->mipmaps[i].height),
+								   0,
+								   GLsizei(constructor->mipmaps[i].pixelData.size()),
+								   reinterpret_cast<GLvoid*>(constructor->mipmaps[i].pixelData.data()));
+			break;
+		}
+		case Abstract::ImgType::DDX5:
+		{
+			glCompressedTexImage2D(GL_TEXTURE_2D,
+								   GLsizei(i),
+								   GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+								   GLsizei(constructor->mipmaps[i].width),
+								   GLsizei(constructor->mipmaps[i].height),
+								   0,
+								   GLsizei(constructor->mipmaps[i].pixelData.size()),
+								   reinterpret_cast<GLvoid*>(constructor->mipmaps[i].pixelData.data()));
+			break;
+		}
+		default: return nullptr;
+		};
 	}
-	else
-	{
-		img->convertTo24Bits();
-		std::vector<uint8_t> imgBuff(img->getHeight() * img->getWidth() * (img->getBitsPerPixel() / 8));
-		FreeImage_ConvertToRawBits(imgBuff.data(),*img,img->getScanWidth(),24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK, true);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,gltex->width,gltex->height,0, GL_BGR, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(imgBuff.data()));
-	}
+
 	glFlush();
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
-	return tmp;
-}
-
-Abstract::sTexture Texture::createFromDDS(textureType ntype, Abstract::sFIO reada)
-{
-	Abstract::sTexture tmp = Abstract::sTexture(new Texture(ntype));
-	Texture* gltex = dynamic_cast<Texture*>(tmp.get());
-	std::vector<uint8_t> header(124);
-	std::vector<char> mword(4);
-	reada->read(mword.data(),4);
-	if (strncmp(mword.data() , "DDS ", 4) != 0)
-	{
-		return Abstract::sTexture();
-	}
-	reada->read(header.data(),124);
-	gltex->height = *reinterpret_cast<uint32_t*>(&header[8]);
-	gltex->width = *reinterpret_cast<uint32_t*>(&header[12]);
-	gltex->linearSize = *reinterpret_cast<uint32_t*>(&header[16]);
-	gltex->mipMapCount = *reinterpret_cast<uint32_t*>(&header[24]);
-	uint32_t fourCC = *reinterpret_cast<uint32_t*>(&header[80]);
-
-	// Okay, now we will create the buffer.
-	uint32_t buffsize = gltex->mipMapCount > 1 ? gltex->linearSize * 2 : gltex->linearSize;
-	std::vector<uint8_t> buffer(buffsize);
-	reada->read(buffer.data(),buffsize);
-
-	uint32_t components  = (fourCC == FOURCC_DXT1) ? 3 : 4;
-	uint32_t format;
-	switch(fourCC)
-	{
-	case FOURCC_DXT1:
-		format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-		break;
-	case FOURCC_DXT3:
-		format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-		break;
-	case FOURCC_DXT5:
-		format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-		break;
-	default:
-		return Abstract::sTexture();
-	}
-
-	glBindTexture(GL_TEXTURE_2D, gltex->textureID);
-	uint32_t blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
-	uint32_t offset = 0;
-	uint32_t width = gltex->width;
-	uint32_t height = gltex->height;
-
-	for (uint32_t level = 0; level < gltex->mipMapCount && (width || height); ++level)
-	{
-		unsigned int size = ((width+3)/4)*((height+3)/4)*blockSize;
-		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-			0, size, buffer.data() + offset);
-
-		offset += size;
-		width  /= 2;
-		height /= 2;
-	}
-
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	return tmp;
 }
 

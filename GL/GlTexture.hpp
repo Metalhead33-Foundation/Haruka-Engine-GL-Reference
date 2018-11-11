@@ -20,18 +20,17 @@ private:
 	const textureType type;
 	Texture(textureType ntype);
 public:
-	~Texture();
-	static Abstract::sTexture createFromDDS(textureType ntype, Abstract::sFIO reada);
-	static Abstract::sTexture createFromImage(textureType ntype, Abstract::sFIO reada);
+	~Texture(); // sTextureConstructor
+	static Abstract::sTexture create(textureType ntype, sTextureConstructor constructor);
 
-	uint32_t getWidth() { return width; }
-	uint32_t getHeight() { return height; }
-	uint32_t getLinearSize() { return linearSize; }
-	uint32_t getMipMapCount() { return mipMapCount; }
+	uint32_t getWidth() const { return width; }
+	uint32_t getHeight() const { return height; }
+	uint32_t getLinearSize() const { return linearSize; }
+	uint32_t getMipMapCount() const { return mipMapCount; }
 	const GLuint& getTextureId() const { return textureID; }
 	textureType getTextureType() const { return type; }
 	static const char* __stringizeType(textureType typus);
-	const char* stringizeType();
+	const char* stringizeType() const;
 	void bindTextureSide();
 
 	static const std::array<const char*,texture_MAX> TEX_TYPES;

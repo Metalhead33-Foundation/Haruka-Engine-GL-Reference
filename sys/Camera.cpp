@@ -1,6 +1,6 @@
 #include "Camera.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include "../audio/AL/OpenALWrapper.hpp"
+// #include "../audio/AL/OpenALWrapper.hpp"
 
 const float Camera::YAW =-90.0f;
 const float Camera::PITCH = 0.0f;
@@ -12,7 +12,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
 	: MovementSpeed(SPEED),
 	  MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
-	alRelevant.Front = glm::vec3(0.0f, 0.0f, -1.0f);
+	Front = glm::vec3(0.0f, 0.0f, -1.0f);
 	Position = position;
 	WorldUp = up;
 	Yaw = yaw;
@@ -28,7 +28,7 @@ Camera::Camera(float posX, float posY, float posZ, float upX,
 	: MovementSpeed(SPEED),
 	  MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
-	alRelevant.Front = glm::vec3(0.0f, 0.0f, -1.0f);
+	Front = glm::vec3(0.0f, 0.0f, -1.0f);
 	Position = glm::vec3(posX, posY, posZ);
 	WorldUp = glm::vec3(upX, upY, upZ);
 	Yaw = yaw;
@@ -60,29 +60,29 @@ void Camera::ProcessKeyboard(Movement direction, float deltaTime)
 {
 	float velocity = MovementSpeed * deltaTime;
 	if (direction == FORWARD)
-		Position += alRelevant.Front * velocity;
+		Position += Front * velocity;
 	if (direction == BACKWARD)
-		Position -= alRelevant.Front * velocity;
+		Position -= Front * velocity;
 	if (direction == LEFT)
 		Position -= Right * velocity;
 	if (direction == RIGHT)
 		Position += Right * velocity;
-	alListener3f(AL_POSITION,Position.x,Position.y,Position.z);
+	// alListener3f(AL_POSITION,Position.x,Position.y,Position.z);
 }
 glm::mat4 Camera::GetViewMatrix()
 {
-	return glm::lookAt(Position, Position + alRelevant.Front, alRelevant.Up);
+	return glm::lookAt(Position, Position + Front, Up);
 }
 void Camera::updateCameraVectors()
 {
 	// Calculate the new Front vector
 	glm::vec3 front;
-	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	front.y = sin(glm::radians(Pitch));
-	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	alRelevant.Front = glm::normalize(front);
+	front.x = cosf(glm::radians(Yaw)) * cosf(glm::radians(Pitch));
+	front.y = sinf(glm::radians(Pitch));
+	front.z = sinf(glm::radians(Yaw)) * cosf(glm::radians(Pitch));
+	Front = glm::normalize(front);
 	// Also re-calculate the Right and Up vector
-	Right = glm::normalize(glm::cross(alRelevant.Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	alRelevant.Up    = glm::normalize(glm::cross(Right, alRelevant.Front));
-	alListenerfv(AL_ORIENTATION,reinterpret_cast<const ALfloat*>(&alRelevant));
+	Right = glm::normalize(glm::cross(Front, WorldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	Up    = glm::normalize(glm::cross(Right, Front));
+	// alListenerfv(AL_ORIENTATION,reinterpret_cast<const ALfloat*>(&alRelevant));
 }

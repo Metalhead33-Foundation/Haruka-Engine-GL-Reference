@@ -14,10 +14,8 @@ public:
 private:
 	// Camera Attributes
 	glm::vec3 Position;
-	struct {
 	glm::vec3 Front;
 	glm::vec3 Up;
-	} alRelevant;
 	glm::vec3 Right;
 	glm::vec3 WorldUp;
 	// Euler Angles

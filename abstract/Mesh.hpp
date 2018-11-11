@@ -3,15 +3,19 @@
 #include "Vertex.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
+#include "AbstractSkeleton.hpp"
+#include <unordered_map>
 #include <vector>
 #include <glm/glm.hpp>
 
 namespace Abstract {
 
+DEFINE_CLASS(KeyframeAnimation)
 DEFINE_CLASS(Mesh)
 class Mesh
 {
 public:
+	friend class KeyframeAnimation;
 	typedef std::vector<Vertex> VertexVector;
 	typedef VertexVector::iterator VertexIterator;
 	typedef std::vector<uint32_t> IndexVector;
@@ -27,10 +31,11 @@ public:
 	{
 		sVertexVector vec;
 		sIndexVector ind;
+		sSkeleton skl;
 	};
 	typedef MeshConstructor& ConstructorReference;
-	typedef std::vector<MeshConstructor> ConstructorArray;
-	typedef std::vector<MeshConstructor>::iterator ConstructorIterator;
+	typedef std::unordered_map<std::string,MeshConstructor> ConstructorArray;
+	typedef ConstructorArray::iterator ConstructorIterator;
 	typedef ConstructorArray& ConstructorArrayReference;
 	typedef std::shared_ptr<ConstructorArray> ConstructorArrayPointer;
 

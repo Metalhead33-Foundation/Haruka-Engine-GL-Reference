@@ -4,21 +4,13 @@
 #include <cstdlib>
 #include "glad_glx.h"
 #include "../abstract/RenderingEngine.hpp"
+#include "GlQuad.hpp"
 namespace Gl {
 
 DEFINE_CLASS(RenderingEngine)
 class RenderingEngine : public Abstract::RenderingEngine
 {
 public:
-	struct Quad
-	{
-		GLuint quadArrayId;
-		GLuint quadBufferId;
-		Quad(bool framebuff=false);
-		~Quad();
-		void draw();
-	};
-	typedef std::shared_ptr<Quad> sQuad;
 private:
 	const Abstract::sSettingContainer settings;
 	XVisualInfo* vi;
@@ -26,7 +18,7 @@ private:
 	Abstract::sFramebuffer framebuffer;
 
 	bool twoDProjection;
-	static sQuad QUAD_WID, QUAD_SCR;
+	static sQuad QUAD_SCR,QUAD_WID;
 public:
 	RenderingEngine(Abstract::sSettingContainer nsettings,uint32_t sampleCount, uint32_t supersampleCount);
 	~RenderingEngine();
@@ -38,14 +30,10 @@ public:
 	static GLint CONTEXT_ATTRIBUTES[];
 	Abstract::sShaderModule createShaderModule(Abstract::ShaderModule::ShaderType ntype, Abstract::sFIO reada);
 	Abstract::sShaderProgram createShaderProgram();
-	Abstract::sTexture createTextureFromDDS(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
-	Abstract::sTexture createTextureFromImage(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
-	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sFIO reada);
+	Abstract::sTexture createTexture(Abstract::Texture::textureType ntype, Abstract::sImageContainer constructor);
+	Abstract::sAnimatedTexture createTextureFromGIF(Abstract::Texture::textureType ntype, Abstract::sAnimatedImageContainer constructor);
 	Abstract::sMesh createMesh(Abstract::Mesh::ConstructorReference ref);
-	Abstract::sVectorWidget createVectorWidget(Abstract::sFIO readah);
-	void renderWidget(const Abstract::WidgetProperties& widget, glm::mat4& projection, Abstract::sShaderProgram shader);
 	MeshCreator getMeshCreator() const;
-	void renderMesh(const Abstract::sMesh mesh, const Abstract::sShaderProgram shader, const Abstract::Mesh::TextureVector& textures, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
 	Abstract::sFramebuffer createFramebuffer(uint32_t nwidth, uint32_t nheight, uint32_t nsamples = 0);
 	void renderFramebuffer(const Abstract::sShaderProgram shader);
 	Abstract::sFramebuffer getFramebuffer();
