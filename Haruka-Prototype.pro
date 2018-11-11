@@ -58,13 +58,13 @@ SOURCES += main.cpp \
     GL/GlVertexBufferObject.cpp \
     GL/GlIndexBuffer.cpp \
     gfx/Billboard.cpp \
-    io/ImgIo.cpp
+    io/ImgIo.cpp \
+    gfx/Skeleton.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
     abstract/AnimatedCubemap.hpp \
     abstract/AnimatedTexture.hpp \
-    abstract/Bone.hpp \
     abstract/Cubemap.hpp \
     abstract/Drawable.hpp \
     abstract/FIO.hpp \
@@ -138,4 +138,7 @@ HEADERS += \
     GL/GlIndexBuffer.hpp \
     gfx/Billboard.hpp \
     abstract/AbstractImageContainer.hpp \
-    io/ImgIo.hpp
+    io/ImgIo.hpp \
+    abstract/Light.hpp \
+    abstract/AbstractSkeleton.hpp \
+    gfx/Skeleton.hpp

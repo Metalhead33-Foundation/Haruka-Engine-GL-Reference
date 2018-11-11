@@ -3,7 +3,7 @@
 #include "Vertex.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
-#include "Bone.hpp"
+#include "AbstractSkeleton.hpp"
 #include <unordered_map>
 #include <vector>
 #include <glm/glm.hpp>
