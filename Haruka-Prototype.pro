@@ -9,7 +9,6 @@ CONFIG(debug, debug|release): LIBS += -ldl -lassimp -lX11-xcb -lSDL2 -lX11 -lphy
 
 SOURCES += main.cpp \
     audio/System.cpp \
-    gfx/Widget.cpp \
     GL/glad_glx.c \
     GL/glad.c \
     GL/GlAnimated.cpp \
@@ -21,7 +20,6 @@ SOURCES += main.cpp \
     GL/GlKeyframeAnimation.cpp \
     GL/GlMesh.cpp \
     GL/GlQuad.cpp \
-    GL/GlRasterDrawable.cpp \
     GL/GlRenderingEngine.cpp \
     GL/GlShaderModule.cpp \
     GL/GlShaderProgram.cpp \
@@ -59,14 +57,20 @@ SOURCES += main.cpp \
     GL/GlIndexBuffer.cpp \
     gfx/Billboard.cpp \
     io/ImgIo.cpp \
-    gfx/Skeleton.cpp
+    gfx/Skeleton.cpp \
+    technique/prototype/AbstractTechniquePrototype.cpp \
+    technique/wrapper/AbstractTechniqueWrapper.cpp \
+    technique/prototype/SimpleModelViewProtoype.cpp \
+    technique/prototype/SimpleWidgetViewProtoype.cpp \
+    technique/wrapper/SimpleModelViewWrapper.cpp \
+    technique/wrapper/SimpleWidgetViewWrapper.cpp \
+    technique/wrapper/Widget2D.cpp
 
 HEADERS += \
     abstract/Animated.hpp \
     abstract/AnimatedCubemap.hpp \
     abstract/AnimatedTexture.hpp \
     abstract/Cubemap.hpp \
-    abstract/Drawable.hpp \
     abstract/FIO.hpp \
     abstract/FIOSys.hpp \
     abstract/Font.hpp \
@@ -76,7 +80,6 @@ HEADERS += \
     abstract/HashTrait.hpp \
     abstract/KeyframeAnimation.hpp \
     abstract/Mesh.hpp \
-    abstract/RasterDrawable.hpp \
     abstract/RenderingEngine.hpp \
     abstract/SettingContainer.hpp \
     abstract/ShaderModule.hpp \
@@ -85,7 +88,6 @@ HEADERS += \
     abstract/Texture.hpp \
     abstract/Vertex.hpp \
     audio/System.hpp \
-    gfx/Widget.hpp \
     GL/glad_glx.h \
     GL/glad.h \
     GL/GlAnimated.hpp \
@@ -97,7 +99,6 @@ HEADERS += \
     GL/GlKeyframeAnimation.hpp \
     GL/GlMesh.hpp \
     GL/GlQuad.hpp \
-    GL/GlRasterDrawable.hpp \
     GL/GlRenderingEngine.hpp \
     GL/GlShaderModule.hpp \
     GL/GlShaderProgram.hpp \
@@ -140,5 +141,15 @@ HEADERS += \
     abstract/AbstractImageContainer.hpp \
     io/ImgIo.hpp \
     abstract/Light.hpp \
-    abstract/AbstractSkeleton.hpp \
-    gfx/Skeleton.hpp
+    gfx/Skeleton.hpp \
+    abstract/Skeleton.hpp \
+    abstract/VertexProvider.hpp \
+    technique/prototype/AbstractTechniquePrototype.hpp \
+    technique/wrapper/AbstractTechniqueWrapper.hpp \
+    technique/interface/SimpleWidgetViewInterface.hpp \
+    technique/interface/SimpleModelViewInterface.hpp \
+    technique/prototype/SimpleModelViewProtoype.hpp \
+    technique/prototype/SimpleWidgetViewProtoype.hpp \
+    technique/wrapper/SimpleModelViewWrapper.hpp \
+    technique/wrapper/SimpleWidgetViewWrapper.hpp \
+    technique/wrapper/Widget2D.hpp

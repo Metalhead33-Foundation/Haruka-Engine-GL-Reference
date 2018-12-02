@@ -3,7 +3,8 @@
 #include "Vertex.hpp"
 #include "ShaderProgram.hpp"
 #include "Texture.hpp"
-#include "AbstractSkeleton.hpp"
+#include "Skeleton.hpp"
+#include "VertexProvider.hpp"
 #include <unordered_map>
 #include <vector>
 #include <glm/glm.hpp>
@@ -12,7 +13,7 @@ namespace Abstract {
 
 DEFINE_CLASS(KeyframeAnimation)
 DEFINE_CLASS(Mesh)
-class Mesh
+class Mesh : public VertexProvider
 {
 public:
 	friend class KeyframeAnimation;

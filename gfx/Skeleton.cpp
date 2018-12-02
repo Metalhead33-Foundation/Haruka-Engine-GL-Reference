@@ -81,5 +81,67 @@ void Skeleton::applyToVertices(Abstract::Vertex* vertices, size_t vertexCount) c
 		}
 	}
 }
+void Skeleton::importFromAiMesh(aiMesh* mesh,aiNode* rootNode)
+{
+	if(!mesh) return;
+	if(!mesh->HasBones()) return;
+
+	weights.resize(mesh->mNumBones);
+	offsetMatrices.resize(mesh->mNumBones);
+	for(unsigned int i = 0; i < mesh->mNumBones; ++i)
+	{
+		const aiBone* currBone = mesh->mBones[i];
+		for(int x = 0; x < 4; ++x)
+		{
+			for(int y = 0; y < 4; ++y)
+			{
+				offsetMatrices[i][x][y] = currBone->mOffsetMatrix[x][y];
+			}
+		}
+		for(unsigned int j = 0; j < currBone->mNumWeights; ++j)
+		{
+			weights[i].push_back(std::make_pair(currBone->mWeights[j].mVertexId,
+												currBone->mWeights[j].mWeight));
+		}
+	}
+	std::unordered_map<std::string,unsigned int> boneMap;
+	for(unsigned int i = 0; i < mesh->mNumBones; ++i)
+	{
+		boneMap.insert(std::make_pair(std::string(mesh->mBones[i]->mName.C_Str()),
+									  i));
+	}
+	preTraverseNode(rootNode,connections,boneMap);
+
+}
+void Skeleton::preTraverseNode(aiNode* node, BoneHierarchy &nodeMap, BoneMap& boneMap)
+{
+	if(!node) return;
+	const std::string name(node->mName.C_Str());
+	auto boneMapId = boneMap.find(name);
+	if(boneMapId != boneMap.end() && node->mParent) // This is a bone!
+	{
+		const std::string parentName(node->mParent->mName.C_Str());
+		auto parentIt = boneMap.find(parentName);
+		if(parentIt != boneMap.end()) // The parent is valid!
+		{
+			auto parentNum = nodeMap.find(parentIt->second);
+			if(parentNum == nodeMap.end())
+			{
+				std::vector<int> tmpvec;
+				tmpvec.push_back(boneMapId->second);
+				nodeMap.insert(std::make_pair(parentIt->second,
+											  tmpvec));
+			}
+			else
+			{
+				parentNum->second.push_back(boneMapId->second);
+			}
+		}
+	}
+	for(unsigned int i = 0; i < node->mNumChildren; ++i)
+	{
+		preTraverseNode(node->mChildren[i],nodeMap,boneMap);
+	}
+}
 
 }

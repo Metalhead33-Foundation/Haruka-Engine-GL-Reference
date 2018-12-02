@@ -1,7 +1,7 @@
 #ifndef GLMESH_HPP
 #define GLMESH_HPP
 #include "../abstract/Mesh.hpp"
-#include "../abstract/AbstractSkeleton.hpp"
+#include "../abstract/Skeleton.hpp"
 #include "GlTexture.hpp"
 #include "GlShaderProgram.hpp"
 #include "GlVertexArray.hpp"

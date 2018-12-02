@@ -3,6 +3,7 @@
 #include "../abstract/Drawable.hpp"
 namespace GFX {
 
+DEFINE_CLASS(Billboard)
 class Billboard
 {
 private:

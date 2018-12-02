@@ -1,6 +1,6 @@
 #pragma once
 #include "../abstract/Mesh.hpp"
-#include "../abstract/AbstractSkeleton.hpp"
+#include "../abstract/Skeleton.hpp"
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>

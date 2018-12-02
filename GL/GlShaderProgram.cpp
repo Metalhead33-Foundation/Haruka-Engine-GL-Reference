@@ -11,6 +11,7 @@ Abstract::sShaderProgram ShaderProgram::createShaderProgram()
 	return Abstract::sShaderProgram(new ShaderProgram());
 }
 ShaderProgram::ShaderProgram()
+	: compilationStatus(GL_FALSE)
 {
 	shaderID = glCreateProgram();
 }
@@ -31,35 +32,30 @@ void ShaderProgram::useShader()
 	}
 	boundTextures = 0;
 }
-void ShaderProgram::bindTexture()
-{
-	glUniform1i(glGetUniformLocation(shaderID, Texture::TEX_TYPES[Texture::texture_diffuse]), boundTextures);
-	++boundTextures;
-}
-void ShaderProgram::bindTexture(Abstract::sTexture tex)
+void ShaderProgram::bindTexture(int location, Abstract::sTexture tex)
 {
 	if(tex)
 	{
 		tex->bindTextureSide();
-		glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+		glUniform1i(location, boundTextures);
 		++boundTextures;
 	}
 }
-void ShaderProgram::bindTexture(Abstract::sFramebuffer tex)
+void ShaderProgram::bindTexture(int location, Abstract::sFramebuffer tex)
 {
 	if(tex)
 	{
 		tex->bindTextureSide();
-		glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+		glUniform1i(location, boundTextures);
 		++boundTextures;
 	}
 }
-void ShaderProgram::bindTexture(Abstract::sFont tex)
+void ShaderProgram::bindTexture(int location, Abstract::sFont tex)
 {
 	if(tex)
 	{
 		tex->bindTextureSide();
-		glUniform1i(glGetUniformLocation(shaderID, tex->stringizeType()), boundTextures);
+		glUniform1i(location, boundTextures);
 		++boundTextures;
 	}
 }
@@ -80,173 +76,187 @@ bool ShaderProgram::linkShaders()
 		else glAttachShader(shaderID,mod->getShaderID());
 	}
 	glLinkProgram(shaderID);
+	glGetProgramiv(shaderID, GL_LINK_STATUS, &compilationStatus);
 	return true;
 }
 
-void ShaderProgram::setBool(const char* name, bool value) const
+void ShaderProgram::setBool(int location, bool value) const
 {
-	glUniform1i(glGetUniformLocation(shaderID, name), (int)value);
+	if(location != -1) glUniform1i(location, (int)value);
 }
-void ShaderProgram::setInt(const char* name, int value) const
+void ShaderProgram::setInt(int location, int value) const
 {
-	glUniform1i(glGetUniformLocation(shaderID, name), value);
+	if(location != -1) glUniform1i(location, value);
 }
-void ShaderProgram::setFloat(const char* name, float value) const
+void ShaderProgram::setFloat(int location, float value) const
 {
-	glUniform1f(glGetUniformLocation(shaderID, name), value);
+	if(location != -1) glUniform1f(location, value);
 }
-void ShaderProgram::setVec2(const char* name, const glm::vec2 &value) const
+void ShaderProgram::setVec2(int location, const glm::vec2 &value) const
 {
-	glUniform2fv(glGetUniformLocation(shaderID, name), 1, &value[0]);
+	if(location != -1) glUniform2fv(location, 1, &value[0]);
 }
-void ShaderProgram::setVec2(const char* name, float x, float y) const
+void ShaderProgram::setVec2(int location, float x, float y) const
 {
-	glUniform2f(glGetUniformLocation(shaderID, name), x, y);
+	if(location != -1) glUniform2f(location, x, y);
 }
-void ShaderProgram::setVec3(const char* name, const glm::vec3 &value) const
+void ShaderProgram::setVec3(int location, const glm::vec3 &value) const
 {
-	glUniform3fv(glGetUniformLocation(shaderID, name), 1, &value[0]);
+	if(location != -1) glUniform3fv(location, 1, &value[0]);
 }
-void ShaderProgram::setVec3(const char* name, float x, float y, float z) const
+void ShaderProgram::setVec3(int location, float x, float y, float z) const
 {
-	glUniform3f(glGetUniformLocation(shaderID, name), x, y, z);
+	if(location != -1) glUniform3f(location, x, y, z);
 }
-void ShaderProgram::setVec4(const char* name, const glm::vec4 &value) const
+void ShaderProgram::setVec4(int location, const glm::vec4 &value) const
 {
-	glUniform4fv(glGetUniformLocation(shaderID, name), 1, &value[0]);
+	if(location != -1) glUniform4fv(location, 1, &value[0]);
 }
-void ShaderProgram::setVec4(const char* name, float x, float y, float z, float w) const
+void ShaderProgram::setVec4(int location, float x, float y, float z, float w) const
 {
-	glUniform4f(glGetUniformLocation(shaderID, name), x, y, z, w);
+	if(location != -1) glUniform4f(location, x, y, z, w);
 }
-void ShaderProgram::setBvec2(const char* name, const glm::bvec2 &value) const
+void ShaderProgram::setBvec2(int location, const glm::bvec2 &value) const
 {
-	glUniform2i(glGetUniformLocation(shaderID, name), value.x, value.y);
+	if(location != -1) glUniform2i(location, value.x, value.y);
 }
-void ShaderProgram::setBvec2(const char* name, bool x, bool y) const
+void ShaderProgram::setBvec2(int location, bool x, bool y) const
 {
-	glUniform2i(glGetUniformLocation(shaderID, name), x, y);
+	if(location != -1) glUniform2i(location, x, y);
 }
-void ShaderProgram::setBvec3(const char* name, const glm::bvec3 &value) const
+void ShaderProgram::setBvec3(int location, const glm::bvec3 &value) const
 {
-	glUniform3i(glGetUniformLocation(shaderID, name), value.x, value.y, value.z);
+	if(location != -1) glUniform3i(location, value.x, value.y, value.z);
 }
-void ShaderProgram::setBvec3(const char* name, bool x, bool y, bool z) const
+void ShaderProgram::setBvec3(int location, bool x, bool y, bool z) const
 {
-	glUniform3i(glGetUniformLocation(shaderID, name), x, y, z);
+	if(location != -1) glUniform3i(location, x, y, z);
 }
-void ShaderProgram::setBvec4(const char* name, const glm::bvec4 &value) const
+void ShaderProgram::setBvec4(int location, const glm::bvec4 &value) const
 {
-	glUniform4i(glGetUniformLocation(shaderID, name), value.x, value.y, value.z, value.w);
+	if(location != -1) glUniform4i(location, value.x, value.y, value.z, value.w);
 }
-void ShaderProgram::setBvec4(const char* name, bool x, bool y, bool z, bool w) const
+void ShaderProgram::setBvec4(int location, bool x, bool y, bool z, bool w) const
 {
-	glUniform4i(glGetUniformLocation(shaderID, name), x, y, z, w);
+	if(location != -1) glUniform4i(location, x, y, z, w);
 }
-void ShaderProgram::setIvec2(const char* name, const glm::ivec2 &value) const
+void ShaderProgram::setIvec2(int location, const glm::ivec2 &value) const
 {
-	glUniform2iv(glGetUniformLocation(shaderID, name), 1, &value[0]);
+	if(location != -1) glUniform2iv(location, 1, &value[0]);
 }
-void ShaderProgram::setIvec2(const char* name, int x, int y) const
+void ShaderProgram::setIvec2(int location, int x, int y) const
 {
-	glUniform2i(glGetUniformLocation(shaderID, name), x, y);
+	if(location != -1) glUniform2i(location, x, y);
 }
-void ShaderProgram::setIvec3(const char* name, const glm::ivec3 &value) const
+void ShaderProgram::setIvec3(int location, const glm::ivec3 &value) const
 {
-	glUniform3iv(glGetUniformLocation(shaderID, name), 1, &value[0]);
+	if(location != -1) glUniform3iv(location, 1, &value[0]);
 }
-void ShaderProgram::setIvec3(const char* name, int x, int y, int z) const
+void ShaderProgram::setIvec3(int location, int x, int y, int z) const
 {
-	glUniform3i(glGetUniformLocation(shaderID, name), x, y, z);
+	if(location != -1) glUniform3i(location, x, y, z);
 }
-void ShaderProgram::setIvec4(const char* name, const glm::ivec4 &value) const
+void ShaderProgram::setIvec4(int location, const glm::ivec4 &value) const
 {
-	glUniform4iv(glGetUniformLocation(shaderID, name), 1, &value[0]);
+	if(location != -1) glUniform4iv(location, 1, &value[0]);
 }
-void ShaderProgram::setIvec4(const char* name, int x, int y, int z, int w) const
+void ShaderProgram::setIvec4(int location, int x, int y, int z, int w) const
 {
-	glUniform4i(glGetUniformLocation(shaderID, name), x, y, z, w);
+	if(location != -1) glUniform4i(location, x, y, z, w);
 }
-void ShaderProgram::setMat2(const char* name, const glm::mat2 &mat) const
+void ShaderProgram::setMat2(int location, const glm::mat2 &mat) const
 {
-	glUniformMatrix2fv(glGetUniformLocation(shaderID, name), 1, GL_FALSE, &mat[0][0]);
+	if(location != -1) glUniformMatrix2fv(location, 1, GL_FALSE, &mat[0][0]);
 }
-void ShaderProgram::setMat3(const char* name, const glm::mat3 &mat) const
+void ShaderProgram::setMat3(int location, const glm::mat3 &mat) const
 {
-	glUniformMatrix3fv(glGetUniformLocation(shaderID, name), 1, GL_FALSE, &mat[0][0]);
+	if(location != -1) glUniformMatrix3fv(location, 1, GL_FALSE, &mat[0][0]);
 }
-void ShaderProgram::setMat4(const char* name, const glm::mat4 &mat) const
+void ShaderProgram::setMat4(int location, const glm::mat4 &mat) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(shaderID, name), 1, GL_FALSE, &mat[0][0]);
+	if(location != -1) glUniformMatrix4fv(location, 1, GL_FALSE, &mat[0][0]);
 }
 
-void ShaderProgram::setBoolArray(const char* name, const bool *value, size_t count) const
+void ShaderProgram::setBoolArray(int location, const bool *value, size_t count) const
 {
+	if(location == -1) return;
 	std::vector<int> tmp(count);
 	for(size_t i = 0; i < count;++i) tmp[i] = value[i];
-	glUniform1iv(glGetUniformLocation(shaderID, name),count,tmp.data());
+	glUniform1iv(location,count,tmp.data());
 }
-void ShaderProgram::setIntArray(const char* name, const int *value, size_t count) const
+void ShaderProgram::setIntArray(int location, const int *value, size_t count) const
 {
-	glUniform1iv(glGetUniformLocation(shaderID, name),count,value);
+	if(location != -1) glUniform1iv(location,count,value);
 }
-void ShaderProgram::setFloatArray(const char* name, const float *value, size_t count) const
+void ShaderProgram::setFloatArray(int location, const float *value, size_t count) const
 {
-	glUniform1fv(glGetUniformLocation(shaderID, name),count,value);
+	if(location != -1) glUniform1fv(location,count,value);
 }
-void ShaderProgram::setVec2Array(const char* name, const glm::vec2 *value, size_t count) const
+void ShaderProgram::setVec2Array(int location, const glm::vec2 *value, size_t count) const
 {
-	glUniform2fv(glGetUniformLocation(shaderID, name),count,&value[0][0] );
+	if(location != -1) glUniform2fv(location,count,&value[0][0] );
 }
-void ShaderProgram::setVec3Array(const char* name, const glm::vec3 *value, size_t count) const
+void ShaderProgram::setVec3Array(int location, const glm::vec3 *value, size_t count) const
 {
-	glUniform3fv(glGetUniformLocation(shaderID, name),count,&value[0][0]);
+	if(location != -1) glUniform3fv(location,count,&value[0][0]);
 }
-void ShaderProgram::setVec4Array(const char* name, const glm::vec4 *value, size_t count) const
+void ShaderProgram::setVec4Array(int location, const glm::vec4 *value, size_t count) const
 {
-	glUniform4fv(glGetUniformLocation(shaderID, name),count,&value[0][0]);
+	if(location != -1) glUniform4fv(location,count,&value[0][0]);
 }
-void ShaderProgram::setIvec2Array(const char* name, const glm::ivec2 *value, size_t count) const
+void ShaderProgram::setIvec2Array(int location, const glm::ivec2 *value, size_t count) const
 {
-	glUniform2iv(glGetUniformLocation(shaderID, name),count,&value[0][0] );
+	if(location != -1) glUniform2iv(location,count,&value[0][0] );
 }
-void ShaderProgram::setIvec3Array(const char* name, const glm::ivec3 *value, size_t count) const
+void ShaderProgram::setIvec3Array(int location, const glm::ivec3 *value, size_t count) const
 {
-	glUniform3iv(glGetUniformLocation(shaderID, name),count,&value[0][0] );
+	if(location != -1) glUniform3iv(location,count,&value[0][0] );
 }
-void ShaderProgram::setIvec4Array(const char* name, const glm::ivec4 *value, size_t count) const
+void ShaderProgram::setIvec4Array(int location, const glm::ivec4 *value, size_t count) const
 {
-	glUniform4iv(glGetUniformLocation(shaderID, name),count,&value[0][0] );
+	if(location != -1) glUniform4iv(location,count,&value[0][0] );
 }
-void ShaderProgram::setBvec2Array(const char* name, const glm::bvec2 *value, size_t count) const
+void ShaderProgram::setBvec2Array(int location, const glm::bvec2 *value, size_t count) const
 {
+	if(location == -1) return;
 	std::vector<glm::ivec2> tmp(count);
 	for(size_t i = 0; i < count;++i) tmp[i] = value[i];
-	glUniform2iv(glGetUniformLocation(shaderID, name),count,&tmp[0][0]);
+	glUniform2iv(location,count,&tmp[0][0]);
 }
-void ShaderProgram::setBvec3Array(const char* name, const glm::bvec3 *value, size_t count) const
+void ShaderProgram::setBvec3Array(int location, const glm::bvec3 *value, size_t count) const
 {
+	if(location == -1) return;
 	std::vector<glm::ivec3> tmp(count);
 	for(size_t i = 0; i < count;++i) tmp[i] = value[i];
-	glUniform3iv(glGetUniformLocation(shaderID, name),count,&tmp[0][0]);
+	glUniform3iv(location,count,&tmp[0][0]);
 }
-void ShaderProgram::setBvec4Array(const char* name, const glm::bvec4 *value, size_t count) const
+void ShaderProgram::setBvec4Array(int location, const glm::bvec4 *value, size_t count) const
 {
+	if(location == -1) return;
 	std::vector<glm::ivec4> tmp(count);
 	for(size_t i = 0; i < count;++i) tmp[i] = value[i];
-	glUniform4iv(glGetUniformLocation(shaderID, name),count,&tmp[0][0]);
+	glUniform4iv(location,count,&tmp[0][0]);
 }
-void ShaderProgram::setMat2Array(const char* name, const glm::mat2 *mat, size_t count) const
+void ShaderProgram::setMat2Array(int location, const glm::mat2 *mat, size_t count) const
 {
-	glUniformMatrix2fv(glGetUniformLocation(shaderID, name), count, GL_FALSE, &mat[0][0][0]);
+	if(location == -1) return;
+	glUniformMatrix2fv(location, count, GL_FALSE, &mat[0][0][0]);
 }
-void ShaderProgram::setMat3Array(const char* name, const glm::mat3 *mat, size_t count) const
+void ShaderProgram::setMat3Array(int location, const glm::mat3 *mat, size_t count) const
 {
-	glUniformMatrix3fv(glGetUniformLocation(shaderID, name), count, GL_FALSE, &mat[0][0][0]);
+	if(location != -1) glUniformMatrix3fv(location, count, GL_FALSE, &mat[0][0][0]);
 }
-void ShaderProgram::setMat4Array(const char* name, const glm::mat4 *mat, size_t count) const
+void ShaderProgram::setMat4Array(int location, const glm::mat4 *mat, size_t count) const
 {
-	glUniformMatrix4fv(glGetUniformLocation(shaderID, name), count, GL_FALSE, &mat[0][0][0]);
+	if(location != -1) glUniformMatrix4fv(location, count, GL_FALSE, &mat[0][0][0]);
+}
+int ShaderProgram::getLocation(const char* name) const
+{
+	return glGetUniformLocation(shaderID, name);
+}
+bool ShaderProgram::isValid() const
+{
+	return compilationStatus == GL_TRUE;
 }
 
 

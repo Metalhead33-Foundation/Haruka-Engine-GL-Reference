@@ -5,31 +5,17 @@ Model::Model()
 {
 
 }
-void Model::render(const glm::mat4& model, Abstract::sShaderProgram shader)
+void Model::bind()
 {
-	if(shader)
-	{
-		shader->useShader();
-		shader->setMat4("model",model);
-		for(auto it = textures.begin(); it != textures.end(); ++it) shader->bindTexture(*it);
-		for(auto it = meshes.begin(); it != meshes.end(); ++it) (*it).second->bind();
-	}
+	for(auto it = meshes.begin(); it != meshes.end(); ++it) (*it).second->bind();
 }
 Model::MeshVector& Model::getMeshVector()
 {
 	return meshes;
 }
-Model::TextureVector& Model::getTextureVector()
-{
-	return textures;
-}
 void Model::setMeshVector(const MeshVector& nMeshes)
 {
 	meshes = nMeshes;
-}
-void Model::setTextureVector(const TextureVector& nTextures)
-{
-	textures = nTextures;
 }
 Model::MeshConstIterator Model::meshesBegin() const
 {
@@ -39,21 +25,11 @@ Model::MeshConstIterator Model::meshesEnd() const
 {
 	return meshes.end();
 }
-Model::TextureConstIterator Model::texturesBegin() const
+void Model::addMesh(const std::string &name, Abstract::sMesh mesh)
 {
-	return textures.begin();
-}
-Model::TextureConstIterator Model::texturesEnd() const
-{
-	return textures.end();
-}
-void Model::addMesh(Abstract::sMesh mesh)
-{
-	meshes.push_back(mesh);
-}
-void Model::addTexture(Abstract::sTexture texture)
-{
-	textures.push_back(texture);
+	auto it = meshes.find(name);
+	if(it == meshes.end()) meshes.insert(std::make_pair(name,mesh));
+	else it->second = mesh;
 }
 
 }

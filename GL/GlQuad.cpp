@@ -61,7 +61,7 @@ Quad::~Quad()
 {
 	;
 }
-void Quad::draw()
+void Quad::bind()
 {
 	VAO.bind();
 	VBO.draw();
